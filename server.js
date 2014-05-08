@@ -145,24 +145,3 @@ app.use( function( err, req, res, next ) {
 app.listen( port, function() {
     console.log( 'Started listening on port 3000' );
 });
-
-
-
-
-// --------------------------------------------- //
-// TODO
-// /api/usergroups, POST(join)/DELETE(leave)
-// /api/groups, POST(new) - generate password
-// /api/specialbets, POST(new bet)/PUT(change bet)
-//
-// xsrf? + angularjs, setcookie for xsrf-token, check header for x-xsrf-token
-// top-listor
-// ändra lösenord
-// API versioning
-//      res.type( 'application/vnd.supertipset-v1+json' );
-// accept headers (jsontoxml module?)
-// TODO summera points + specialbetspoints
-//
-// registrera användare (slumpa iterations för hash?)
-//
-// flytta över alla routes till egna filer?
