@@ -1,0 +1,13 @@
+# TODO
+
+* /api/usergroups, POST (join) / DELETE (leave)
+* /api/groups, POST (new, generate hash)
+* /api/specialbets, POST (new) / PUT (change)
+* Top lists
+* User being able to change password
+* API versioning (unnecessary atm)?
+    - res.type( 'application/vnd.supertipset-v1+json' )
+    - added support for accept headers (xml to start with)?
+* Sum of points AND special bets points
+* Being able to register a new user
+* Move base (index etc.) routes to routes/?
