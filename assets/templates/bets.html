@@ -1,0 +1,9 @@
+<ul>
+    <li>points: {{ user.points }}</li>
+    <li>team: {{ user.team }}</li>
+    <li>player: {{ user.player_firstname }} {{ user.player_lastname }} with {{ user.player_goals }} goals</li>
+</ul>
+
+<div data-ng-repeat="round in rounds" class="rounds">
+    <div data-round data-ng-model="round"></div>
+</div>

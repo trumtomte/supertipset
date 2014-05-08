@@ -1,0 +1,11 @@
+<p>groups</p>
+
+<div data-ng-repeat="group in groups" class="group">
+    <p><a href="#/groups/{{ group.id }}">{{ group.name }}</a></p>
+
+    <ul>
+        <li data-ng-repeat="user in group.users">
+            {{ user.username }} - {{ user.points }} - {{ user.team }}
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,24 @@
+{
+  "name": "Supertipset",
+  "version": "0.0.1",
+  "authors": [
+    "trumtomte <sebbebook@gmail.com>"
+  ],
+  "description": "Supertipset",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "assets/js/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.16",
+    "angular-route": "~1.2.16",
+    "angular-animate": "~1.2.16",
+    "lodash": "~2.4.1"
+  }
+}

@@ -1,0 +1,36 @@
+doctype html
+html(lang="sv")
+    head
+        meta(charset="utf-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        meta(http-equiv="X-UA-Compatible" content="IE=edge,chrome=1")
+        title Supertipset :: Login
+
+        style.
+            .wrapper {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .login-form {
+                margin-top: 50px;
+                padding: 15px;
+            }
+
+    body
+        div.wrapper
+
+            h1 Supertipset
+
+            if error
+                p.error Wrong username and password combination.
+
+            form.login-form(method="POST" action="/login")
+                input(type="text" name="username")
+                input(type="text" name="password")
+                input(type="hidden" name="_csrf" value="#{token}")
+                button(type="submit") Logga in
+
+            footer.footer
+                p &copy; 2014 Supertipset
+

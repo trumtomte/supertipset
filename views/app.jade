@@ -1,0 +1,44 @@
+doctype html
+html(lang="sv")
+    head
+        meta(charset="utf-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        meta(http-equiv="X-UA-Compatible" content="IE=edge,chrome=1")
+        title Supertipset
+        link(rel="stylesheet" href="assets/css/main.css")
+    body(data-ng-app="supertipset" data-ng-controller="AppCtrl")
+        div.wrapper
+
+            a.logout(href="/logout") Logga ut
+
+            div.header
+                // logo?
+
+                nav.nav
+                    ul.nav-list
+                        li.nav-item
+                            a.nav-link(href="#/bets") Tipsa
+                        li.nav-item
+                            a.nav-link(href="#/groups") Ligor
+                        li.nav-item
+                            a.nav-link(href="#/profile") Profil
+                        // li.nav-item
+                            // a.nav-link(href="#/toplist") Top Listor
+
+            div.main(data-ng-view)
+
+            footer.footer
+                p &copy; 2014 Supertipset
+
+        if dev
+            script(src="assets/js/vendor/angular/angular.js")
+            script(src="assets/js/vendor/angular-route/angular-route.js")
+            script(src="assets/js/vendor/angular-animate/angular-animate.js")
+            script(src="assets/js/vendor/lodash/dist/lodash.js")
+            script(src="assets/js/app.build.js")
+        else
+            script(src="assets/js/app.min.js")
+
+        script.
+            // Temporary
+            angular.module( 'supertipset' ).constant( 'consts.user_id', #{id} );
