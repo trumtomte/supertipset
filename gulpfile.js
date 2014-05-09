@@ -8,7 +8,7 @@ var gulp =  require( 'gulp' ),
 
 // Compile SASS to CSS and minify the CSS source
 gulp.task( 'styles', function() {
-    return gulp.src( 'assets/sass/main.scss' )
+    return gulp.src( ['assets/sass/backend.scss', 'assets/sass/frontend.scss'] )
         .pipe( sass({ style: 'compressed' }) )
         .pipe( gulp.dest( 'assets/css' ) )
         .pipe( minify() );
