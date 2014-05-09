@@ -1,13 +1,22 @@
 # TODO
 
+
+## Now
+
+* Being able to Join / Leave groups
+* Being able to Create / Edit a group
+    - when will groups be removed (if at all)?
+
+## Later
+
+* Move base (index etc.) routes to routes/?
+* Sum of points AND special bets points
 * /api/usergroups, POST (join) / DELETE (leave)
 * /api/groups, POST (new, generate hash)
 * /api/specialbets, POST (new) / PUT (change)
 * Top lists
 * User being able to change password
+* Being able to register a new user
 * API versioning (unnecessary atm)?
     - res.type( 'application/vnd.supertipset-v1+json' )
     - added support for accept headers (xml to start with)?
-* Sum of points AND special bets points
-* Being able to register a new user
-* Move base (index etc.) routes to routes/?
