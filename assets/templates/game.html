@@ -9,7 +9,7 @@
     <div data-ng-if="isDone == false">
         <p>Spelas: {{ game.game_start | date : 'd/M, HH:mm' }}</p>
 
-        <form data-ng-if="bet" data-ng-submit="updateBet(betOne, betTwo)">
+        <form data-ng-if="bet" data-ng-submit="update(betOne, betTwo)">
             <span>update</span>
             <p>Dina tips: {{ bet.team_1_bet }} - {{ bet.team_2_bet }}</p>
 
@@ -19,7 +19,7 @@
             <button type="submit">update</button>
         </form>
 
-        <form data-ng-if="!bet" data-ng-submit="newBet(betOne, betTwo)">
+        <form data-ng-if="!bet" data-ng-submit="create(betOne, betTwo)">
             <span>new</span>
             <span>dina tips:</span>
 
