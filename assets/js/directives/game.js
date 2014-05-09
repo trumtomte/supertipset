@@ -25,7 +25,7 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', fun
                 $scope.betTwo = $scope.bettingRange[0];
             }
 
-            $scope.updateBet = function( betOne, betTwo ) {
+            $scope.update = function( betOne, betTwo ) {
                 // If the user submits the same bet - do nothing
                 if ( $scope.bet.team_1_bet == betOne &&
                      $scope.bet.team_2_bet == betTwo ) {
@@ -48,7 +48,7 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', fun
                 api.bets.update( bets ).success( success );
             };
 
-            $scope.newBet = function( betOne, betTwo ) {
+            $scope.create = function( betOne, betTwo ) {
                 var bets = {
                     user_id: id,
                     game_id: $scope.game.game_id,
