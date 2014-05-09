@@ -33,3 +33,8 @@ build
 # OS X...
 .DS_Store
 .DS_Store?
+
+assets/css/*
+assets/js/app.min.js
+assets/js/app.build.js
+assets/js/vendor/*
