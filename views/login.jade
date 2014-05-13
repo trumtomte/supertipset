@@ -4,17 +4,75 @@ html(lang="sv")
         meta(charset="utf-8")
         meta(name="viewport" content="width=device-width, initial-scale=1")
         meta(http-equiv="X-UA-Compatible" content="IE=edge,chrome=1")
-        title Supertipset :: Login
+        title Supertipset | Login
 
         style.
+            body, html {
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                font-size: 16px;
+                line-height: 130%;
+            }
             .wrapper {
-                max-width: 500px;
-                margin: 0 auto;
+                max-width: 350px;
+                margin: 8% auto 0 auto;
             }
 
-            .login-form {
-                margin-top: 50px;
-                padding: 15px;
+            input {
+                display: block;
+                width: 100%;
+                margin: 0 auto;
+                border: 0;
+                border-left: 2px solid #ccc;
+                padding: 8px 12px;
+                margin-bottom: 15px;
+                font-size: 12px;
+            }
+
+            input:focus {
+                outline: none;
+                border-color: #0077dd;
+            }
+
+            button {
+                display: block;
+                width: 100%;
+                margin: 0 auto;
+                padding: 10px;
+                color: white;
+                background: #0077dd;
+                border: 0;
+                text-align: center;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                font-size: 14px;
+                font-weight: 300;
+                cursor: pointer;
+                outline: none;
+            }
+
+            button:hover, button:active {
+                background: #1188cc;
+            }
+
+            h1 {
+                text-align: center;
+                font-weight: 100;
+                margin-bottom: 50px;
+            }
+
+            .error {
+                color: #dd0044;
+                text-align: center;
+                font-size: 14px;
+            }
+
+            .footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                text-align: center;
+                font-size: 12px;
+                color: #444;
             }
 
     body
@@ -23,11 +81,11 @@ html(lang="sv")
             h1 Supertipset
 
             if error
-                p.error Wrong username and password combination.
+                p.error Invalid username and password combination.
 
             form.login-form(method="POST" action="/login")
-                input(type="text" name="username")
-                input(type="text" name="password")
+                input(type="text" name="username" placeholder="Username")
+                input(type="password" name="password" placeholder="Password")
                 input(type="hidden" name="_csrf" value="#{token}")
                 button(type="submit") Logga in
 
