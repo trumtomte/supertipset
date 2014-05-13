@@ -1,7 +1,7 @@
 // MySQL queries
 var queries = require( '../utilities/queries' );
 
-exports = module.exports = function( conn ) {
+module.exports = function( conn ) {
     // Return one user (with specialbets and points) by id
     function findOne( req, res ) {
         var id = req.params.id;

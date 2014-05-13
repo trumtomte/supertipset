@@ -1,7 +1,7 @@
 // MySQL queries
 var queries = require( '../utilities/queries' );
 
-exports = module.exports = function( conn ) {
+module.exports = function( conn ) {
     // Return all groups (users and points) based on user id
     function find( req, res ) {
         var id = req.params.id,
