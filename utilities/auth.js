@@ -1,34 +1,33 @@
 var crypto = require( 'crypto' );
 
-// Middleware for checking if user is logged in
-function check( req, res, next ) {
-    if ( ! req.session.userId ) {
-        res.redirect( '/login?error=1' );
-    } else {
-        next();
+// Check if a user is already logged in
+exports.check = function( req, res, next ) {
+    if ( req.session.userId ) {
+        return next();
     }
-}
 
-// Compare password hashes
-function compare( input, password, callback ) {
+    return res.redirect( '/login?error=1' );
+};
+
+// Compare database hash with submitted hash
+exports.compare = function( input, password, fn ) {
     // Get password parts (salt, hash, iterations)
     var parts = password.split( '::' ),
         salt = parts[0],
-        dbhash = parts[1],
+        databaseHash = parts[1],
         iterations = +parts[2];
-    
-    // Generate hash based on the parts and compare it to the database hash
+
+    // Generate hash based on parts from the database and compare it to the submitted hash
     crypto.pbkdf2( input, salt, iterations, 64, function( err, hash ) {
         if ( err ) {
-            return callback( false );
+            console.log( err.toString() );
+            return fn( err );
         }
 
-        if ( dbhash == hash.toString( 'base64' ) ) {
-            return callback( true );
+        if ( databaseHash != hash.toString( 'base64' ) ) {
+            return fn( new Error( 'Database hash does not match input hash' ) );
         }
 
-        return callback( false );
+        fn();
     });
-}
-
-exports = module.exports = { check: check, compare: compare };
+};

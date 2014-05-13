@@ -1,5 +1,5 @@
-// TODO better solution for this?
-exports = module.exports = {
+// Alternative?
+module.exports = {
     USERBETS_BY_ID:     'SELECT r.name AS round, r.id AS round_id, g.id AS game_id, b.id AS bet_id, b.team_1_bet AS team_1_bet, b.team_2_bet AS team_2_bet, (SELECT l.name FROM Teams AS l WHERE l.id = g.team_1_id) AS team_1_name, (SELECT l.name FROM Teams AS l WHERE l.id = g.team_2_id) AS team_2_name FROM Users AS u INNER JOIN Bets AS b ON u.id = b.user_id INNER JOIN Games AS g ON b.game_id = g.id INNER JOIN Rounds AS r ON g.round_id = r.id WHERE u.id = ? GROUP BY r.name, g.id',
     UPDATE_BETS:        'UPDATE Bets SET team_1_bet = ?, team_2_bet = ? WHERE id = ?',
     CREATE_BET:         'INSERT INTO Bets SET ?',
