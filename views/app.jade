@@ -9,6 +9,9 @@ html(lang="sv")
     body(data-ng-app="supertipset" data-ng-controller="AppCtrl")
         div.wrapper
 
+            div.notifications(data-ng-notify="main")
+                p {{ notification.message }}
+
             a.logout(href="/logout") Logga ut
 
             div.header
