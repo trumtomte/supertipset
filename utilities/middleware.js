@@ -7,11 +7,15 @@ var express         = require( 'express' ),
     csrf            = require( 'csurf' ),
     fs              = require( 'fs' );
 
-// Middleware configuration
-module.exports = function( app ) {
+var cookieParserSecret = '1823uc98duaks9duoisdfsdjkhfhkq0weu0djdqwd',
+    cookieSessionSecret = 'pokrktg9031u4hhkadkKJDHKSD8QWEH1sdusd772EWJ';
+
+// Middleware application configuration
+exports.conf = function( app ) {
     app.set( 'view engine', 'jade' );
     app.use( logger( 'dev' ) );
     app.use( function( req, res, next ) {
+        // One of three static files
         if ( req.url == '/robots.txt' ||
              req.url == '/humans.txt' ||
              req.url == '/sitemap.xml' ) {
@@ -28,10 +32,10 @@ module.exports = function( app ) {
 
         next();
     });
-    app.use( '/assets', express.static( __dirname + '/assets' ) );
+    app.use( '/assets', express.static( __dirname + '/../assets' ) );
     app.use( bodyparser() );
-    app.use( cookieParser( 'kpofgkhoe155rtuhsdkqwe08uq9we' ) );
-    app.use( cookieSession({ secret: 'asjdoiasdj9awpewqeidwimdiwq' }) );
+    app.use( cookieParser( cookieParserSecret ) );
+    app.use( cookieSession({ secret: cookieSessionSecret }) );
     app.use( csrf() );
     app.use( function( req, res, next ) {
         res.cookie( 'XSRF-TOKEN', req.csrfToken() );
