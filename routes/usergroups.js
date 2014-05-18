@@ -31,7 +31,8 @@ exports.find = function( req, res, next ) {
             var group = {
                 id: groupedGroups[key][0].group_id,
                 name: groupedGroups[key][0].group_name,
-                admin: groupedGroups[key][0].group_admin
+                admin: groupedGroups[key][0].group_admin,
+                relation: groupedGroups[key][0].relation
             };
 
             // Restructure each user object
@@ -54,5 +55,13 @@ exports.find = function( req, res, next ) {
         }
 
         return res.json({ groups: groups });
+    });
+};
+
+exports.remove = function( req, res, next ) {
+    db.removeUserGroup( req.params.id, function( err, result ) {
+        if ( err ) return next( err );
+
+        return res.json( result );
     });
 };
