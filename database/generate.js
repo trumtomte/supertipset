@@ -1,3 +1,6 @@
+// TODO DB schema has changed this is most likely incorrect (db columns)
+
+// Requires node module "faker"
 var fs = require( 'fs' ),
     faker = require( 'Faker' );
 
