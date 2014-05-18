@@ -1,26 +1,38 @@
-// MySQL queries
-var queries = require( '../utilities/queries' );
+var db = require( '../utilities/database' );
 
-module.exports = function( conn ) {
-    // Return one user (with specialbets and points) by id
-    function findOne( req, res ) {
-        var id = req.params.id;
+// Get summary of user information based on user id
+exports.findOne = function( req, res, next ) {
+    db.getUserSummary( req.params.id, function( err, rows ) {
+        if ( err ) return next( err );
 
-        conn.query( queries.USER_BY_ID, [id], function( err, rows ) {
-            if ( err ) {
-                return res.json( 500, {
-                    statusCode: 500,
-                    error: 'Database error'
-                });
+        if ( ! rows.length ) {
+            return res.json( 204, {} );
+        }
+
+        // Restructure user object
+        var user = {
+            id: rows[0].id,
+            username: rows[0].username,
+            firstname: rows[0].firstname,
+            lastname: rows[0].lastname,
+            points: rows[0].points,
+            player: {
+                id: rows[0].player_id,
+                firstname: rows[0].player_firstname,
+                lastname: rows[0].player_lastname,
+                goals: rows[0].player_goals,
+                team: rows[0].player_team
+            },
+            team: {
+                id: rows[0].team_id,
+                name: rows[0].team
             }
+        };
 
-            if ( ! rows.length ) {
-                return res.json( 204, {} );
-            }
+        return res.json({ user: user });
+    });
+};
 
-            return res.json({ user: rows[0] });
-        });
-    }
-
-    return { findOne: findOne };
+exports.create = function( req, res ) {
+    // TODO
 };

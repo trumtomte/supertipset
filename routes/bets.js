@@ -1,82 +1,71 @@
-// MySQL queries
-var queries = require( '../utilities/queries' );
+var db = require( '../utilities/database' );
 
-module.exports = function( conn ) {
-    // Return all bets by id
-    function find( req, res ) {
-        var id = req.params.id;
+// Get all bets based on user id
+exports.find = function( req, res, next ) {
+    db.getBets( req.params.id, function( err, rows ) {
+        if ( err ) return next( err );
 
-        conn.query( queries.USERBETS_BY_ID, [id], function( err, rows ) {
-            if ( err ) {
-                return res.json( 500, {
-                    statusCode: 500,
-                    error: 'Database error'
-                });
+        if ( ! rows.length ) {
+            return res.json( 204, {} );
+        }
+
+        var groupedBets = {},
+            bets = [];
+
+        rows.forEach( function( row ) {
+            if ( ! ( row.round in groupedBets ) ) {
+                groupedBets[row.round] = [];
             }
 
-            if ( ! rows.length ) {
-                return res.json( 204, {} );
-            }
+            groupedBets[row.round].push( row );
+        });
 
-            // Temporary object for sorting out bets (grouped by round)
-            var tmp = {},
-                bets = [];
+        for ( var key in groupedBets ) {
+            var bet = {
+                round: key,
+                round_id: groupedBets[key][0].round_id
+            };
 
-            rows.forEach( function( row ) {
-                if ( ! ( row.round in tmp ) ) {
-                    tmp[row.round] = [];
-                }
-
-                tmp[row.round].push( row );
+            // Restructure each bet object
+            groupedBets[key].forEach( function( b, i ) {
+                groupedBets[key][i] = {
+                    id: b.bet_id,
+                    game: b.game_id,
+                    teams: [
+                        { id: b.team_1_id, name: b.team_1_name, bet: b.team_1_bet },
+                        { id: b.team_2_id, name: b.team_2_name, bet: b.team_2_bet }
+                    ]
+                };
             });
 
-            for ( var name in tmp ) {
-                bets.push({
-                    round: name,
-                    round_id: tmp[name][0].round_id,
-                    bets: tmp[name]
-                });
-            }
+            bet.bets = groupedBets[key];
+            bets.push( bet );
+        }
 
-            return res.json({ bets: bets });
-        });
-    }
+        return res.json({ bets: bets });
+    });
+};
 
-    function update( req, res ) {
-        var params = [
-            req.body.team_1_goals,
-            req.body.team_2_goals,
-            req.body.id
-        ];
+// Update user bets
+exports.update = function( req, res, next ) {
+    var params = [
+        req.body.team_1_bet,
+        req.body.team_2_bet,
+        req.body.id
+    ];
 
-        conn.query( queries.UPDATE_BETS, params, function( err, result ) {
-            if ( err ) {
-                return res.json( 500, {
-                    statusCode: 500,
-                    error: 'Database error'
-                });
-            }
+    db.updateBets( params, function( err, result ) {
+        if ( err ) return next( err );
 
-            return res.json( result );
-        });
-    }
+        return res.json( result );
+    });
+};
 
-    function create( req, res ) {
-        conn.query( queries.CREATE_BET, req.body, function( err, result ) {
-            if ( err ) {
-                return res.json( 500, {
-                    statusCode: 500,
-                    error: 'Database error'
-                });
-            }
+// Place new bets
+exports.create = function( req, res, next ) {
+    db.createBets( req.body, function( err, result ) {
+        if ( err ) return next( err );
 
-            return res.json( result );
-        });
-    }
-
-    return {
-        find: find,
-        update: update,
-        create: create
-    };
+        return res.json( result );
+    });
 };

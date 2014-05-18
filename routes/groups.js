@@ -1,36 +1,38 @@
-// MySQL queries
-var queries = require( '../utilities/queries' );
+var db = require( '../utilities/database' );
 
-module.exports = function( conn ) {
-    // Return one user (with specialbets and points) by id
-    function findOne( req, res ) {
-        var id = req.params.id;
+// Get a group (and members) based on group id
+exports.findOne = function( req, res, next ) {
+    db.getGroup( req.params.id, function( err, rows ) {
+        if ( err ) return next( err );
 
-        // tournament_id = 1
-        conn.query( queries.GROUP_BY_ID, [id, 1], function( err, rows ) {
-            if ( err ) {
-                return res.json( 500, {
-                    statusCode: 500,
-                    error: 'Database error'
-                });
-            }
+        if ( ! rows.length ) {
+            return res.json( 204, {} );
+        }
 
-            if ( ! rows.length ) {
-                return res.json( 204, {} );
-            }
+        var group = {
+            id: rows[0].group_id,
+            name: rows[0].group_name,
+            admin: rows[0].group_admin,
+            description: rows[0].group_description
+        };
 
-            var group = {
-                name: rows[0].group_name,
-                id: rows[0].group_id,
-                description: rows[0].group_description,
-                admin: rows[0].group_admin,
-                users: rows
+        // Restructure each user objects
+        rows.forEach( function( row, i ) {
+            rows[i] = {
+                id: row.id,
+                username: row.username,
+                firstname: row.firstname,
+                lastname: row.lastname,
+                points: row.points,
+                team: {
+                    id: row.team_id,
+                    name: row.team
+                }
             };
-
-            return res.json({ group: group });
         });
-    }
 
-    return { findOne: findOne };
+        group.users = rows;
+
+        return res.json({ group: group });
+    });
 };
-

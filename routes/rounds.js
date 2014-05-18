@@ -1,48 +1,51 @@
-// MySQL queries
-var queries = require( '../utilities/queries' );
+var db = require( '../utilities/database' );
 
-module.exports = function( conn ) {
-    // Return all rounds and games from a tournament based on id
-    function find( req, res ) {
-        var id = req.params.id;
+// Get all rounds based on tournament id
+exports.find = function( req, res, next ) {
+    db.getTournamentRounds( req.params.id, function( err, rows ) {
+        if ( err ) return next( err );
 
-        conn.query( queries.ROUNDS_BY_ID, [id], function( err, rows ) {
-            if ( err ) {
-                return res.json( 500, {
-                    statusCode: 500,
-                    error: 'Database error'
-                });
+        if ( ! rows.length ) {
+            return res.json( 204, {} );
+        }
+
+        var groupedRounds = {},
+            rounds = [];
+
+        // Extract games by round
+        rows.forEach( function( row ) {
+            if ( ! ( row.round in groupedRounds ) ) {
+                groupedRounds[row.round] = [];
             }
 
-            if ( ! rows.length ) {
-                return res.json( 204, {} );
-            }
-            
-            // Temporary object for sorting out rounds
-            var tmp = {},
-                rounds = [];
+            groupedRounds[row.round].push( row );
+        });
 
-            rows.forEach( function( row ) {
-                if ( ! ( row.round in tmp ) ) {
-                    tmp[row.round] = [];
-                }
+        for ( var key in groupedRounds ) {
+            var round = {
+                name: key,
+                id: groupedRounds[key][0].round_id,
+                start: groupedRounds[key][0].round_start,
+                stop: groupedRounds[key][0].round_stop
+            };
 
-                tmp[row.round].push( row );
+            // Restructure each game object
+            groupedRounds[key].forEach( function( game, i ) {
+                groupedRounds[key][i] = {
+                    id: game.game_id,
+                    start: game.game_start,
+                    stop: game.game_stop,
+                    teams: [
+                        { id: game.team_1_id, result: game.team_1_result, name: game.team_1_name },
+                        { id: game.team_2_id, result: game.team_2_result, name: game.team_2_name }
+                    ]
+                };
             });
 
-            for ( var name in tmp ) {
-                rounds.push({
-                    name: name,
-                    id: tmp[name][0].round_id,
-                    start: tmp[name][0].round_start,
-                    stop: tmp[name][0].round_stop,
-                    games: tmp[name]
-                });
-            }
+            round.games = groupedRounds[key];
+            rounds.push( round );
+        }
 
-            return res.json({ rounds: rounds });
-        });
-    }
-    
-    return { find: find };
+        return res.json({ rounds: rounds });
+    });
 };

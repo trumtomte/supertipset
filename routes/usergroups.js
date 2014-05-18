@@ -1,49 +1,58 @@
-// MySQL queries
-var queries = require( '../utilities/queries' );
+var db = require( '../utilities/database' );
 
-module.exports = function( conn ) {
-    // Return all groups (users and points) based on user id
-    function find( req, res ) {
-        var id = req.params.id,
-            limit = req.query.limit || 5;
+// Get all groups (and members) based on user id
+exports.find = function( req, res, next ) {
+    var id = req.params.id,
+        limit = req.query.limit || 5;
 
-        conn.query( queries.USERGROUPS_BY_ID, [id], function( err, rows ) {
-            if ( err ) {
-                return res.json( 500, {
-                    statusCode: 500,
-                    error: 'Database error'
-                });
+    db.getUserGroups( id, function( err, rows ) {
+        if ( err ) return next( err );
+
+        if ( ! rows.length ) {
+            return res.json( 204, {} );
+        }
+
+        var groupedGroups = {},
+            groups = [];
+
+        // Extract games by round
+        rows.forEach( function( row ) {
+            if ( ! ( row.group_name in groupedGroups ) ) {
+                groupedGroups[row.group_name] = [];
             }
 
-            if ( ! rows.length ) {
-                return res.json( 204, {} );
+            // Only show amount of users based on "limit"
+            if ( groupedGroups[row.group_name].length < limit ) {
+                groupedGroups[row.group_name].push( row );
             }
+        });
 
-            // Temporary object for sorting out groups
-            var tmp = {},
-                groups = [];
+        for ( var key in groupedGroups ) {
+            var group = {
+                id: groupedGroups[key][0].group_id,
+                name: groupedGroups[key][0].group_name,
+                admin: groupedGroups[key][0].group_admin
+            };
 
-            rows.forEach( function( row ) {
-                if ( ! ( row.group_name in tmp ) ) {
-                   tmp[row.group_name] = []; 
-                }
-
-                if ( tmp[row.group_name].length < limit ) {
-                    tmp[row.group_name].push( row );
-                }
+            // Restructure each user object
+            groupedGroups[key].forEach( function( user, i ) {
+                groupedGroups[key][i] = {
+                    id: user.id,
+                    username: user.username,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
+                    points: user.points,
+                    team: {
+                        id: user.team_id,
+                        name: user.team
+                    }
+                };
             });
 
-            for ( var name in tmp ) {
-                groups.push({
-                    name: tmp[name][0].group_name,
-                    id: tmp[name][0].group_id,
-                    users: tmp[name]
-                });
-            }
+            group.users = groupedGroups[key];
+            groups.push( group );
+        }
 
-            return res.json({ groups: groups });
-        });
-    }
-    
-    return { find: find };
+        return res.json({ groups: groups });
+    });
 };
