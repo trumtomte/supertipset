@@ -18,7 +18,7 @@
         this.$get = ['$timeout', function( $timeout ) {
             // Publish a notification to a channel, remove it after the set delay
             function publish( chan, notification, ms ) {
-                ms || ms = delay
+                ms = ms || delay;
 
                 if ( stackable === false && channels[chan].length > 0 ) {
                     remove( chan, channels[chan][0] );
@@ -79,7 +79,7 @@
                     '<li class="ng-notify-item" data-ng-click="remove(notification)" data-ng-transclude data-ng-class="notification.level" data-ng-repeat="notification in notifications"></li>' +
                 '</ul>',
             link: function( $scope, $element, $attr ) {
-                var name = $attr.ngNotify;
+                var name = $attr.ngNotify,
                     channel = notify( name );
 
                 $scope.notifications = channel.notifications;
