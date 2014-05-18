@@ -5,11 +5,9 @@
 
 * Being able to Join / Leave groups
 * Being able to Create / Edit a group
-    - when will groups be removed (if at all)?
 
 ## Later
 
-* Move base (index etc.) routes to routes/?
 * Sum of points AND special bets points
 * /api/usergroups, POST (join) / DELETE (leave)
 * /api/groups, POST (new, generate hash)
@@ -20,3 +18,11 @@
 * API versioning (unnecessary atm)?
     - res.type( 'application/vnd.supertipset-v1+json' )
     - added support for accept headers (xml to start with)?
+
+
+
+* Lösenord för en grupp kan inte synas (eftersom det är ett HASH) - ska man kunna requesta ett nytt lösenord?
+* Lämna grupp (måste acceptera, samt välja ny admin om man är admin - om man är sista medlemmen raderas gruppen)
+* Joina grupp (namn på gruppen samt lösenord)
+* Skapa grupp (namn på grupp) - lösenord genereras och visas efter gruppen har skapats -> vidare så skickas man till den nya gruppen i efterhand?
+* Redigera grupp - admin kan redigera gruppens "description"
