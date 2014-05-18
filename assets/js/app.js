@@ -1,20 +1,26 @@
+"use strict";
+
 // Application module
-angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'supertipset.controllers'] )
+angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'supertipset.controllers'] )
+
 // Routes
-.config( ['$routeProvider', function( $routeProvider ) {
+.config( ['$routeProvider', 'consts.user_id', function( $routeProvider, userID ) {
     // Bets
     var bets = {
         controller: 'BetsCtrl',
         templateUrl: '/assets/templates/bets.html',
         resolve: {
-            user: ['api', 'consts.user_id', function( api, id ) {
-                return api.users.findOne( id );
+            user: ['api', function( api ) {
+                return api.users.findOne( userID );
             }],
-            rounds: ['api', 'consts.user_id', function( api, id ) {
-                return api.rounds.find( id );
+            rounds: ['api', function( api ) {
+                return api.rounds.find( userID );
             }],
-            bets: ['api', 'consts.user_id', function( api, id ) {
-                return api.bets.find( id );
+            bets: ['api', function( api ) {
+                return api.bets.find( userID );
+            }],
+            teams: ['api', function( api ) {
+                return api.teams.all();
             }]
         }
     };
@@ -27,8 +33,11 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'supertipset.controllers
         controller: 'GroupsCtrl',
         templateUrl: '/assets/templates/groups.html',
         resolve: {
-            groups: ['api', 'consts.user_id', function( api, id ) {
-                return api.usergroups.find( id );
+            user: ['api', function( api ) {
+                return api.users.findOne( userID );
+            }],
+            groups: ['api', function( api ) {
+                return api.usergroups.find( userID );
             }]
         }
     });
@@ -38,6 +47,9 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'supertipset.controllers
         controller: 'GroupCtrl',
         templateUrl: '/assets/templates/group.html',
         resolve: {
+            user: ['api', function( api ) {
+                return api.users.findOne( userID );
+            }],
             group: ['api', '$route', function( api, $route ) {
                 return api.groups.findOne( $route.current.params.id );
             }]
@@ -49,11 +61,11 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'supertipset.controllers
         controller: 'ProfileCtrl',
         templateUrl: '/assets/templates/profile.html',
         resolve: {
-            user: ['api', 'consts.user_id', function( api, id ) {
-                return api.users.findOne( id );
+            user: ['api', function( api ) {
+                return api.users.findOne( userID );
             }],
-            groups: ['api', 'consts.user_id', function( api, id ) {
-                return api.usergroups.find( id );
+            groups: ['api', function( api ) {
+                return api.usergroups.find( userID );
             }]
         }
     });
