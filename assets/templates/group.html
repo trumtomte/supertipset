@@ -1,1 +1,10 @@
-<h1>{{ group.name }}</h1>
+<a href="#/groups">Tillbaka</a>
+<h1>{{ group.name }} <span data-ng-if="group.admin == user.id">(admin)</span></h1>
+<p>{{ group.description }}</p>
+
+<ul>
+    <li data-ng-repeat="user in group.users">
+        {{ user.username }} - {{ user.points }} - {{ user.team.name }}
+    </li>
+</ul>
+

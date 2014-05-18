@@ -3,6 +3,15 @@
 <ul>
     <li>username: {{ user.username }}, first: {{ user.firstname }}, last: {{ user.lastname }}</li>
     <li>points: {{ user.points }}</li>
-    <li>team: {{ user.team }}</li>
-    <li>player: {{ user.player_firstname }} {{ user.player_lastname }} with {{ user.player_goals }} goals</li>
+    <li>team: {{ user.team.name }}</li>
+    <li>player: {{ user.player.firstname }} {{ user.player.lastname }} with {{ user.player.goals }} goals</li>
 </ul>
+
+<div class="groups">
+    <div data-ng-repeat="group in groups" class="group">
+        {{ group.name }} 
+        <span data-ng-if="group.admin == user.id">(admin)</span>
+
+        <button data-ng-if="user.current" data-ng-click="leave(group)" type="button">lämna</button>
+    </div>
+</div>

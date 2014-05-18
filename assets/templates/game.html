@@ -1,32 +1,34 @@
 <div class="game">
-    <p>Lag: {{ game.team_1_name }} vs {{ game.team_2_name }}</p>
+    <p>Lag: {{ game.teams[0].name }} vs {{ game.teams[1].name }}</p>
 
     <div data-ng-if="isDone">
-        <p>Resultat: {{ game.team_1_result }} - {{ game.team_2_result }}</p>
-        <p data-ng-if="bet">Dina tips: {{ bet.team_1_bet }} - {{ bet.team_2_bet }}</p>
+        <p>Avgjord</p>
+        <p>Resultat: {{ game.teams[0].result }} - {{ game.teams[1].result }}</p>
+        <div data-ng-if="bet">
+            <p>Dina tips: {{ bet.teams[0].bet }} - {{ bet.teams[1].bet }}</p>
+            <p>Poäng: {{ points }}</p>
+        </div>
     </div>
 
-    <div data-ng-if="isDone == false">
-        <p>Spelas: {{ game.game_start | date : 'd/M, HH:mm' }}</p>
+    <div data-ng-if="!isDone">
+        <p>Deadline: {{ game.start | date : 'd/M' }}</p>
 
         <form data-ng-if="bet" data-ng-submit="update(betOne, betTwo)">
-            <span>update</span>
-            <p>Dina tips: {{ bet.team_1_bet }} - {{ bet.team_2_bet }}</p>
+            <p>Dina tips:</p>
 
             <select data-ng-model="betOne" data-ng-options="opt for opt in bettingRange"></select>
             <select data-ng-model="betTwo" data-ng-options="opt for opt in bettingRange"></select>
 
-            <button type="submit">update</button>
+            <button type="submit">Spara</button>
         </form>
 
         <form data-ng-if="!bet" data-ng-submit="create(betOne, betTwo)">
-            <span>new</span>
-            <span>dina tips:</span>
+            <p>Dina tips:</p>
 
             <select data-ng-model="betOne" data-ng-options="opt for opt in bettingRange"></select>
             <select data-ng-model="betTwo" data-ng-options="opt for opt in bettingRange"></select>
 
-            <button type="submit">new</button>
+            <button type="submit">Tipsa</button>
         </form>
     </div>
 </div>
