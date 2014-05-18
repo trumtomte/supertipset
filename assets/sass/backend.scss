@@ -1,8 +1,79 @@
 @import "normalize";
 
+$linkcolor: #0077dd;
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 130%;
+}
+
 .wrapper {
     max-width: 960px;
     margin: 0 auto;
+    position: relative;
+}
+
+.logout {
+    position: absolute;
+    right: 15px;
+    top: 8px;
+    text-decoration: none;
+    color: $linkcolor;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.nav {
+    .nav-item {
+        display: inline-block;
+    }
+
+    .nav-link {
+        display: inline-block;
+        padding: 8px 15px;
+        text-decoration: none;
+        color: $linkcolor;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.user-points, .user-team, .user-player {
+    background: #999;
+    color: white;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px;
+
+    .label, .points, .team, .player {
+        margin: 0;
+        text-align: center;
+    }
+
+    .label {
+        font-size: 12px;
+        font-weight: 300;
+    }
+
+    .points {
+        margin: 5px 0;
+        font-size: 24px;
+    }
+
+    .team, .player {
+        margin: 5px 0;
+        font-size: 16px;
+    }
+}
+
+.rounds {
+    clear: both;
 }
 
 .game {
@@ -15,4 +86,69 @@
     padding: 10px;
     margin-bottom: 20px;
     background: #eeeeee;
+}
+
+
+/* Notifications */
+
+.ng-notify-item {
+    position: fixed;
+    top: 10px;
+    left: 0;
+    right: 0;
+    max-width: 300px;
+    padding: 10px 15px;
+    margin: 0 auto;
+    text-align: center;
+    list-style: none;
+
+    // Temporary
+    border-radius: 4px;
+    background: $linkcolor;
+    color: white;
+
+    p {
+        font-weight: 300;
+        margin: 0;
+    }
+}
+
+.ng-notify-item.ng-enter, .ng-notify-item.ng-move {
+    -webkit-transition: 0.4s linear all;
+    -moz-transition: 0.4s linear all;
+    -o-transition: 0.4s linear all;
+    transition: 0.4s linear all;
+    opacity: 0;
+}
+
+.ng-notify-item.ng-enter.ng-enter-active,
+.ng-notify-item.ng-move.ng-move-active {
+    opacity: 1;
+}
+
+.ng-notify-item.ng-leave {
+    -webkit-animation: 0.5s ng-notify-hide;
+    -moz-animation: 0.5s ng-notify-hide;
+    -o-animation: 0.5s ng-notify-hide;
+    animation: 0.5s ng-notify-hide;
+}
+
+@keyframes ng-notify-hide {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@-webkit-keyframes ng-notify-hide {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@-moz-keyframes ng-notify-hide {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@-o-keyframes ng-notify-hide {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
