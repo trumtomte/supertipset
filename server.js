@@ -29,6 +29,7 @@ api.get( '/users/:id',          routes.users.findOne );
 api.get( '/groups/:id',         routes.groups.findOne );
 api.get( '/rounds/:id',         routes.rounds.find );
 api.get( '/usergroups/:id',     routes.usergroups.find );
+api.delete( '/usergroups/:id',  routes.usergroups.remove );
 api.get( '/bets/:id',           routes.bets.find );
 api.put( '/bets/:id',           routes.bets.update );
 api.post( '/bets/:id',          routes.bets.create );
