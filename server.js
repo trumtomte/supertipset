@@ -63,8 +63,6 @@ app.use( function( req, res, next ) {
 
 // Error handler
 app.use( function( err, req, res, next ) {
-    console.log( '[ERROR]', err, '[REQUEST]', req);
-
     if ( req.path.split( '/' )[1] == 'api' ) {
         res.json( 500, { statusCode: 500, error: 'Internal Server Error' } );
     } else {
