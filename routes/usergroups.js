@@ -3,7 +3,7 @@ var db = require( '../utilities/database' );
 // Get all groups (and members) based on user id
 exports.find = function( req, res, next ) {
     var id = req.params.id,
-        limit = req.query.limit || 5;
+        limit = req.query.limit || 0;
 
     db.getUserGroups( id, function( err, rows ) {
         if ( err ) return next( err );
@@ -21,10 +21,7 @@ exports.find = function( req, res, next ) {
                 groupedGroups[row.group_name] = [];
             }
 
-            // Only show amount of users based on "limit"
-            if ( groupedGroups[row.group_name].length < limit ) {
-                groupedGroups[row.group_name].push( row );
-            }
+            groupedGroups[row.group_name].push( row );
         });
 
         for ( var key in groupedGroups ) {
@@ -50,7 +47,7 @@ exports.find = function( req, res, next ) {
                 };
             });
 
-            group.users = groupedGroups[key];
+            group.users = limit > 0 ? groupedGroups[key].splice( 0, limit ) : groupedGroups[key];
             groups.push( group );
         }
 
