@@ -37,6 +37,7 @@ gulp.task( 'scripts-min', function() {
         'assets/js/vendor/angular/angular.min.js',
         'assets/js/vendor/angular-route/angular-route.min.js',
         'assets/js/vendor/angular-animate/angular-animate.min.js',
+        'assets/js/vendor/ngDialog/js/ngDialog.min.js',
         'assets/js/vendor/lodash/dist/lodash.min.js',
         'assets/js/app.build.js'
     ];
