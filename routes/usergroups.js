@@ -1,4 +1,5 @@
-var db = require( '../utilities/database' );
+var db = require( '../utilities/database' ),
+    auth = require( '../utilities/auth' );
 
 // Get all groups (and members) based on user id
 exports.find = function( req, res, next ) {
@@ -55,10 +56,41 @@ exports.find = function( req, res, next ) {
     });
 };
 
+// Remove user <-> group relation
 exports.remove = function( req, res, next ) {
     db.removeUserGroup( req.params.id, function( err, result ) {
         if ( err ) return next( err );
 
         return res.json( result );
+    });
+};
+
+// Create a user <-> group relation
+exports.create = function( req, res, next ) {
+    db.getGroupSummary( req.body.name, function( err, rows ) {
+        if ( err ) return next( err );
+
+        if ( ! rows.length ) {
+            return res.json( 400, { statusCode: 400, error: 'Group by [name] could not be found' } );
+        }
+
+        var group = rows[0];
+
+        auth.compare( req.body.password, group.password, function( err ) {
+            if ( err ) {
+                return res.json( 400, { statusCode: 400, error: 'Invalid password for [group]' } );
+            }
+
+            var params = {
+                user_id: req.body.id,
+                group_id: group.id
+            };
+
+            db.createUserGroup( params, function( err, result ) {
+                if ( err ) return next( err );
+
+                return res.json( group );                
+            });
+        });
     });
 };
