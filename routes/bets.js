@@ -66,6 +66,6 @@ exports.create = function( req, res, next ) {
     db.createBets( req.body, function( err, result ) {
         if ( err ) return next( err );
 
-        return res.json( result );
+        return res.json({ id: result.insertId });
     });
 };
