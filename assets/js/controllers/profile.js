@@ -1,19 +1,16 @@
-angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl', ['$scope', '$route', function( $scope, $route ) {
+angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl', ['$scope', '$route', 'ngDialog', function( $scope, $route, dialog ) {
     $scope.user = $route.current.locals.user.data.user;
     $scope.groups = $route.current.locals.groups.data.groups;
+    $scope.user.current = $route.current.params.id ? false : true;
 
-    if ( $route.current.params.id ) {
-        console.log( 'other user' );
-        $scope.user.current = false;
-    } else {
-        console.log( 'current user' );
-        $scope.user.current = true;
-    }
+    $scope.leaveDialog = function( group ) {
+        $scope.group = group;
 
-    $scope.leave = function( group ) {
-        console.log( 'leave group', group );
+        dialog.open({
+            template: '/assets/templates/leave-group.html',
+            controller: 'GroupManagerCtrl',
+            scope: $scope
+        });
     };
-
-    console.log( 'PROFILE', $scope.groups, $scope.user );
 }]);
 
