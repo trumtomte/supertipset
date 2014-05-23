@@ -27,9 +27,13 @@ middleware.conf( app );
 // API endpoints
 api.get( '/users/:id',          routes.users.findOne );
 api.get( '/groups/:id',         routes.groups.findOne );
+api.delete( '/groups/:id',      routes.groups.remove );
+api.put( '/groups/:id',         routes.groups.update );
+api.post( '/groups',            routes.groups.create );
 api.get( '/rounds/:id',         routes.rounds.find );
 api.get( '/usergroups/:id',     routes.usergroups.find );
 api.delete( '/usergroups/:id',  routes.usergroups.remove );
+api.post( '/usergroups',        routes.usergroups.create );
 api.get( '/bets/:id',           routes.bets.find );
 api.put( '/bets/:id',           routes.bets.update );
 api.post( '/bets/:id',          routes.bets.create );
@@ -64,6 +68,7 @@ app.use( function( req, res, next ) {
 // Error handler
 app.use( function( err, req, res, next ) {
     if ( req.path.split( '/' )[1] == 'api' ) {
+        console.log( err );
         res.json( 500, { statusCode: 500, error: 'Internal Server Error' } );
     } else {
         err.status = err.status || 500;
