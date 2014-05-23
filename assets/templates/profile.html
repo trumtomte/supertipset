@@ -12,6 +12,6 @@
         {{ group.name }} 
         <span data-ng-if="group.admin == user.id">(admin)</span>
 
-        <button data-ng-if="user.current" data-ng-click="leave(group)" type="button">lämna</button>
+        <button data-ng-if="user.current" data-ng-click="leaveDialog(group)" type="button">lämna</button>
     </div>
 </div>

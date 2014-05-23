@@ -1,6 +1,21 @@
 <a href="#/groups">Tillbaka</a>
 <h1>{{ group.name }} <span data-ng-if="group.admin == user.id">(admin)</span></h1>
-<p>{{ group.description }}</p>
+
+<p data-ng-if="group.admin != user.id">{{ group.description }}</p>
+
+<div data-ng-if="group.admin == user.id">
+    <p data-ng-hide="isEditing">
+        {{ group.description }}
+        <button data-ng-click="edit()" type="button">redigera</button>
+    </p>
+    <form data-ng-show="isEditing" data-ng-submit="save()">
+        <textarea data-ng-model="group.description"></textarea>
+        <button type="submit">spara ändringar</button>
+        <button data-ng-click="edit()" type="button">avbryt</button>
+    </form>
+</div>
+
+<button data-ng-if="group.admin == user.id" data-ng-click="password()" type="button">generera nytt lösenord</button>
 
 <ul>
     <li data-ng-repeat="user in group.users">

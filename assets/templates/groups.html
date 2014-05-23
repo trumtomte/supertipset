@@ -1,15 +1,15 @@
 <p>groups</p>
 
-<button data-ng-click="create()" type="button">skapa grupp</button>
-<button data-ng-click="join()" type="button">gå med i grupp</button>
+<button data-ng-click="createDialog()" type="button">skapa grupp</button>
+<button data-ng-click="joinDialog()" type="button">gå med i grupp</button>
 
 <div data-ng-repeat="group in groups" class="group">
     <p><a href="#/groups/{{ group.id }}">{{ group.name }}</a> <span data-ng-if="group.admin == user.id">(admin)</span></p>
-    <button data-ng-click="leave(group)" type="button">lämna</button>
+    <button data-ng-click="leaveDialog(group)" type="button">lämna</button>
 
     <ul>
-        <li data-ng-repeat="user in group.users">
-            {{ user.username }} - {{ user.points }} - {{ user.team.name }}
+        <li data-ng-repeat="user in group.users | limitTo:5">
+        #{{ $index + 1 }} {{ user.username }} - {{ user.points }} - {{ user.team.name }}
         </li>
     </ul>
 </div>
