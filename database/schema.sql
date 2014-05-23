@@ -7,10 +7,11 @@
 --
 CREATE TABLE Users (
     id          INT UNSIGNED AUTO_INCREMENT NOT NULL,
-    username    VARCHAR(255) NOT NULL,
+    username    VARCHAR(50) NOT NULL,
     password    VARCHAR(200) DEFAULT '' NOT NULL,
     firstname   VARCHAR(50) DEFAULT '' NOT NULL,
     lastname    VARCHAR(50) DEFAULT '' NOT NULL,
+    email       VARCHAR(50) DEFAULT '' NOT NULL,
     created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(id)
 ) ENGINE=InnoDB;
