@@ -1,7 +1,7 @@
 "use strict";
 
 // Application module
-angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'supertipset.controllers'] )
+angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 'supertipset.controllers'] )
 
 // Routes
 .config( ['$routeProvider', 'consts.user_id', function( $routeProvider, userID ) {
