@@ -2,6 +2,7 @@ angular.module( 'supertipset' ).factory( 'api', ['$http', '$cacheFactory', funct
     // API error handler
     function e( message, obj ) {
         return function( response ) {
+            // TODO notification?
             console.log( '[API ERROR]', message, obj, '[RESPONSE]', response );
         }
     }
@@ -22,14 +23,31 @@ angular.module( 'supertipset' ).factory( 'api', ['$http', '$cacheFactory', funct
                 return $http.get( '/api/usergroups/' + id, { cache: true } ).error( e( 'Unable to find user groups by id', id ) );
             },
             remove: function( id ) {
-                // TODO clear cache
+                // TODO clear cache - not needed?
                 return $http.delete( '/api/usergroups/' + id ).error( e( 'Unable to delete user group relation by id', id ) );
+            },
+            create: function( params ) {
+                cache.remove( '/api/usergroups/' + params.id );
+                return $http.post( '/api/usergroups', params );
             }
         },
         // Groups
         groups: {
             findOne: function( id ) {
                 return $http.get( '/api/groups/' + id, { cache: true } ).error( e( 'Unable to find group by id', id ) );
+            },
+            remove: function( id ) {
+                cache.remove( '/api/groups/' + id );
+                return $http.delete( '/api/groups/' + id ).error( e( 'Unable to delete group by id', id ) );
+            },
+            update: function( params ) {
+                cache.remove( '/api/groups/' + params.id );
+                return $http.put( '/api/groups/' + params.id, params ).error( e( 'Unable to update group by id', params ) );;
+            },
+            create: function( params ) {
+                cache.remove( '/api/groups/' + params.user_id );
+                cache.remove( '/api/usergroups/' + params.user_id );
+                return $http.post( '/api/groups', params );
             }
         },
         // Rounds
