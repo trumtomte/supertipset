@@ -30,7 +30,6 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
 
             // Dont allow betting if the game is done (been played)
             if ( today > gameStart ) {
-                console.log( 'game has been played' );
                 $scope.isDone = true;
 
                 // If game is done and there were bets placed, calculate the score
@@ -38,7 +37,6 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
                      $scope.points = pointsCalculator( $scope.game, $scope.bet );
                 }
             } else {
-                console.log( 'game hasnt been played' );
                 $scope.isDone = false;
             }
 
@@ -58,11 +56,8 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
                 };
 
                 var success = function( res ) {
-                    console.log( 'success', res );
-
                     $scope.bet.teams[0].bet = betOne;
                     $scope.bet.teams[1].bet = betTwo;
-
                     notify( 'main' ).info( 'Tips redigerat!' );
                 };
 
@@ -78,11 +73,9 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
                     team_2_bet: betTwo
                 };
 
-                var success = function( res ) {
-                    console.log( 'success', res );
-
+                var success = function( result ) {
                     $scope.bet = {
-                        id: res.insertId,
+                        id: result.insertId,
                         user_id: id,
                         game_id: $scope.game.id,
                         teams: [
