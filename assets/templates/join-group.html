@@ -1,0 +1,8 @@
+<h1>gå med i grupp</h1>
+<form data-ng-submit="join(name,password)">
+    <p data-ng-show="message">{{ message }}</p>
+    <input data-ng-model="name" type="text">
+    <input data-ng-model="password" type="password">
+    <button type="submit">gå med i grupp</button>
+    <button data-ng-click="close()" type="button">stäng</button>
+</form>

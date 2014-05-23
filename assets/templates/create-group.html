@@ -1,0 +1,7 @@
+<h1>skapa ny grupp</h1>
+<form data-ng-submit="create(name)">
+    <p data-ng-show="message">{{ message }}</p>
+    <input data-ng-model="name" type="text">
+    <button type="submit">skapa grupp</button>
+    <button data-ng-click="close()" type="button">stäng</button>
+</form>

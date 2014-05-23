@@ -1,0 +1,22 @@
+
+<!-- More then 1 member and the current user is an admin -->
+<form data-ng-if="group.admin == user.id && group.users.length > 1" data-ng-submit="leave(newAdmin)">
+    <p>välj en ny medlem som admin!</p>
+    <select data-ng-model="newAdmin" data-ng-options="u.username for u in group.users"></select>
+    <button data-ng-click="close()" type="button">stäng</button>
+    <button type="submit">lämna</button>
+</form>
+
+<!-- Only one user left, remove the entire group -->
+<div data-ng-if="group.users.length == 1">
+    <p>gruppen kommer raderas!</p>
+    <button data-ng-click="leave()" type="button">lämna</button>
+    <button data-ng-click="close()" type="button">stäng</button>
+</div>
+
+<!-- User leaves the group -->
+<div data-ng-if="group.admin != user.id && group.users.length > 1">
+    <p>är du säker?</p>
+    <button data-ng-click="leave()" type="button">lämna</button>
+    <button data-ng-click="close()" type="button">stäng</button>
+</div>
