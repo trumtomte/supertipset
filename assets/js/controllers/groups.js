@@ -1,40 +1,31 @@
-angular.module( 'supertipset.controllers' ).controller( 'GroupsCtrl', ['$scope', '$route', 'ngNotify', 'api', function( $scope, $route, notify, api ) {
+angular.module( 'supertipset.controllers' ).controller( 'GroupsCtrl', ['$scope', '$route', 'ngDialog', function( $scope, $route, dialog ) {
     $scope.groups = $route.current.locals.groups.data.groups;
     $scope.user = $route.current.locals.user.data.user;
 
-    $scope.leave = function( group ) {
-        if ( group.admin == $scope.user.id ) {
-            console.log( 'admin!' );
-        }
+    $scope.leaveDialog = function( group ) {
+        $scope.group = group;
 
-        var index = $scope.groups.indexOf( group );
-
-        if ( index < 0 ) {
-            return;
-        }
-
-        var answer = confirm( 'Är du säker?' );
-
-        if ( ! answer ) {
-            return;
-        }
-
-        var success = function( result ) {
-            $scope.groups.splice( index, 1 );
-            notify( 'main' ).info( 'Du har lämnat gruppen!' );
-        };
-
-        api.usergroups.remove( group.relation ).success( success );
+        dialog.open({
+            template: '/assets/templates/leave-group.html',
+            controller: 'GroupManagerCtrl',
+            scope: $scope
+        });
     };
 
-    $scope.create = function() {
-        console.log( 'skapa grupp' );
+    $scope.createDialog = function() {
+        dialog.open({
+            template: '/assets/templates/create-group.html',
+            controller: 'GroupManagerCtrl',
+            scope: $scope
+        });
     };
 
-    $scope.join = function() {
-        console.log( 'gå med i grupp' );
+    $scope.joinDialog = function() {
+        dialog.open({
+            template: '/assets/templates/join-group.html',
+            controller: 'GroupManagerCtrl',
+            scope: $scope
+        });
     };
-
-    console.log( 'GROUPS', $scope.groups );
 }]);
 
