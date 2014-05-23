@@ -70,7 +70,5 @@ angular.module( 'supertipset.controllers' ).controller( 'BetsCtrl', ['$scope', '
 
         api.specialbets.update( bets ).success( success );
     };
-
-    // console.log( 'BETS', $scope.user, $scope.rounds, $scope.bets, $scope.teams );
 }]);
 
