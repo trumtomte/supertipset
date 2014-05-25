@@ -2,7 +2,7 @@
 <!-- More then 1 member and the current user is an admin -->
 <form data-ng-if="group.admin == user.id && group.users.length > 1" data-ng-submit="leave(newAdmin)">
     <p>välj en ny medlem som admin!</p>
-    <select data-ng-model="newAdmin" data-ng-options="u.username for u in group.users"></select>
+    <select data-ng-model="newAdmin" data-ng-options="u.username for u in group.users | except:user.id"></select>
     <button data-ng-click="close()" type="button">stäng</button>
     <button type="submit">lämna</button>
 </form>
