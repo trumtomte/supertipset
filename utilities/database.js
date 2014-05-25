@@ -20,7 +20,13 @@ var USERBETS_BY_ID =        'SELECT r.name AS round, r.id AS round_id, g.id AS g
     USERSUMMARY_BY_ID =     'SELECT u.id, u.username, u.firstname, u.lastname, SUM(pts.points) AS points, t.name AS team, t.id AS team_id, p.id AS player_id, p.firstname AS player_firstname, p.lastname AS player_lastname, p.team_id AS player_team, bs.player_goals AS player_goals FROM Users AS u INNER JOIN Points AS pts ON u.id = pts.user_id INNER JOIN BetsSpecial AS bs ON u.id = bs.user_id INNER JOIN Teams AS t ON bs.team_id = t.id INNER JOIN Players AS p ON bs.player_id = p.id WHERE u.id = ?',
     USER_BY_ID =            'SELECT id, username, password FROM Users WHERE username = ?'
     ALL_TEAMS =             'SELECT t.id AS id, t.name AS team, p.id AS player_id, p.firstname AS player_firstname, p.lastname AS player_lastname FROM Teams AS t INNER JOIN Players AS p ON t.id = p.team_id ORDER BY t.name',
-    TEAM_BY_ID =            'SELECT t.id AS id, t.name AS team, p.id AS player_id, p.firstname AS player_firstname, p.lastname AS player_lastname FROM Teams AS t INNER JOIN Players AS p ON t.id = p.team_id WHERE t.id = ? ORDER BY t.name';
+    TEAM_BY_ID =            'SELECT t.id AS id, t.name AS team, p.id AS player_id, p.firstname AS player_firstname, p.lastname AS player_lastname FROM Teams AS t INNER JOIN Players AS p ON t.id = p.team_id WHERE t.id = ? ORDER BY t.name',
+    TOP_USERS =             'SELECT u.id, u.username, SUM(p.points) AS points FROM Users AS u INNER JOIN Points AS p ON u.id = p.user_id GROUP BY u.username ORDER BY points DESC, u.username LIMIT 10',
+    TOP_BET_TEAMS =         'SELECT bs.team_id, COUNT(bs.team_id) AS total, (SELECT t.name FROM Teams AS t WHERE t.id = bs.team_id) AS team_name FROM BetsSpecial AS bs GROUP BY bs.team_id ORDER BY total DESC LIMIT 10',
+    TOP_BET_PLAYERS =       'SELECT bs.player_id, COUNT(bs.player_id) AS total, (SELECT p.firstname FROM Players AS p WHERE p.id = bs.player_id) AS player_firstname, (SELECT p.lastname FROM Players AS p WHERE p.id = bs.player_id) AS player_lastname FROM BetsSpecial AS bs GROUP BY bs.player_id ORDER BY total DESC LIMIT 10',
+    TOP_GROUPS_USERS =      'SELECT g.id, g.name, COUNT(DISTINCT u.id) AS total_users FROM Groups AS g INNER JOIN UsersGroups AS ug ON ug.group_id = g.id INNER JOIN Users AS u ON ug.user_id = u.id GROUP BY g.name ORDER BY total_users DESC LIMIT 10',
+    TOP_GROUPS_POINTS =     'SELECT g.id, g.name, SUM(p.points) AS points FROM Groups AS g INNER JOIN UsersGroups AS ug ON ug.group_id = g.id INNER JOIN Users AS u ON ug.user_id = u.id INNER JOIN Points AS p ON p.user_id = u.id GROUP BY g.name ORDER BY points DESC LIMIT 10',
+    TOP_GROUPS_AVERAGE =    'SELECT g.id, g.name, FLOOR(SUM(p.points) / COUNT(DISTINCT u.id)) AS average FROM Groups AS g INNER JOIN UsersGroups AS ug ON ug.group_id = g.id INNER JOIN Users AS u ON ug.user_id = u.id INNER JOIN Points AS p ON p.user_id = u.id GROUP BY g.name ORDER BY average DESC LIMIT 10';
 
 // Create a MySQL connection
 var conn = mysql.createConnection({
@@ -176,6 +182,48 @@ exports.getTeams = function( fn ) {
 // Get a team by id (with players)
 exports.getTeam = function( id, fn ) {
     conn.query( TEAM_BY_ID, [id], function( err, res ) {
+        fn( err, res );
+    });
+};
+
+// Get top list of users by points
+exports.getTopUsers = function( fn ) {
+    conn.query( TOP_USERS, function( err, res ) {
+        fn( err, res );
+    });
+};
+
+// Get top bet for teams
+exports.getTopBetTeams = function( fn ) {
+    conn.query( TOP_BET_TEAMS, function( err, res ) {
+        fn( err, res );
+    });
+};
+
+// Get top bet for players
+exports.getTopBetPlayers = function( fn ) {
+    conn.query( TOP_BET_PLAYERS, function( err, res ) {
+        fn( err, res );
+    });
+};
+
+// Get top list of groups by sum of member points
+exports.getTopGroupsByPoints = function( fn ) {
+    conn.query( TOP_GROUPS_POINTS, function( err, res ) {
+        fn( err, res );
+    });
+};
+
+// Get top list of groups by amount of members
+exports.getTopGroupsByUsers = function( fn ) {
+    conn.query( TOP_GROUPS_USERS, function( err, res ) {
+        fn( err, res );
+    });
+};
+
+// Get top list of groups by member average points
+exports.getTopGroupsByAverage = function( fn ) {
+    conn.query( TOP_GROUPS_AVERAGE, function( err, res ) {
         fn( err, res );
     });
 };
