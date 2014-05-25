@@ -21,6 +21,7 @@ middleware.conf( app );
     'bets',
     'specialbets',
     'teams',
+    'toplists',
     'login'
 ].map( function( route ) { routes[route] = require( './routes/' + route ); });
 
@@ -40,6 +41,7 @@ api.post( '/bets/:id',          routes.bets.create );
 api.put( '/specialbets/:id',    routes.specialbets.update );
 api.get( '/teams',              routes.teams.all );
 api.get( '/teams/:id',          routes.teams.findOne );
+api.get( '/toplists',           routes.toplists.all );
 // Define API entry endpoint
 app.use( '/api', api );
 
@@ -67,6 +69,7 @@ app.use( function( req, res, next ) {
 
 // Error handler
 app.use( function( err, req, res, next ) {
+    // TODO more correctly split middleware between the App and API?
     if ( req.path.split( '/' )[1] == 'api' ) {
         console.log( err );
         res.json( 500, { statusCode: 500, error: 'Internal Server Error' } );
