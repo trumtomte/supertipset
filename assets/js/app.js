@@ -89,7 +89,9 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
         controller: 'TopListCtrl',
         templateUrl: '/assets/templates/toplist.html',
         resolve: {
-
+            toplists: ['api', function( api ) {
+                return api.toplists.all();
+            }]
         }
     });
 }]);

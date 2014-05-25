@@ -1,1 +1,31 @@
-<p>toplist</p>
+<h2>Top listor</h2>
+
+<p>Användare</p>
+<ul>
+    <li data-ng-repeat="user in toplists.users">{{ $index + 1 }} {{ user.username }} - {{ user.points }}p</li>
+</ul>
+
+<p>Lag</p>
+<ul>
+    <li data-ng-repeat="team in toplists.teams">{{ $index + 1 }} {{ team.team_name }}</li>
+</ul>
+
+<p>Spelare</p>
+<ul>
+    <li data-ng-repeat="player in toplists.players">{{ $index + 1 }} {{ player.player_firstname }} {{ player.player_lastname }}</li>
+</ul>
+
+<p>Ligor med bäst medelpoäng</p>
+<ul>
+    <li data-ng-repeat="group in toplists.groups.average">{{ $index + 1 }} {{ group.name }} - {{ group.average }}p</li>
+</ul>
+
+<p>Ligor med högsta totalpoäng</p>
+<ul>
+    <li data-ng-repeat="group in toplists.groups.points">{{ $index + 1 }} {{ group.name }} - {{ group.points }}p</li>
+</ul>
+
+<p>Ligor med flest medlemmar</p>
+<ul>
+    <li data-ng-repeat="group in toplists.groups.users">{{ $index + 1 }} {{ group.name }} - {{ group.total_users }} medlemmar</li>
+</ul>

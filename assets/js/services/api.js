@@ -84,6 +84,13 @@ angular.module( 'supertipset' ).factory( 'api', ['$http', '$cacheFactory', funct
             findOne: function( id ) {
                 return $http.get( '/api/teams/' + id, { cache: true } ).error( e( 'Unable to fetch team by id', id ) );
             }
+        },
+        // Top lists
+        toplists: {
+            all: function() {
+                return $http.get( '/api/toplists', { cache: true } ).error( e( 'Unable to fetch all top lists' ) );
+            }
         }
+
     };
 }]);
