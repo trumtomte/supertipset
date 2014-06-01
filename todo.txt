@@ -1,9 +1,19 @@
 # TODO
 
-* Kunna requesta ett nytt lösenord för en admin (val att det skickas till ens mail?)
-* Räkna med poäng från "special" bets
 * En användare ska kunna ändra lösenord
+* Kontrollera problem vid generering av grupper (lösenord blir problematiskt ibland?)
 * Kunna registrera en ny användare
+* Dela upp App + API router?
+* Responsiv
+* Refactor SASS
+* Cross browser
+* SEO
+
+* Skicka det nya grupp lösenordet till en mail?
+* "Glömt lösenord?" vid inloggning?
+* Kunna skicka in data för dom olika databas tabellerna ("admin" gränssnitt)
+* seeder.js för att generera random data?
+* Test suite?
 
 - Debug! -
 
@@ -13,3 +23,4 @@
     - res.type( 'application/vnd.supertipset-v1+json' )
     - added support for accept headers (xml to start with)?
 
+* Redigera platser där tournament_id = x måste användas

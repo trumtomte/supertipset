@@ -11,6 +11,7 @@ var express     = require( 'express' ),
 var port = process.env.PORT || 3000;
 
 // Middleware configuration
+// TODO split into two separate routers (App/API)
 middleware.conf( app );
 
 [ // API Routes
@@ -26,6 +27,7 @@ middleware.conf( app );
 ].map( function( route ) { routes[route] = require( './routes/' + route ); });
 
 // API endpoints
+// api.use( auth.validate ); TODO uncomment
 api.get( '/users/:id',          routes.users.findOne );
 api.get( '/groups/:id',         routes.groups.findOne );
 api.delete( '/groups/:id',      routes.groups.remove );
