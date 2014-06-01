@@ -1,22 +1,38 @@
 
 <!-- More then 1 member and the current user is an admin -->
 <form data-ng-if="group.admin == user.id && group.users.length > 1" data-ng-submit="leave(newAdmin)">
-    <p>välj en ny medlem som admin!</p>
-    <select data-ng-model="newAdmin" data-ng-options="u.username for u in group.users | except:user.id"></select>
-    <button data-ng-click="close()" type="button">stäng</button>
-    <button type="submit">lämna</button>
+    <h2 class="dialog-title">Lämna</h2>
+    <p class="dialog-description">Välj en ny medlem som admin</p>
+
+    <select data-ng-model="newAdmin" data-ng-options="u.username for u in group.users | except:user.id" class="dialog-select"></select>
+
+    <div class="dialog-actions">
+        <button data-ng-click="closeThisDialog()" class="dialog-action dialog-cancel" type="button">Avbryt</button>
+        <button class="dialog-action dialog-ok" type="submit">OK</button>
+        <div style="clear:both;"></div>
+    </div>
 </form>
 
 <!-- Only one user left, remove the entire group -->
 <div data-ng-if="group.users.length == 1">
-    <p>gruppen kommer raderas!</p>
-    <button data-ng-click="leave()" type="button">lämna</button>
-    <button data-ng-click="close()" type="button">stäng</button>
+    <h2 class="dialog-title">Lämna</h2>
+    <p class="dialog-description">Gruppen kommer att raderas</p>
+
+    <div class="dialog-actions">
+        <button data-ng-click="closeThisDialog()" class="dialog-action dialog-cancel" type="button">Avbryt</button>
+        <button data-ng-click="leave()" class="dialog-action dialog-ok" type="button">OK</button>
+        <div style="clear:both;"></div>
+    </div>
 </div>
 
 <!-- User leaves the group -->
 <div data-ng-if="group.admin != user.id && group.users.length > 1">
-    <p>är du säker?</p>
-    <button data-ng-click="leave()" type="button">lämna</button>
-    <button data-ng-click="close()" type="button">stäng</button>
+    <h2 class="dialog-title">Lämna</h2>
+    <p class="dialog-description">Är du säker?</p>
+
+    <div class="dialog-actions">
+        <button data-ng-click="closeThisDialog()" class="dialog-action dialog-cancel" type="button">Avbryt</button>
+        <button data-ng-click="leave()" class="dialog-action dialog-ok" type="button">OK</button>
+        <div style="clear:both;"></div>
+    </div>
 </div>

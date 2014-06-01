@@ -1,7 +1,13 @@
-<h1>skapa ny grupp</h1>
 <form data-ng-submit="create(name)">
-    <p data-ng-show="message">{{ message }}</p>
-    <input data-ng-model="name" type="text">
-    <button type="submit">skapa grupp</button>
-    <button data-ng-click="close()" type="button">stäng</button>
+    <h2 class="dialog-title">Skapa grupp</h2>
+    <p class="dialog-description">Fyll i gruppens namn:</p>
+    <p data-ng-show="message" class="dialog-message">{{ message }}</p>
+
+    <input data-ng-model="name" class="dialog-input" type="text" placeholder="Gruppnamn">
+
+    <div class="dialog-actions">
+        <button data-ng-click="closeThisDialog()" class="dialog-action dialog-cancel" type="button">Avbryt</button>
+        <button class="dialog-action dialog-ok" type="submit">OK</button>
+        <div style="clear:both;"></div>
+    </div>
 </form>

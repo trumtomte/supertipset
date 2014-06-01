@@ -1,28 +1,80 @@
-<div data-ng-if="hasStarted">
-    <div class="user-team">
-        <p class="label">LAG</p>
-        <p class="team">{{ user.team.name }}</p>
+<div class="special-bets">
+    <div data-ng-if="hasStarted">
+        <table class="profile-summary">
+            <thead>
+                <tr>
+                    <th>POÄNG</th>
+                    <th>LAG</th>
+                    <th>SKYTTEKUNG</th>
+                    <th>MÅL</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>{{ user.points }}</td>
+                    <td>{{ user.team.name }}</td>
+                    <td>{{ user.player.firstname }} {{ user.player.lastname }}</td>
+                    <td>{{ user.player.goals }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+    <div data-ng-if="!hasStarted">
+        <button data-ng-hide="isEditing" data-ng-click="edit()" class="edit-special-bets-button" type="button">Redigera</button>
+        <table data-ng-hide="isEditing" class="profile-summary">
+            <thead>
+                <tr>
+                    <th>POÄNG</th>
+                    <th>LAG</th>
+                    <th>SKYTTEKUNG</th>
+                    <th>MÅL</th>
+                </tr>
+            </thead>
 
-    <div class="user-player">
-        <p class="label">SPELARE</p>
-        <p class="player">{{ user.player.firstname }} {{ user.player.lastname }}, {{ user.player.goals }}</p>
+            <tbody>
+                <tr>
+                    <td>{{ user.points }}</td>
+                    <td>{{ user.team.name }}</td>
+                    <td>{{ user.player.firstname }} {{ user.player.lastname }}</td>
+                    <td>{{ user.player.goals }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <form data-ng-show="isEditing" data-ng-submit="specialBet(selectedTeam, selectedPlayer, selectedGoals)" class="edit-special-bets">
+            <table class="profile-summary">
+                <thead>
+                    <tr>
+                        <th>POÄNG</th>
+                        <th>LAG</th>
+                        <th>SKYTTEKUNG</th>
+                        <th>MÅL</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>{{ user.points }}</td>
+                        <td>
+                            <select data-ng-model="selectedTeam" data-ng-options="team.name for team in teams"></select>
+                        </td>
+                        <td>
+                            <select data-ng-model="selectedPlayer" data-ng-options="item.name group by item.group for item in teamsFlat"></select>
+                        </td>
+                        <td>
+                            <input data-ng-model="selectedGoals" type="number">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button data-ng-click="edit()" type="button" class="btn btn-cancel">Avbryt</button>
+            <button type="submit" class="btn btn-ok">Spara</button>
+            <div style="clear:both;"></div>
+        </form>
     </div>
 </div>
 
-<div data-ng-if="!hasStarted">
-    <form data-ng-submit="specialBet(selectedTeam, selectedPlayer, selectedGoals)">
-        <select data-ng-model="selectedTeam" data-ng-options="team.name for team in teams"></select>
-        <select data-ng-model="selectedPlayer" data-ng-options="item.name group by item.group for item in flattenTeams"></select>
-        <input data-ng-model="selectedGoals" type="number">
-        <button type="submit">spara</button>
-    </form>
-</div>
-
-<div class="user-points">
-    <p class="label">POÄNG</p>
-    <p class="points">{{ user.points }}</p>
-</div>
 
 <div data-ng-repeat="round in rounds" class="rounds">
     <div data-round data-ng-model="round"></div>
