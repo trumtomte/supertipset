@@ -62,10 +62,12 @@ angular.module( 'supertipset' ).factory( 'api', ['$http', '$cacheFactory', funct
                 return $http.get( '/api/bets/' + id, { cache: true } ).error( e( 'Unable to find bets by id', id ) );
             },
             create: function( bets ) {
+                cache.remove( '/api/users/' + bets.user_id );
                 cache.remove( '/api/bets/' + bets.user_id );
                 return $http.post( '/api/bets/' + bets.user_id, bets ).error( e( 'Unable to create a new bet', bets ) );
             },
             update: function( bets ) {
+                cache.remove( '/api/users/' + bets.user_id );
                 cache.remove( '/api/bets/' + bets.user_id );
                 return $http.put( '/api/bets/' + bets.user_id, bets ).error( e( 'Unable to update bets by id', bets ) );
             }
@@ -73,6 +75,7 @@ angular.module( 'supertipset' ).factory( 'api', ['$http', '$cacheFactory', funct
         // Special bets
         specialbets: {
             update: function( bets ) {
+                cache.remove( '/api/users/' + bets.user_id );
                 return $http.put( '/api/specialbets/' + bets.user_id, bets ).error( e( 'Unable to update special bets by id', bets ) );
             }
         },
