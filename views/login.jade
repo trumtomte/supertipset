@@ -7,56 +7,63 @@ html(lang="sv")
         title Supertipset | Login
 
         style.
+            *, *:before, *:after {
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box; 
+                box-sizing: border-box;
+            }
+
             body, html {
                 font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
                 font-size: 16px;
                 line-height: 130%;
+                background: #ddd;
             }
             .wrapper {
-                max-width: 350px;
+                max-width: 400px;
                 margin: 8% auto 0 auto;
+                background: white;
             }
 
             input {
+                border: 1px solid #ddd;
+                padding: 10px;
+                width: 90%;
+                margin: 0 auto 10px auto;
                 display: block;
-                width: 100%;
-                margin: 0 auto;
-                border: 0;
-                border-left: 2px solid #ccc;
-                padding: 8px 12px;
-                margin-bottom: 15px;
-                font-size: 12px;
+                outline: none;
+                font-weight: 100;
+                font-size: 15px;
+                font-family: Helvetica, Arial, sans-serif;
             }
 
             input:focus {
-                outline: none;
-                border-color: #0077dd;
+                border-color: #1ABC9C;
             }
 
             button {
-                display: block;
-                width: 100%;
-                margin: 0 auto;
-                padding: 10px;
-                color: white;
-                background: #0077dd;
                 border: 0;
-                text-align: center;
-                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                font-size: 14px;
-                font-weight: 300;
-                cursor: pointer;
+                margin: 15px 0 0 0;
+                padding: 15px;
+                background: #1ABC9C;
+                width: 100%;
                 outline: none;
-            }
-
-            button:hover, button:active {
-                background: #1188cc;
+                font-weight: 100;
+                font-size: 16px;
+                color: white;
+                letter-spacing: 2px;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                cursor: pointer;
             }
 
             h1 {
                 text-align: center;
-                font-weight: 100;
-                margin-bottom: 50px;
+                font-weight: 200;
+                letter-spacing: 2px;
+                margin-bottom: 30px;
+                padding-top: 20px;
+                line-height: 130%;
+                font-size: 28px;
             }
 
             .error {
@@ -71,8 +78,10 @@ html(lang="sv")
                 left: 0;
                 right: 0;
                 text-align: center;
-                font-size: 12px;
-                color: #444;
+                font-size: 14px;
+                color: #222;
+                font-weight: 200;
+                letter-spacing: 1px;
             }
 
     body
@@ -84,11 +93,11 @@ html(lang="sv")
                 p.error Invalid username and password combination.
 
             form.login-form(method="POST" action="/login")
-                input(type="text" name="username" placeholder="Username")
-                input(type="password" name="password" placeholder="Password")
+                input(type="text" name="username" placeholder="Användarnamn")
+                input(type="password" name="password" placeholder="Lösenord")
                 input(type="hidden" name="_csrf" value="#{token}")
                 button(type="submit") Logga in
 
             footer.footer
-                p &copy; 2014 Supertipset
+                p &copy; Supertipset 2014
 

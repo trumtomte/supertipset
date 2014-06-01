@@ -20,18 +20,18 @@ html(lang="sv")
                 nav.nav
                     ul.nav-list
                         li.nav-item
-                            a.nav-link(href="#/bets") Tipsa
+                            a.nav-link(href="#/bets" data-ng-class="{ active: isActive('/bets') }") Tipsa
                         li.nav-item
-                            a.nav-link(href="#/groups") Ligor
+                            a.nav-link(href="#/groups" data-ng-class="{ active: isActive('/groups') }") Ligor
                         li.nav-item
-                            a.nav-link(href="#/profile") Profil
+                            a.nav-link(href="#/toplist" data-ng-class="{ active: isActive('/toplist') }") Top 10
                         li.nav-item
-                            a.nav-link(href="#/toplist") Topplistor
+                            a.nav-link(href="#/profile" data-ng-class="{ active: isActive('/profile') }") Profil
 
             div.main(data-ng-view)
 
             footer.footer
-                p &copy; 2014 Supertipset
+                p &copy; Supertipset 2014
 
         if dev
             script(src="assets/js/vendor/angular/angular.js")
