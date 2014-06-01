@@ -59,7 +59,7 @@ exports.create = function( req, res, next ) {
         }
 
         // Generate random password
-        var password = crypto.randomBytes(4).toString( 'hex' );
+        var password = crypto.randomBytes( 4 ).toString( 'hex' );
 
         // Generate password hash (salt+hash+iterations)
         auth.generate( password, function( err, hash ) {
@@ -95,16 +95,33 @@ exports.create = function( req, res, next ) {
 
 // Update a group by id
 exports.update = function( req, res, next ) {
-    var cb = function( err, result ) {
-        if ( err ) return next( err );
-        res.json( result );
-    };
+    if ( ! req.body.id ) {
+        return next( new Error( 'No group ID specified' ) );
+    }
 
+    // Change admin
     if ( req.body.user_id ) {
-        db.updateGroup( 'admin', [req.body.user_id, req.body.id], cb );
+        db.updateGroup( 'admin', [req.body.user_id, req.body.id], function( err, result ) {
+            if ( err ) return next( err );
+            res.json({});
+        });
+    // Change group description
     } else if ( req.body.description ) {
-        db.updateGroup( 'description', [req.body.description, req.body.id], cb );
-    } else if ( req.body.password ) {
-        // TODO fix
+        db.updateGroup( 'description', [req.body.description, req.body.id], function( err, result ) {
+            if ( err ) return next( err );
+            res.json({});
+        });
+    // Generate new group password
+    } else if ( req.body.password && req.body.password == 'new' ) {
+        var password = crypto.randomBytes( 4 ).toString( 'hex' );
+
+        auth.generate( password, function( err, hash ) {
+            if ( err ) return next( err );
+
+            db.updateGroup( 'password', [hash, req.body.id], function( err, result ) {
+                if ( err ) return next( err );
+                res.json({ password: password });
+            });
+        });
     }
 };
