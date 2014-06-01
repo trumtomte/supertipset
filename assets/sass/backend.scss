@@ -3,41 +3,239 @@
 
 $linkcolor: #0077dd;
 
+$green: #1ABC9C;
+$blue: #3498DB;
+$orange: #F39C12;
+$red: #C0392B;
+
+*, *:before, *:after {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box; 
+    box-sizing: border-box;
+}
+
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 16px;
-    font-weight: normal;
+    font-weight: 200;
+    letter-spacing: 1px;
     line-height: 130%;
 }
 
 .wrapper {
-    max-width: 960px;
+    max-width: 880px;
     margin: 0 auto;
     position: relative;
+}
+
+.main {
+    padding: 40px 10px 0 10px;
 }
 
 .logout {
     position: absolute;
     right: 15px;
     top: 8px;
+    font-size: 14px;
+    color: $blue;
     text-decoration: none;
-    color: $linkcolor;
 
     &:hover {
         text-decoration: underline;
+        color: darken($blue, 10%);
     }
 }
 
+.footer p {
+    margin: 0;
+    text-align: center;
+    padding: 25px 0;
+    margin-top: 25px;
+    font-size: 14px;
+    border-top: 1px solid $green;
+}
+
 .nav {
+    padding: 0 10px;
+
+    .nav-list {
+        max-width: 500px;
+        margin: 0 auto;
+        border: 1px solid darken($green, 5%);
+        border-radius: 4px;
+        text-align: center;
+        padding-left: 0;
+    }
+
     .nav-item {
         display: inline-block;
+        width: 25%;
+        border-right: 1px solid darken($green, 5%);
+
+        &:last-child {
+            border-right: 0;
+        }
     }
 
     .nav-link {
+        width: 100%;
         display: inline-block;
-        padding: 8px 15px;
+        font-weight: 200;
         text-decoration: none;
-        color: $linkcolor;
+        color: darken($green, 8%);
+        padding-top: 8px;
+        padding-bottom: 8px;
+        letter-spacing: 1px;
+
+        &:hover, &.active {
+            background: $green;
+            color: white;
+        }
+    }
+}
+
+// DIALOG
+.ngdialog {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.dialog-actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.dialog-action {
+    display: inline-block;
+    float: left;
+    margin: 0;
+    padding: 10px 0;
+    background: none;
+    border: 0;
+    width: 50%;
+    outline: none;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 100;
+    letter-spacing: 2px;
+
+    &.dialog-ok {
+        color: white;
+        background: #2ECC71;
+
+        &:hover {
+            background: lighten(#2ECC71, 8%);
+        }
+    }
+
+    &.dialog-cancel {
+        color: white;
+        background: #E74C3C;
+
+        &:hover {
+            background: lighten(#E74C3C, 8%);
+        }
+    }
+}
+
+.dialog-input {
+    border: 1px solid white;
+    padding: 8px;
+    width: 90%;
+    margin: 0 auto 8px auto;
+    display: block;
+    outline: none;
+    font-weight: 100;
+    font-size: 15px;
+
+    &:focus {
+        border: 1px solid $green;
+    }
+}
+
+.dialog-select {
+    width: 90%;
+    margin: 0 auto 8px auto;
+    display: block;
+}
+
+.dialog-title {
+    text-align: center;
+    font-weight: 100;
+    letter-spacing: 2px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.dialog-description, .dialog-message {
+    font-size: 15px;
+    text-align: center;
+}
+
+.dialog-message {
+    color: #E74C3C;
+}
+
+.dialog-fullwidth {
+    width: 100%;
+}
+
+.new-password {
+   font-size: 16px;
+   background: white;
+   padding: 4px 8px;
+   font-family: Courier;
+}
+
+.toplist {
+    width: 49%;
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 15px;
+    padding: 2%;
+}
+
+
+.toplist-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 0;
+
+    .center {
+        text-align: center;
+        width: 15%;
+    }
+
+    caption {
+        font-size: 18px;
+        font-weight: 200;
+        letter-spacing: 1px;
+        margin-bottom: 15px;
+        color: darken($green, 5%);
+    }
+
+    thead tr {
+        border-bottom: 1px solid darken($green, 5%);
+    }
+
+    thead th {
+        font-weight: 200;
+        letter-spacing: 2px;
+        font-size: 14px;
+        background: $green;
+        color: white;
+    }
+
+    thead th, tbody td {
+        padding: 10px 15px;
+    }
+
+    tbody tr:nth-child(even) {
+        background: #eee;
+    }
+
+    tbody a {
+        color: darken($green, 10%);
+        text-decoration: none;
 
         &:hover {
             text-decoration: underline;
@@ -45,53 +243,356 @@ body {
     }
 }
 
-.user-points, .user-team, .user-player {
-    background: #999;
-    color: white;
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 4px;
+.groups-table {
+    @extend .toplist-table;
+    width: 80%;
+    margin: 0 auto;
 
-    .label, .points, .team, .player {
-        margin: 0;
-        text-align: center;
+    .leave-group {
+        background: none;
+        border: 0;
+        color: $red;
+        font-size: 15px;
+        outline: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
+}
 
-    .label {
-        font-size: 12px;
+.group-actions {
+    text-align: center;
+    margin-bottom: 45px;
+
+    .create-group, .join-group {
+        outline: none;
+        border: 0;
+        background: none;
+        color: darken($green, 6%);
         font-weight: 300;
+        letter-spacing: 1px;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    .separator {
+        color: #999;
+        margin: 0 6px;
+    }
+}
+.groups {
+    max-width: 70%;
+    margin: 25px auto;
+}
+
+.group-table {
+    @extend .toplist-table;
+    margin-bottom: 40px;
+
+    caption {
+        position: relative;
     }
 
-    .points {
-        margin: 5px 0;
-        font-size: 24px;
+    caption a {
+        color: #17a689;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 
-    .team, .player {
-        margin: 5px 0;
-        font-size: 16px;
+    .leave-group {
+        position: absolute;
+        right: 12px;
+        top: 4px;
+        font-size: 14px;
+        background: none;
+        border: 0;
+        color: $red;
+        outline: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
 
-.rounds {
-    clear: both;
+.group {
+    max-width: 80%;
+    margin: 0 auto;
+    padding-top: 30px;
+    position: relative;
+
+    .back-button, .group-password {
+        color: darken($green, 5%);
+        background: none;
+        border: 0;
+        outline: none;
+        text-decoration: none;
+        font-weight: 300;
+        position: absolute;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .back-button {
+        top: 0;
+        left: 0;
+    }
+    .group-password {
+        top: 0;
+        right: 0;
+    }
+
+    h1 {
+        text-align: center;
+        margin: 10px 0 40px 0;
+        font-size: 28px;
+        font-weight: 300;
+
+        span {
+            color: #666;
+            font-size: 16px;
+        }
+    }
 }
 
-.game {
-    padding: 10px;
-    margin-bottom: 20px;
-    background: #dddddd;
+.group-description-form {
+    width: 60%;
+    margin: 0 auto 30px auto;
+
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        outline: none;
+        margin-bottom: 8px;
+        resize: none;
+        font-weight: 300;
+        height: 80px;
+
+        &:focus {
+            border-color: $green;
+        }
+    }
+
+    button {
+        width: 50%;
+        color: white;
+        border: 0;
+        outline: none;
+        float: left;
+        padding: 10px 0;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 100;
+        letter-spacing: 2px;
+    }
+
+    .btn-ok {
+        background: #2ECC71;
+
+        &:hover {
+            background: lighten(#2ECC71, 8%);
+        }
+    }
+
+    .btn-cancel {
+        background: #E74C3C;
+
+        &:hover {
+            background: lighten(#E74C3C, 8%);
+        }
+    }
 }
 
-.round {
-    padding: 10px;
-    margin-bottom: 20px;
-    background: #eeeeee;
+.group-description {
+    text-align: center;
+    margin-bottom: 45px;
+
+    .edit-group-description {
+        background: none;
+        border: 0;
+        color: darken($green, 5%);
+        outline: none;
+        font-size: 14px;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
 }
 
+.group-members {
+    @extend .toplist-table;
+}
 
-/* Notifications */
+.profile {
+    width: 80%;
+    margin: 0 auto 50px auto;
+    position: relative;
 
+    .change-password {
+        position: absolute;
+        right: 0;
+        top: 0;
+        background: none;
+        outline: none;
+        border: 0;
+        color: darken($green, 5%);
+        font-weight: 300;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .username {
+        font-size: 28px;
+        font-weight: 300;
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .profile-items {
+        border-collapse: separate;
+        width: 60%;
+        margin: 0 auto;
+        border: 1px solid $green;
+        border-radius: 4px;
+        
+        thead th {
+            font-weight: 300;
+            font-size: 12px;
+            color: darken($green, 10%);
+            padding: 5px 15px;
+            border-bottom: 1px solid $green;
+        }
+
+        thead th, tbody td {
+            text-align: center;
+            border-right: 1px solid $green;
+
+            &:last-child {
+                border-right: 0;
+            }
+        }
+
+        tbody td {
+            padding: 15px;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+    }
+}
+
+.special-bets {
+    position: relative;
+
+    .edit-special-bets-button {
+        display: block;
+        width: 150px;
+        margin: 0 auto 15px auto;
+        background: none;
+        outline: none;
+        border: 0;
+        color: darken($green, 5%);
+        font-weight: 300;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .profile-summary {
+        border-collapse: separate;
+        width: 60%;
+        margin: 0 auto;
+        border: 1px solid $green;
+        border-radius: 4px;
+        
+        thead th {
+            font-weight: 300;
+            font-size: 12px;
+            color: darken($green, 10%);
+            padding: 5px 15px;
+            border-bottom: 1px solid $green;
+        }
+
+        thead th, tbody td {
+            text-align: center;
+            border-right: 1px solid $green;
+
+            &:last-child {
+                border-right: 0;
+            }
+        }
+
+        tbody td {
+            padding: 15px;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+    }
+
+    .edit-special-bets {
+        width: 60%;
+        margin: 0 auto;
+
+        .profile-summary {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 65px;
+            border: 1px solid transparent;
+            background: #eeeeee;
+            padding: 5px;
+            font-weight: 300;
+            outline: none;
+
+            &:focus {
+                border-color: $green;
+            }
+        }
+
+        button {
+            width: 50%;
+            color: white;
+            border: 0;
+            outline: none;
+            float: left;
+            padding: 10px 0;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-weight: 100;
+            letter-spacing: 2px;
+        }
+
+        .btn-ok {
+            background: #2ECC71;
+
+            &:hover {
+                background: lighten(#2ECC71, 8%);
+            }
+        }
+
+        .btn-cancel {
+            background: #E74C3C;
+
+            &:hover {
+                background: lighten(#E74C3C, 8%);
+            }
+        }
+    }
+}
+
+// Notifications
 .ng-notify-item {
     position: fixed;
     top: 10px;
@@ -105,8 +606,9 @@ body {
 
     // Temporary
     border-radius: 4px;
-    background: $linkcolor;
+    background: $green;
     color: white;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
 
     p {
         font-weight: 300;
@@ -153,3 +655,113 @@ body {
     from { opacity: 1; }
     to { opacity: 0; }
 }
+
+
+
+// RESPONSIVE
+
+@media (max-width: 850px) {
+    .groups-table {
+        width: 98%;
+    }
+}
+
+@media (max-width: 650px) {
+    .groups-table .hidden-col {
+        display: none;
+    }
+
+    .profile {
+        width: 98% !important;
+    }
+}
+@media (max-width: 500px) {
+    .toplist .toplist-table, .groups .group-table {
+        tbody td, thead th {
+            font-size: 14px;
+            padding: 8px;
+        }
+    }
+
+    .groups {
+        .group-table .hidden-col {
+            display: none;
+        }
+        .group-table caption {
+            font-size: 14px;
+        }
+    }
+
+    .group {
+        .hidden-col {
+            display: none;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin-top: 20px;
+        }
+
+        .group-description-form {
+            width: 98%;
+        }
+
+        .group-members {
+            tbody td, thead th {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+    }
+}
+
+@media (max-width: 420px) {
+    .profile {
+        .profile-items {
+            tbody td {
+                font-size: 14px;
+                padding: 8px;
+            }
+            thead th {
+                padding: 5px 8px;
+            }
+        }
+    }
+    .groups-table tbody td {
+        font-size: 14px;
+
+        .leave-group {
+            font-size: 14px;
+        }
+    }
+}
+@media (max-width: 800px) {
+    .toplist {
+        width: 98%;
+        margin: 0 auto 40px auto;
+        display: block;
+        padding: 0;
+    }
+}
+@media (max-width: 750px) {
+    .profile .change-password {
+        position: static;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .group {
+        max-width: 98%;
+    }
+}
+@media (max-width: 700px) {
+    .groups {
+        max-width: 98%;
+    }
+    .group-table {
+        thead th, tbody td {
+            font-size: 14px !important;
+        }
+    }
+}
+
