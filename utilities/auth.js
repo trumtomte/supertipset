@@ -9,6 +9,15 @@ exports.check = function( req, res, next ) {
     return res.redirect( '/login?error=1' );
 };
 
+// Used to validate API requests (only allowed for active users
+exports.validate = function( req, res, next ) {
+    if ( ! req.session.userId ) {
+        return res.json( 401, { statusCode: 401, error: 'Unauthorized request to API' } );
+    }
+
+    next();
+};
+
 // Compare database hash with submitted hash
 exports.compare = function( input, password, fn ) {
     // Get password parts (salt, hash, iterations)
