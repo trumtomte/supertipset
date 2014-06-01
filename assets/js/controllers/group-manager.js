@@ -29,7 +29,7 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
 
     $scope.create = function( name ) {
         if ( ! name ) {
-            $scope.message = 'Fyll i ett namn';
+            $scope.message = 'Fyll i ett gruppnamn';
             return;
         }
 
@@ -41,21 +41,19 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
         }
 
         var success = function( result ) {
-            $scope.newGroup = {
-                id: result.id,
-                password: result.password
-            };
+            dialog.close(dialog.latestID)
 
             dialog.open({
                 template: '/assets/templates/password.html',
-                scope: $scope
+                data: result.password
             });
+
+            $location.path( '/groups/' + result.id );
         };
 
         var error = function( result ) {
-            console.log( result );
             // Unable to create group
-            $scope.message = 'error';
+            $scope.message = 'Gruppen kunde inte skapas, var vänlig försök igen';
         };
 
         var params = {
@@ -66,11 +64,6 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
         api.groups.create( params )
             .success( success )
             .error( error );
-    };
-
-    $scope.done = function() {
-        dialog.close();
-        $location.path( '/groups/' + $scope.newGroup.id );
     };
 
     // TODO store name and password each time to it cant be resubmitted?
@@ -114,9 +107,5 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
         api.usergroups.create( params )
             .success( success )
             .error( error );
-    };
-
-    $scope.close = function() {
-        dialog.close();
     };
 }]);
