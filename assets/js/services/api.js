@@ -25,9 +25,9 @@ angular.module( 'supertipset' ).factory( 'api', ['$http', '$cacheFactory', funct
             find: function( id ) {
                 return $http.get( '/api/usergroups/' + id, { cache: true } ).error( e( 'Unable to find user groups by id', id ) );
             },
-            remove: function( id ) {
-                // TODO clear cache - not needed?
-                return $http.delete( '/api/usergroups/' + id ).error( e( 'Unable to delete user group relation by id', id ) );
+            remove: function( params ) {
+                cache.remove( '/api/usergroups/' + params.id );
+                return $http.delete( '/api/usergroups/' + params.relation ).error( e( 'Unable to delete user group relation by id', params ) );
             },
             create: function( params ) {
                 cache.remove( '/api/usergroups/' + params.id );

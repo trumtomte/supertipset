@@ -24,7 +24,7 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
             dialog.close();
         };
 
-        api.usergroups.remove( $scope.group.relation ).success( success );
+        api.usergroups.remove({ relation: $scope.group.relation, id: $scope.user.id }).success( success );
     };
 
     $scope.create = function( name ) {
