@@ -500,16 +500,19 @@ body {
 
     .edit-special-bets-button {
         display: block;
-        width: 150px;
+        width: 110px;
         margin: 0 auto 15px auto;
-        background: none;
         outline: none;
         border: 0;
-        color: darken($green, 5%);
+        background: $blue;
+        color: white;
         font-weight: 300;
+        font-size: 14px;
+        padding: 6px 0;
+        letter-spacing: 1px;
 
         &:hover {
-            text-decoration: underline;
+            background: lighten($blue, 8%);
         }
     }
 
@@ -546,7 +549,7 @@ body {
     }
 
     .edit-special-bets {
-        width: 60%;
+        width: 80%;
         margin: 0 auto;
 
         .profile-summary {

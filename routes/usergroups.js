@@ -86,6 +86,10 @@ exports.create = function( req, res, next ) {
                 group_id: group.id
             };
 
+            // Send data as array
+            // INSERT IGNORE in query
+            // UNIQUE KEY ... (user_id, group_id) in database
+
             db.createUserGroup( params, function( err, result ) {
                 if ( err ) return next( err );
 

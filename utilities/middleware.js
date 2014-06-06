@@ -13,7 +13,7 @@ var cookieParserSecret = '1823uc98duaks9duoisdfsdjkhfhkq0weu0djdqwd',
 // Middleware application configuration
 exports.conf = function( app ) {
     app.set( 'view engine', 'jade' );
-    app.use( logger( 'dev' ) );
+    app.use( logger() );
     app.use( function( req, res, next ) {
         // One of three static files
         if ( req.url == '/robots.txt' ||
