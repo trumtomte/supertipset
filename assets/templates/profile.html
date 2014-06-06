@@ -1,5 +1,5 @@
 <div class="profile">
-    <button data-ng-click="passwordDialog()" class="change-password" type="button">Ändra lösenord</button>
+    <button data-ng-if="user.current" data-ng-click="passwordDialog()" class="change-password" type="button">Ändra lösenord</button>
     <h1 class="username">{{ user.username }}</h1>
 
     <table class="profile-items">
