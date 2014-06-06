@@ -109,7 +109,7 @@ html(lang="sv")
                 if success
                     p.success Uträkningen lyckades
 
-                form(method="POST" action="/api/calculate")
+                form(method="POST" action="/calculate")
                     input(type="text" name="id" placeholder="ID")
                     input(type="password" name="password" placeholder="Lösenord")
                     input(type="hidden" name="_csrf" value="#{token}")

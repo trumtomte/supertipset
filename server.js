@@ -29,7 +29,7 @@ middleware.conf( app );
 ].map( function( route ) { routes[route] = require( './routes/' + route ); });
 
 // API endpoints
-// api.use( auth.validate ); TODO uncomment
+api.use( auth.validate );
 api.get( '/users/:id',          routes.users.findOne );
 api.put( '/users/:id',          routes.users.update );
 api.get( '/groups/:id',         routes.groups.findOne );
@@ -48,7 +48,6 @@ api.post( '/specialbets/:id',   routes.specialbets.create );
 api.get( '/teams',              routes.teams.all );
 api.get( '/teams/:id',          routes.teams.findOne );
 api.get( '/toplists',           routes.toplists.all );
-api.post( '/calculate',         routes.calculate.game );
 // Define API entry endpoint
 app.use( '/api', api );
 
@@ -62,6 +61,7 @@ app.get( '/app', auth.check, function( req, res ) {
     res.render( 'app', { id: req.session.userId, dev: dev } );
 });
 
+app.post( '/calculate', routes.calculate.game );
 app.get( '/admin-calculate', function( req, res ) {
     res.render( 'admin', {
         error: req.query.error,
