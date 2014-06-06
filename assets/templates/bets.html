@@ -76,6 +76,7 @@
 </div>
 
 
-<div data-ng-repeat="round in rounds" class="rounds">
+<div data-ng-if="rounds" data-ng-repeat="round in rounds" class="rounds">
     <div data-round data-ng-model="round"></div>
 </div>
+<p data-ng-if="!rounds" class="no-groups">Inga matcher har ännu skapats.</p>

@@ -6,7 +6,7 @@ angular.module( 'supertipset.controllers' ).controller( 'BetsCtrl', ['$scope', '
     // Determine if the tournament has started or not
     $scope.hasStarted = false;
     // Determine if the tournament hasnt started by checking the start date of the first round
-    if ( $scope.rounds.length ) {
+    if ( $scope.rounds && $scope.rounds.length ) {
         var today = new Date(),
             firstRoundStart = new Date( Date.parse( $scope.rounds[0].start ) );
             
