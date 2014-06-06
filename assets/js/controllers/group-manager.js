@@ -3,7 +3,7 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
 
     // Set default choice for a new admin
     if ( $scope.group ) {
-        $scope.newAdmin = $scope.group.users[0];
+        $scope.newAdmin = $scope.group.users[0].id == $scope.user.id ? $scope.group.users[1] : $scope.group.users[0];
     }
 
     // Remove user from a group

@@ -8,7 +8,8 @@ var express     = require( 'express' ),
     api         = express.Router();
 
 // HTTP port
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3000,
+    dev = process.env.DEV ? true : false;
 
 // Middleware configuration
 // TODO split into two separate routers (App/API)
@@ -58,7 +59,7 @@ app.post( '/login', routes.login.login );
 
 // Backend
 app.get( '/app', auth.check, function( req, res ) {
-    res.render( 'app', { id: req.session.userId, dev: true } );
+    res.render( 'app', { id: req.session.userId, dev: dev } );
 });
 
 app.get( '/admin', function( req, res ) {

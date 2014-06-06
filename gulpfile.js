@@ -69,7 +69,8 @@ gulp.task( 'clean', function() {
 gulp.task( 'build', ['scripts', 'scripts-min', 'styles'], function() {
     var src = [
         'assets/js/app.min.js',
-        'assets/css/main.css',
+        'assets/css/backend.css',
+        'assets/css/frontend.css',
         'assets/templates/*',
         'assets/images/*',
         'assets/fonts/*',
