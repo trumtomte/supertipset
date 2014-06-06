@@ -1,4 +1,4 @@
-angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl', ['$scope', '$route', 'ngDialog', 'ngNotify', 'api', function( $scope, $route, dialog, notify, api ) {
+angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl', ['$scope', '$route', 'consts.user_id', 'ngDialog', 'ngNotify', 'api', function( $scope, $route, id, dialog, notify, api ) {
     $scope.user = $route.current.locals.user.data.user;
     $scope.groups = $route.current.locals.groups.data.groups;
     $scope.user.current = $route.current.params.id ? false : true;
@@ -27,12 +27,16 @@ angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl', ['$scope'
         }
 
         var success = function( result ) {
-
+            dialog.close();
+            notify( 'main' ).info( 'Lösenord uppdaterat!' );
         };
 
         var params = {
-
+            id: id,
+            password: password
         };
+
+        api.users.update( params ).success( success );
     };
 }]);
 

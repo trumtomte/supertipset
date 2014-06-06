@@ -15,9 +15,9 @@
         <tbody>
             <tr>
                 <td>{{ user.points }}</td>
-                <td>{{ user.team.name }}</td>
-                <td>{{ user.player.firstname }} {{ user.player.lastname }}</td>
-                <td>{{ user.player.goals }}</td>
+                <td>{{ user.team.name | notnull:'-' }}</td>
+                <td>{{ user.player.firstname | notnull:'-' }} {{ user.player.lastname }}</td>
+                <td>{{ user.player.goals | notnull:0 }}</td>
             </tr>
         </tbody>
     </table>
@@ -25,7 +25,7 @@
 </div>
 
 <div class="group-list">
-    <table class="groups-table">
+    <table data-ng-if="groups" class="groups-table">
         <caption>Ligor</caption>
         <thead>
             <tr>
@@ -53,4 +53,5 @@
             </tr>
         </tbody>
     </table>
+    <p data-ng-if="!groups" class="no-groups">Du är inte medlem i någon grupp.</p>
 </div>

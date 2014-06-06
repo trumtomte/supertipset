@@ -1,0 +1,16 @@
+<form data-ng-submit="create(betOne, betTwo)">
+    <h2 class="dialog-title">Tipsa</h2>
+    <p class="dialog-description">{{ game.teams[0].name }} - {{ game.teams[1].name }}</p>
+    <p data-ng-show="message" class="dialog-message">{{ message }}</p>
+
+    <div class="select-bets">
+        <select data-ng-model="betOne" data-ng-options="opt for opt in bettingRange"></select>
+        <select data-ng-model="betTwo" data-ng-options="opt for opt in bettingRange"></select>
+    </div>
+
+    <div class="dialog-actions">
+        <button data-ng-click="closeThisDialog()" class="dialog-action dialog-cancel" type="button">Avbryt</button>
+        <button class="dialog-action dialog-ok" type="submit">OK</button>
+        <div style="clear:both;"></div>
+    </div>
+</form>

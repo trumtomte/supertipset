@@ -1,8 +1,10 @@
 # TODO
 
-* En användare ska kunna ändra lösenord
+* ändra consts.user_id (användas i api service också?)
+
+- deployment, testa med virtualBox först?
+
 * Kontrollera problem vid generering av grupper (lösenord blir problematiskt ibland?)
-* Kunna registrera en ny användare
 * Dela upp App + API router?
 * Responsiv
 * Refactor SASS

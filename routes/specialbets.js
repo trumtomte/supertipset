@@ -9,14 +9,14 @@ exports.update = function( req, res, next ) {
     ];
     
     db.updateSpecialBets( params, function( err, result ) {
-        if ( err ) {
-            return next( err );
-        }
-
-        return res.json( result );
+        if ( err ) return next( err );
+        res.json( result );
     });
 };
 
-exports.create = function( req, res ) {
-
+exports.create = function( req, res, next ) {
+    db.createSpecialBets( req.body, function( err, result ) {
+        if ( err ) return next( err );
+        res.json( result );
+    });
 };

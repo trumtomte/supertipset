@@ -55,6 +55,10 @@ body {
     border-top: 1px solid $green;
 }
 
+.no-groups {
+    text-align: center;
+}
+
 .nav {
     padding: 0 10px;
 
@@ -460,7 +464,7 @@ body {
 
     .profile-items {
         border-collapse: separate;
-        width: 60%;
+        width: 75%;
         margin: 0 auto;
         border: 1px solid $green;
         border-radius: 4px;
@@ -492,6 +496,7 @@ body {
 
 .special-bets {
     position: relative;
+    margin-bottom: 40px;
 
     .edit-special-bets-button {
         display: block;
@@ -592,6 +597,69 @@ body {
     }
 }
 
+.round {
+    .games {
+        width: 90%;
+        border-collapse: collapse;
+        border: 0;
+        margin: 0 auto 40px auto;
+
+        caption {
+            font-size: 18px;
+            font-weight: 200;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: darken($green, 5%);
+        }
+
+        thead tr {
+            border-bottom: 1px solid darken($green, 5%);
+        }
+
+        thead th {
+            font-weight: 200;
+            letter-spacing: 2px;
+            font-size: 14px;
+            background: $green;
+            color: white;
+        }
+
+        thead th, tbody td {
+            padding: 10px 15px;
+            text-align: center;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #eee;
+        }
+
+        tbody a {
+            color: darken($green, 10%);
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .update-bet, .create-bet {
+            background: none;
+            outline: none;
+            border: 0;
+            color: darken($green, 5%);
+            font-weight: 300;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+.select-bets {
+    text-align: center;
+}
+
 // Notifications
 .ng-notify-item {
     position: fixed;
@@ -606,9 +674,10 @@ body {
 
     // Temporary
     border-radius: 4px;
-    background: $green;
+    background: $blue;
+    border: 1px solid darken($blue, 5%);
     color: white;
-    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.25);
 
     p {
         font-weight: 300;

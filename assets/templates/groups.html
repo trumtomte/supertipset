@@ -5,7 +5,7 @@
 </div>
 
 <div class="groups">
-    <table data-ng-repeat="group in groups" class="group-table">
+    <table data-ng-if="groups" data-ng-repeat="group in groups" class="group-table">
         <caption>
             <a href="#/groups/{{ group.id }}">{{ group.name }}</a>
             <button data-ng-click="leaveDialog(group)" class="leave-group" type="button">Lämna</button>
@@ -29,4 +29,5 @@
             </tr>
         </tbody>
     </table>
+    <p data-ng-if="!groups" class="no-groups">Du är inte medlem i någon grupp.</p>
 </div>

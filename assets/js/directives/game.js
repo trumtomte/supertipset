@@ -1,4 +1,4 @@
-angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ngNotify', 'pointsCalculator', function( api, id, notify, pointsCalculator ) {
+angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ngNotify', 'pointsCalculator', 'ngDialog', function( api, id, notify, pointsCalculator, dialog ) {
     var directive = {
         require: '^ngModel',
         transclude: true,
@@ -40,11 +40,26 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
                 $scope.isDone = false;
             }
 
+            $scope.updateBet = function() {
+                dialog.open({
+                    template: '/assets/templates/edit-bet.html',
+                    scope: $scope
+                });
+            };
+
+            $scope.createBet = function() {
+                dialog.open({
+                    template: '/assets/templates/place-bet.html',
+                    scope: $scope
+                });
+            };
+
             // Update current user bets
             $scope.update = function( betOne, betTwo ) {
                 // If the user submits the same bet - do nothing
                 if ( $scope.bet.teams[0].bet == betOne &&
                      $scope.bet.teams[1].bet == betTwo ) {
+                    dialog.close();
                     return;
                 }
 
@@ -58,7 +73,10 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
                 var success = function( res ) {
                     $scope.bet.teams[0].bet = betOne;
                     $scope.bet.teams[1].bet = betTwo;
+                    $scope.betOne = $scope.bettingRange[betOne];
+                    $scope.betTwo = $scope.bettingRange[betTwo];
                     notify( 'main' ).info( 'Tips redigerat!' );
+                    dialog.close();
                 };
 
                 api.bets.update( bets ).success( success );
@@ -86,8 +104,8 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
 
                     $scope.betOne = $scope.bettingRange[betOne];
                     $scope.betTwo = $scope.bettingRange[betTwo];
-
                     notify( 'main' ).info( 'Tips sparat!' );
+                    dialog.close();
                 };
 
                 api.bets.create( bets ).success( success );

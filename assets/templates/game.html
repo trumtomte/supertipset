@@ -1,34 +1,39 @@
-<div class="game">
-    <p>Lag: {{ game.teams[0].name }} vs {{ game.teams[1].name }}</p>
+<tr class="game">
+    <td data-ng-if="isDone" class="date done">Avgjord</td>
+    <td data-ng-if="isDone" class="teams">{{ game.teams[0].name }} - {{ game.teams[1].name }}</td>
+    <td data-ng-if="isDone" class="result">{{ game.teams[0].result }} - {{ game.teams[1].result }}</td>
+    <td data-ng-if="isDone" class="bets">
+        <span data-ng-if="bet">{{ bet.teams[0].bet }} - {{ bet.teams[1].bet }}</span>
+        <span data-ng-if="!bet">-</span>
+    </td>
+    <td data-ng-if="isDone" class="points">
+        <span data-ng-if="bet">{{ points }}</span>
+        <span data-ng-if="!bet">-</span>
+    </td>
 
-    <div data-ng-if="isDone">
-        <p>Avgjord</p>
-        <p>Resultat: {{ game.teams[0].result }} - {{ game.teams[1].result }}</p>
-        <div data-ng-if="bet">
-            <p>Dina tips: {{ bet.teams[0].bet }} - {{ bet.teams[1].bet }}</p>
-            <p>Poäng: {{ points }}</p>
-        </div>
-    </div>
 
-    <div data-ng-if="!isDone">
-        <p>Deadline: {{ game.start | date : 'd/M' }}</p>
-
+    <td data-ng-if="!isDone" class="date">{{ game.start | date:'d/M' }}</td>
+    <td data-ng-if="!isDone" class="teams">{{ game.teams[0].name }} - {{ game.teams[1].name }}</td>
+    <td data-ng-if="!isDone" class="results">-</td>
+    <td data-ng-if="!isDone" class="bets">
+        <!--
         <form data-ng-if="bet" data-ng-submit="update(betOne, betTwo)">
-            <p>Dina tips:</p>
-
             <select data-ng-model="betOne" data-ng-options="opt for opt in bettingRange"></select>
             <select data-ng-model="betTwo" data-ng-options="opt for opt in bettingRange"></select>
-
             <button type="submit">Spara</button>
         </form>
 
         <form data-ng-if="!bet" data-ng-submit="create(betOne, betTwo)">
-            <p>Dina tips:</p>
-
             <select data-ng-model="betOne" data-ng-options="opt for opt in bettingRange"></select>
             <select data-ng-model="betTwo" data-ng-options="opt for opt in bettingRange"></select>
-
             <button type="submit">Tipsa</button>
         </form>
-    </div>
-</div>
+        -->
+        <span data-ng-if="bet">{{ bet.teams[0].bet }} - {{ bet.teams[1].bet }}</span>
+        <span data-ng-if="!bet">0 - 0</span>
+    </td>
+    <td data-ng-if="!isDone">
+        <button data-ng-if="bet" data-ng-click="updateBet()" class="update-bet" type="button">Tipsa</button>
+        <button data-ng-if="!bet" data-ng-click="createBet()" class="create-bet" type="button">Tipsa</button>
+    </td>
+</tr>

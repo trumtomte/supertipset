@@ -23,12 +23,14 @@ middleware.conf( app );
     'specialbets',
     'teams',
     'toplists',
-    'login'
+    'login',
+    'calculate'
 ].map( function( route ) { routes[route] = require( './routes/' + route ); });
 
 // API endpoints
 // api.use( auth.validate ); TODO uncomment
 api.get( '/users/:id',          routes.users.findOne );
+api.put( '/users/:id',          routes.users.update );
 api.get( '/groups/:id',         routes.groups.findOne );
 api.delete( '/groups/:id',      routes.groups.remove );
 api.put( '/groups/:id',         routes.groups.update );
@@ -41,9 +43,11 @@ api.get( '/bets/:id',           routes.bets.find );
 api.put( '/bets/:id',           routes.bets.update );
 api.post( '/bets/:id',          routes.bets.create );
 api.put( '/specialbets/:id',    routes.specialbets.update );
+api.post( '/specialbets/:id',   routes.specialbets.create );
 api.get( '/teams',              routes.teams.all );
 api.get( '/teams/:id',          routes.teams.findOne );
 api.get( '/toplists',           routes.toplists.all );
+api.post( '/calculate',         routes.calculate.game );
 // Define API entry endpoint
 app.use( '/api', api );
 
@@ -57,10 +61,22 @@ app.get( '/app', auth.check, function( req, res ) {
     res.render( 'app', { id: req.session.userId, dev: true } );
 });
 
+app.get( '/admin', function( req, res ) {
+    res.render( 'admin', { token: req.csrfToken() });
+});
+
 // Frontend
 app.get( '/', function( req, res ) {
     res.render( 'index' );
 });
+
+app.get( '/register', function( req, res ) {
+    res.render( 'register', {
+        error: req.query.error,
+        token: req.csrfToken()
+    });
+});
+app.post( '/users', routes.users.create );
 
 // 404 (passes the error to the error handler)
 app.use( function( req, res, next ) {

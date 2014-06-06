@@ -42,9 +42,9 @@ angular.module( 'supertipset.controllers' ).controller( 'BetsCtrl', ['$scope', '
 
     $scope.teamsFlat = flatten( $scope.teams );
 
-    $scope.selectedTeam = _.find( $scope.teams, { id: $scope.user.team.id } );
-    $scope.selectedPlayer = _.find( $scope.teamsFlat, { id: $scope.user.player.id } );
-    $scope.selectedGoals = $scope.user.player.goals;
+    $scope.selectedTeam = $scope.user.team.id ? _.find( $scope.teams, { id: $scope.user.team.id } ) : $scope.teams[0];
+    $scope.selectedPlayer = $scope.user.player.id ? _.find( $scope.teamsFlat, { id: $scope.user.player.id } ) : $scope.teamsFlat[0];
+    $scope.selectedGoals = $scope.user.player.goals || 0;
 
     $scope.specialBet = function( team, player, goals ) {
         // If user submits the same as before do nothing
@@ -80,7 +80,12 @@ angular.module( 'supertipset.controllers' ).controller( 'BetsCtrl', ['$scope', '
             notify( 'main' ).info( 'Specialtips uppdaterat!' );
         };
 
-        api.specialbets.update( bets ).success( success );
+        if ( $scope.user.player.id ) {
+            api.specialbets.update( bets ).success( success );
+        } else {
+            bets.tournament_id = 1;
+            api.specialbets.create( bets ).success( success );
+        }
     };
 }]);
 

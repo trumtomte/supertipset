@@ -15,6 +15,9 @@ angular.module( 'supertipset' ).factory( 'api', ['$http', '$cacheFactory', funct
         users: {
             findOne: function( id ) {
                 return $http.get( '/api/users/' + id, { cache: true } ).error( e( 'Unable to find user by id', id ) );
+            },
+            update: function( params ) {
+                return $http.put( '/api/users/' + params.id, params ).error( e( 'Unable to update user by id', params ) );
             }
         },
         // User groups
@@ -77,6 +80,10 @@ angular.module( 'supertipset' ).factory( 'api', ['$http', '$cacheFactory', funct
             update: function( bets ) {
                 cache.remove( '/api/users/' + bets.user_id );
                 return $http.put( '/api/specialbets/' + bets.user_id, bets ).error( e( 'Unable to update special bets by id', bets ) );
+            },
+            create: function( bets ) {
+                cache.remove( '/api/users/' + bets.user_id );
+                return $http.post( '/api/specialbets/' + bets.user_id, bets ).error( e( 'Unable to create special bets by id', bets ) );
             }
         },
         // Teams

@@ -14,7 +14,7 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
                 return api.users.findOne( userID );
             }],
             rounds: ['api', function( api ) {
-                return api.rounds.find( userID );
+                return api.rounds.find( 1 );
             }],
             bets: ['api', function( api ) {
                 return api.bets.find( userID );

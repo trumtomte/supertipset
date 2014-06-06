@@ -2,20 +2,14 @@ var crypto = require( 'crypto' );
 
 // Check if a user is already logged in
 exports.check = function( req, res, next ) {
-    if ( req.session.userId ) {
-        return next();
-    }
-
-    return res.redirect( '/login?error=1' );
+    if ( req.session.userId ) return next();
+    res.redirect( '/login?error=1' );
 };
 
 // Used to validate API requests (only allowed for active users
 exports.validate = function( req, res, next ) {
-    if ( ! req.session.userId ) {
-        return res.json( 401, { statusCode: 401, error: 'Unauthorized request to API' } );
-    }
-
-    next();
+    if ( req.session.userId ) return next();
+    res.json( 401, { statusCode: 401, error: 'Unauthorized request to API' } );
 };
 
 // Compare database hash with submitted hash
@@ -46,6 +40,6 @@ exports.generate = function( password, fn ) {
         len = 64;
 
     crypto.pbkdf2( password, salt, iter, len, function( err, hash ) {
-        fn( err, [salt, hash, iter].join( '::' ));
+        fn( err, [salt, hash.toString( 'base64' ), iter].join( '::' ));
     });
 };

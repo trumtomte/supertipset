@@ -90,7 +90,8 @@ CREATE TABLE Points (
     game_id     INT UNSIGNED NOT NULL,
     user_id     INT UNSIGNED NOT NULL,
     created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE KEY points_per_game (game_id, user_id)
 ) ENGINE=InnoDB;
 
 --
