@@ -76,6 +76,12 @@ html(lang="sv")
                 font-size: 14px;
             }
 
+            .success {
+                text-align: center;
+                font-size: 14px;
+                color: #1ABC9C;
+            }
+
             .footer {
                 margin-top: 40px;
                 text-align: center;
@@ -97,32 +103,39 @@ html(lang="sv")
             div.form-container
                 p.info Räkna ut poäng baserad på match ID för alla användare.
 
+                if error == 1
+                    p.error Var vänlig försök igen
+
+                if success
+                    p.success Uträkningen lyckades
+
                 form(method="POST" action="/api/calculate")
-                    input(type="text" name="id" placeholder="id")
+                    input(type="text" name="id" placeholder="ID")
+                    input(type="password" name="password" placeholder="Lösenord")
                     input(type="hidden" name="_csrf" value="#{token}")
                     button(type="submit") Beräkna
 
-            div.form-container
-                p.info Skapa en ny match
+            // div.form-container
+            //     p.info Skapa en ny match
 
-                form(method="POST" action="/api/games")
-                    input(type="text" name="team_1_id" placeholder="Lag 1")
-                    input(type="text" name="team_2_id" placeholder="Lag 2")
-                    input(type="text" name="round_id" placeholder="Omgång")
-                    input(type="text" name="start_date" placeholder="Start")
-                    input(type="text" name="stop_date" placeholder="Slut")
-                    input(type="hidden" name="_csrf" value="#{token}")
-                    button(type="submit") Skapa match
+            //     form(method="POST" action="/api/games")
+            //         input(type="text" name="team_1_id" placeholder="Lag 1")
+            //         input(type="text" name="team_2_id" placeholder="Lag 2")
+            //         input(type="text" name="round_id" placeholder="Omgång")
+            //         input(type="text" name="start_date" placeholder="Start")
+            //         input(type="text" name="stop_date" placeholder="Slut")
+            //         input(type="hidden" name="_csrf" value="#{token}")
+            //         button(type="submit") Skapa match
 
-            div.form-container
-                p.info Match resultat
+            // div.form-container
+            //     p.info Match resultat
 
-                form(method="POST" action="/api/results")
-                    input(type="text" name="team_1_goals" placeholder="Mål lag 1")
-                    input(type="text" name="team_2_goals" placeholder="Mål lag 2")
-                    input(type="text" name="game_id" placeholder="Match")
-                    input(type="hidden" name="_csrf" value="#{token}")
-                    button(type="submit") Spara resultat
+            //     form(method="POST" action="/api/results")
+            //         input(type="text" name="team_1_goals" placeholder="Mål lag 1")
+            //         input(type="text" name="team_2_goals" placeholder="Mål lag 2")
+            //         input(type="text" name="game_id" placeholder="Match")
+            //         input(type="hidden" name="_csrf" value="#{token}")
+            //         button(type="submit") Spara resultat
 
         footer.footer
             p &copy; Supertipset 2014

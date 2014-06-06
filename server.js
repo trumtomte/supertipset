@@ -62,8 +62,12 @@ app.get( '/app', auth.check, function( req, res ) {
     res.render( 'app', { id: req.session.userId, dev: dev } );
 });
 
-app.get( '/admin', function( req, res ) {
-    res.render( 'admin', { token: req.csrfToken() });
+app.get( '/admin-calculate', function( req, res ) {
+    res.render( 'admin', {
+        error: req.query.error,
+        success: req.query.success,
+        token: req.csrfToken()
+    });
 });
 
 // Frontend

@@ -1,4 +1,5 @@
-var db = require( '../utilities/database' );
+var db = require( '../utilities/database' ),
+    auth = require( '../utilities/auth' );
 
 // Return and calculate points given game results and user bets
 function calculate( results, bets ) {
@@ -36,43 +37,55 @@ function calculate( results, bets ) {
 }
     
 exports.game = function( req, res, next ) {
-    var id = +req.body.id;
+    var id = +req.body.id,
+        password = req.body.password;
 
-    db.getGameResults( id, function( err, rows ) {
-        if ( err ) return next( err );
-
-        if ( ! rows.length ) {
-            return res.json({ message: 'Game not found' }); 
+    db.getUser( 'superuser', function( err, rows ) {
+        if ( err || ! rows.length ) {
+            return res.redirect( '/admin-calculate?error=1' );
         }
 
-        var results = [
-            rows[0].team_1_goals,
-            rows[0].team_2_goals
-        ]
+        var user = rows[0];
 
-        db.getUserBetsByGame( id, function( err, rows ) {
-            if ( err ) return next( err );
-
-            if ( ! rows.length ) {
-                return res.json({ message: 'No user bets found' });
+        auth.compare( password, user.password, function( err ) {
+            if ( err ) {
+                return res.redirect( '/admin-calculate?error=1' );
             }
 
-            var userPoints = [];
+            db.getGameResults( id, function( err, rows ) {
+                if ( err || ! rows.length ) {
+                    return res.redirect( '/admin-calculate?error=1' );
+                }
 
-            rows.forEach( function( row ) {
-                var bets = [row.team_1_bet, row.team_2_bet],
-                    points = calculate( results, bets );
+                var results = [
+                    rows[0].team_1_goals,
+                    rows[0].team_2_goals
+                ]
 
-                userPoints.push([ points, id, row.user_id ]);
-            });
+                db.getUserBetsByGame( id, function( err, rows ) {
+                    if ( err || ! rows.length ) {
+                        return res.redirect( '/admin-calculate?error=1' );
+                    }
 
-            // console.log( userPoints );
+                    var userPoints = [];
 
-            db.insertUserPoints( userPoints, function( err, results ) {
-                if ( err ) return next( err );
-                res.json( results );
+                    rows.forEach( function( row ) {
+                        var bets = [row.team_1_bet, row.team_2_bet],
+                            points = calculate( results, bets );
+
+                        userPoints.push([ points, id, row.user_id ]);
+                    });
+
+                    db.insertUserPoints( userPoints, function( err, results ) {
+                        if ( err ) {
+                            return res.redirect( '/admin-calculate?error=1' );
+                        }
+                        res.redirect( '/admin-calculate?success=1' );
+                    });
+                });
             });
         });
     });
+
 };
 
