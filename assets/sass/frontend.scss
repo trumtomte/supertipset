@@ -1,0 +1,179 @@
+// Imports
+@import "normalize";
+
+// Variables
+$font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-size: 16px;
+$font-weight: 200;
+$line-height: 130%;
+$letter-spacing: 1px;
+
+$green: #1ABC9C;
+$red: #dd0044;
+$blue: #3498DB;
+
+*, *:before, *:after {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box; 
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: $font-family;
+    font-size: $font-size;
+    line-height: $line-height;
+    letter-spacing: $letter-spacing;
+    font-weight: $font-weight;
+
+    &.admin, &.login, &.register {
+        background: #dddddd;
+
+        .wrapper {
+            max-width: 500px;
+            background: white;
+            margin: 6% auto 0 auto;
+            padding-top: 10px;
+        }
+    }
+}
+
+.footer {
+    margin-top: 40px;
+    text-align: center;
+    color: #222222;
+    font-size: $font-size - 2px;
+    font-weight: $font-weight;
+    letter-spacing: $letter-spacing;
+}
+
+.form-container {
+    margin-top: 30px;
+
+    input {
+        display: block;
+        outline: none;
+        width: 90%;
+        margin: 0 auto 10px auto;
+        padding: 10px;
+        border: 1px solid #dddddd;
+        font-weight: $font-weight;
+        font-family: $font-family;
+        font-size: 15px;
+
+        &:focus {
+            border-color: $green;
+        }
+    }
+
+    button {
+        width: 100%;
+        outline: none;
+        border: 0;
+        margin-top: 15px;
+        padding: 15px 0;
+        background: $green;
+        color: white;
+        font-size: $font-size;
+        font-family: $font-family;
+        font-weight: $font-weight;
+        letter-spacing: $letter-spacing;
+        cursor: pointer;
+
+        &:hover {
+            background: lighten($green, 8%);
+        }
+    }
+
+    .error-msg, .success-msg, .info-msg {
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .error-msg {
+        color: $red;
+    }
+    .success-msg {
+        color: $green;
+    }
+}
+
+
+h1, h2 {
+    text-align: center;
+    font-weight: $font-weight;
+    letter-spacing: $letter-spacing + 1px;
+    margin-bottom: 15px;
+    line-height: $line-height;
+}
+
+h1 {
+    color: darken($green, 4%);
+    font-size: 32px;
+}
+h2 {
+    font-size: 18px;
+}
+
+.index {
+    .wrapper {
+        max-width: 500px;
+        margin: 10% auto 0 auto;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 50px;
+        color: $green;
+        margin-bottom: 60px;
+    }
+
+    .register, .login {
+        min-width: 160px;
+        text-align: center;
+        display: inline-block;
+        outline: none;
+        border: 0;
+        margin-top: 15px;
+        padding: 15px 25px;
+        color: white;
+        font-size: $font-size;
+        font-family: $font-family;
+        font-weight: $font-weight;
+        letter-spacing: $letter-spacing;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .register {
+        margin-right: 10px;
+        background: $green;
+
+        &:hover {
+            background: lighten($green, 8%);
+        }
+    }
+    .login {
+        background: $blue;
+
+        &:hover {
+            background: lighten($blue, 8%);
+        }
+    }
+
+    .footer {
+        margin-top: 80px;
+    }
+}
+
+@media (max-width: 400px) {
+    .index {
+        h1 {
+            font-size: 40px;
+        }
+        .register, .login {
+            display: block;
+            width: 95%;
+            margin: 0 auto 10px auto;
+        }
+    }
+}

@@ -57,7 +57,7 @@ exports.update = function( req, res, next ) {
     db.updateBets( params, function( err, result ) {
         if ( err ) return next( err );
 
-        return res.json( result );
+        return res.send( 200 );
     });
 };
 

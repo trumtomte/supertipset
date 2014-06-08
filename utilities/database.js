@@ -1,6 +1,24 @@
 var mysql = require( 'mysql' );
 
-// TODO make queries into an array, loop and create exports.<function>
+// Create a MySQL connection
+var conn = mysql.createConnection({
+    host: process.env.MYSQL_HOST || 'localhost',
+    port: process.env.MYSQL_PORT || 3306,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASS || '',
+    database: process.env.MYSQL_DB || 'supertipset'
+});
+
+// Connect to the database
+conn.connect( function( err ) {
+    if ( err ) {
+        console.log( '[SERVER]: Unable to establish a database connection' ); 
+        throw err;
+    }
+    console.log( '[SERVER]: Database connection established' );
+});
+
+// TODO cleanup deluxé
 
 // SQL Queries
 var USERBETS_BY_ID =        'SELECT r.name AS round, r.id AS round_id, g.id AS game_id, b.id AS bet_id, g.team_1_id AS team_1_id, g.team_2_id AS team_2_id, b.team_1_bet AS team_1_bet, b.team_2_bet AS team_2_bet, (SELECT l.name FROM Teams AS l WHERE l.id = g.team_1_id) AS team_1_name, (SELECT l.name FROM Teams AS l WHERE l.id = g.team_2_id) AS team_2_name FROM Users AS u INNER JOIN Bets AS b ON u.id = b.user_id INNER JOIN Games AS g ON b.game_id = g.id INNER JOIN Rounds AS r ON g.round_id = r.id WHERE u.id = ? GROUP BY r.name, g.id',
@@ -34,25 +52,6 @@ var USERBETS_BY_ID =        'SELECT r.name AS round, r.id AS round_id, g.id AS g
     INSERT_USER_POINTS =    'INSERT IGNORE INTO Points (points, game_id, user_id) VALUES ?',
     UPDATE_USER_PASS =      'UPDATE Users SET password = ? WHERE id = ?',
     CREATE_USER =           'INSERT INTO Users SET ?';
-
-// Create a MySQL connection
-var conn = mysql.createConnection({
-    host: process.env.MYSQL_HOST || 'localhost',
-    port: process.env.MYSQL_PORT || 3306,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASS || '',
-    database: process.env.MYSQL_DB || 'supertipset'
-});
-
-// Connect to the database
-conn.connect( function( err ) {
-    if ( err ) {
-        console.log( '[SERVER]: Unable to establish a database connection' ); 
-        throw err;
-    }
-
-    console.log( '[SERVER]: Database connection established' );
-});
 
 // Get a user by username
 exports.getUser = function( username, fn ) {
@@ -264,6 +263,7 @@ exports.updateUserPass = function( params, fn ) {
     });
 };
 
+// Create a new user
 exports.createUser = function( params, fn ) {
     conn.query( CREATE_USER, params, function( err, res ) {
         fn( err, res );

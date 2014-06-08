@@ -60,8 +60,7 @@ exports.find = function( req, res, next ) {
 exports.remove = function( req, res, next ) {
     db.removeUserGroup( req.params.id, function( err, result ) {
         if ( err ) return next( err );
-
-        return res.json( result );
+        res.json( 200 );
     });
 };
 
@@ -86,14 +85,15 @@ exports.create = function( req, res, next ) {
                 group_id: group.id
             };
 
-            // Send data as array
+            // TODO fix / better solution
+            // Send data as an array
             // INSERT IGNORE in query
             // UNIQUE KEY ... (user_id, group_id) in database
+            // Instead of "LIMIT 1" in subquery
 
             db.createUserGroup( params, function( err, result ) {
                 if ( err ) return next( err );
-
-                return res.json( group );                
+                res.json( group );                
             });
         });
     });

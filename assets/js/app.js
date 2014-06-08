@@ -1,11 +1,11 @@
 "use strict";
 
 // Application module
-angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 'supertipset.controllers'] )
+angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 'ngProgressbar', 'supertipset.controllers'] )
 
 // Routes
-.config( ['$routeProvider', 'consts.user_id', function( $routeProvider, userID ) {
-    // Bets
+.config( ['$routeProvider', 'consts.userID', function( $routeProvider, userID ) {
+    // Bet route
     var bets = {
         controller: 'BetsCtrl',
         templateUrl: '/assets/templates/bets.html',
@@ -24,11 +24,12 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
             }]
         }
     };
-    // Bets-routes
+
+    // Bet routes
     $routeProvider.when( '/', bets );
     $routeProvider.when( '/bets', bets );
 
-    // Groups
+    // User specific groups
     $routeProvider.when( '/groups', {
         controller: 'GroupsCtrl',
         templateUrl: '/assets/templates/groups.html',
@@ -42,7 +43,7 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
         }
     });
 
-    // Group
+    // Specific group
     $routeProvider.when( '/groups/:id', {
         controller: 'GroupCtrl',
         templateUrl: '/assets/templates/group.html',
@@ -84,7 +85,7 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
         }
     });
     
-    // Top list
+    // Top lists
     $routeProvider.when( '/toplist', {
         controller: 'TopListCtrl',
         templateUrl: '/assets/templates/toplist.html',
@@ -94,6 +95,30 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
             }]
         }
     });
+
+    // Default
+    $routeProvider.otherwise( bets );
+}])
+
+// Navigation controller
+.controller( 'NavCtrl', ['$scope', '$location', '$rootScope', 'ngProgressbar', function( $scope, $location, $rootScope, progress ) {
+
+    $rootScope.$on( '$routeChangeStart', function( a, b) {
+        progress.start();
+    });
+    $rootScope.$on( '$routeChangeSuccess', function() {
+        progress.complete();
+    });
+    $rootScope.$on( '$routeChangeError', function() {
+        progress.reset();
+    });
+
+    // Compare given path with the current location path
+    $scope.isActive = function( path ) {
+        var re = new RegExp( '^' + path );
+        return re.test( $location.path() );
+    };
 }]);
 
+// Create module for controllers
 angular.module( 'supertipset.controllers', [] );

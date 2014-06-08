@@ -34,6 +34,7 @@ exports.findOne = function( req, res, next ) {
     });
 };
 
+// Create a new user
 exports.create = function( req, res, next ) {
     if ( req.body.email == '' || req.body.username == '' ||
          req.body.firstPassword == '' || req.body.secondPassword == '' ) {
@@ -81,7 +82,7 @@ exports.update = function( req, res, next ) {
 
         db.updateUserPass( [hash, id], function( err, result ) {
             if ( err ) return next( err );
-            res.json( result );
+            res.json( 200 );
         });
     });
 };

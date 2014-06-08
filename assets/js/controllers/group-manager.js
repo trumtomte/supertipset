@@ -1,9 +1,10 @@
-angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$scope', '$location', 'ngNotify', 'ngDialog', 'api', function( $scope, $location, notify, dialog, api ) {
+angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$scope', '$location', 'api', 'ngDialog', 'ngNotify', function( $scope, $location, api, dialog, notify ) {
     $scope.message = '';
 
     // Set default choice for a new admin
+    // Choose the first user, second if the current user happens to be first
     if ( $scope.group ) {
-        $scope.newAdmin = $scope.group.users[0].id == $scope.user.id ? $scope.group.users[1] : $scope.group.users[0];
+        $scope.newAdmin = $scope.group.users[$scope.group.users[0].id == $scope.user.id ? 1 : 0];
     }
 
     // Remove user from a group
@@ -20,28 +21,32 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
 
         var success = function( result ) {
             $scope.groups.splice( $scope.groups.indexOf( $scope.group ), 1 );
-            notify( 'main' ).info( 'Du har lämnat gruppen!' );
+            notify( 'main' ).info( 'Du har lämnat ligan!' );
             dialog.close();
         };
 
+        // Finally remove the user from a group
         api.usergroups.remove({ relation: $scope.group.relation, id: $scope.user.id }).success( success );
     };
 
+    // Create a new group
     $scope.create = function( name ) {
+        // Empty name
         if ( ! name ) {
-            $scope.message = 'Fyll i ett gruppnamn';
+            $scope.message = 'Fyll i ett liganman';
             return;
         }
 
         var exists = _.find( $scope.groups, { name: name } );
 
+        // Group already exists
         if ( exists ) {
-            $scope.message = 'Gruppen finns redan';
+            $scope.message = 'Ligan finns redan';
             return;
         }
 
         var success = function( result ) {
-            dialog.close(dialog.latestID)
+            dialog.close( dialog.latestID );
 
             dialog.open({
                 template: '/assets/templates/password.html',
@@ -51,9 +56,9 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
             $location.path( '/groups/' + result.id );
         };
 
+        // Unable to create group
         var error = function( result ) {
-            // Unable to create group
-            $scope.message = 'Gruppen kunde inte skapas, var vänlig försök igen';
+            $scope.message = 'Ligan kunde inte skapas, var vänlig försök igen';
         };
 
         var params = {
@@ -61,13 +66,8 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
             name: name
         };
 
-        api.groups.create( params )
-            .success( success )
-            .error( error );
+        api.groups.create( params ).success( success ).error( error );
     };
-
-    // TODO store name and password each time to it cant be resubmitted?
-    var prevName, prevPassword;
 
     // Add user to a group
     $scope.join = function( name, password ) {
@@ -81,21 +81,19 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
 
         // If the user is already a member of the group
         if ( isMember ) {
-            $scope.message = 'Du är redan med i gruppen';
+            $scope.message = 'Du är redan med i ligan';
             return;
         }
 
         // On success, close dialog and redirect to the group
         var success = function( result ) {
-            console.log( result );
             dialog.close();
+            notify( 'main' ).info( 'Du har gått med i ligan!' );
             $location.path( '/groups/' + result.id );
-            notify( 'main' ).info( 'Du har gått med i gruppen!' );
         };
 
         var error = function( result ) {
-            console.log( result );
-            $scope.message = 'Fel kombination';
+            $scope.message = 'Fel kombination av liga och lösenord';
         };
 
         var params = {
@@ -104,8 +102,6 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
             password: password
         };
 
-        api.usergroups.create( params )
-            .success( success )
-            .error( error );
+        api.usergroups.create( params ).success( success ).error( error );
     };
 }]);

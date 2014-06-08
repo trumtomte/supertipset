@@ -20,8 +20,8 @@
             </tbody>
         </table>
     </div>
+    <!-- Tournament hasnt started -->
     <div data-ng-if="!hasStarted">
-        <button data-ng-hide="isEditing" data-ng-click="edit()" class="edit-special-bets-button" type="button">Redigera</button>
         <table data-ng-hide="isEditing" class="profile-summary">
             <thead>
                 <tr>
@@ -41,6 +41,7 @@
                 </tr>
             </tbody>
         </table>
+        <button data-ng-hide="isEditing" data-ng-click="edit()" class="edit-special-bets-button" type="button">Specialtips</button>
 
         <form data-ng-show="isEditing" data-ng-submit="specialBet(selectedTeam, selectedPlayer, selectedGoals)" class="edit-special-bets">
             <table class="profile-summary">

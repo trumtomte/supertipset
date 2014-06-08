@@ -9,14 +9,13 @@ function calculate( results, bets ) {
         t1Bet = bets[0],
         t2Bet = bets[1];
 
-    var points = 0;
-
     if ( t1Result == t1Bet &&
          t2Result == t2Bet ) {
-        // Perfect bet = 4 points
-        points += 4;
-        return points;
+        // Perfect bet gives 10 pts
+        return 10;
     }
+
+    var points = 0;
 
     // Calculate difference in goals
     var resultDiff = t1Result - t2Result,
@@ -24,18 +23,28 @@ function calculate( results, bets ) {
     
     // Correctly placed the bet on team 1 as the winner
     if ( resultDiff > 0 && betDiff > 0 ) {
-        points += 1;
+        points += 4;
     // Correctly placed the bet on team 2 as the winner
     } else if ( resultDiff < 0 == betDiff < 0 ) {
-        points += 1;
+        points += 4;
     // Correctly placed the bet on a game draw
     } else if ( resultDiff == 0 && betDiff == 0 ) {
-        points += 1;
+        points += 4;
+    }
+
+    // If a user placed a bet equal to goals from one of the teams = 2 pts
+    if ( t1Result == t1Bet || t2Result == t2Bet ) {
+        points += 2;
     }
 
     return points;
 }
+
+// TODO Add calculation for special bets (!)
     
+// TODO better solution
+// Calculate points for each user based on game results and user bets
+// This requires the password of one specific user
 exports.game = function( req, res, next ) {
     var id = +req.body.id,
         password = req.body.password;
@@ -80,12 +89,11 @@ exports.game = function( req, res, next ) {
                         if ( err ) {
                             return res.redirect( '/admin-calculate?error=1' );
                         }
+
                         res.redirect( '/admin-calculate?success=1' );
                     });
                 });
             });
         });
     });
-
 };
-

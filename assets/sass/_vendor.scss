@@ -297,3 +297,96 @@ body.ngdialog-open {
   background: #e0e0e0;
   color: #777;
 }
+
+// Progressbar
+#ng-progressbar {
+    margin: 0;
+    padding: 0;
+    z-index: 99998;
+    background-color: #DA5757;
+    color: #DA5757;
+    box-shadow: 0 0 10px 0;
+    height: 2px;
+    opacity: 1;
+    width: 0%;
+
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+#ng-progressbar-container {
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+}
+
+// Notifications
+@keyframes ng-notify-hide {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@-webkit-keyframes ng-notify-hide {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@-moz-keyframes ng-notify-hide {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@-o-keyframes ng-notify-hide {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.ng-notify-item {
+    position: fixed;
+    top: 10px;
+    left: 0;
+    right: 0;
+    max-width: 300px;
+    padding: 10px 15px;
+    margin: 0 auto;
+    text-align: center;
+    list-style: none;
+
+    // Temporary
+    border-radius: 4px;
+    background: $blue;
+    border: 1px solid darken($blue, 5%);
+    color: white;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.25);
+
+    p {
+        font-weight: 300;
+        margin: 0;
+    }
+}
+
+.ng-notify-item.ng-enter, .ng-notify-item.ng-move {
+    -webkit-transition: 0.4s linear all;
+    -moz-transition: 0.4s linear all;
+    -o-transition: 0.4s linear all;
+    transition: 0.4s linear all;
+    opacity: 0;
+}
+
+.ng-notify-item.ng-enter.ng-enter-active,
+.ng-notify-item.ng-move.ng-move-active {
+    opacity: 1;
+}
+
+.ng-notify-item.ng-leave {
+    -webkit-animation: 0.5s ng-notify-hide;
+    -moz-animation: 0.5s ng-notify-hide;
+    -o-animation: 0.5s ng-notify-hide;
+    animation: 0.5s ng-notify-hide;
+}

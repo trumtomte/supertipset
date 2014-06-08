@@ -1,6 +1,5 @@
 <div class="group">
     <button data-ng-click="$back()" class="back-button" type="button">Tillbaka</button>
-
     <button data-ng-if="group.admin == user.id" data-ng-click="password()" class="group-password" type="button">Generera nytt lösenord</button>
 
     <h1>{{ group.name }} <span data-ng-if="group.admin == user.id">(admin)</span></h1>

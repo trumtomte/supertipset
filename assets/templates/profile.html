@@ -44,7 +44,7 @@
                 <td class="center hidden-col">
                     <span data-ng-if="group.admin == user.id">{{ user.username }}</span>
                     <span data-ng-if="group.admin != user.id">
-                        <a href="#/profile/{{ group.admin }}">{{ group.users | admin:group.admin }}</a>
+                        <a href="#/profile/{{ group.admin }}">{{ group.admin_name }}</a>
                     </span>
                 </td>
                 <td data-ng-if="user.current" class="center">

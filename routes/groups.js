@@ -103,13 +103,13 @@ exports.update = function( req, res, next ) {
     if ( req.body.user_id ) {
         db.updateGroup( 'admin', [req.body.user_id, req.body.id], function( err, result ) {
             if ( err ) return next( err );
-            res.json({});
+            res.send( 200 );
         });
     // Change group description
     } else if ( req.body.description ) {
         db.updateGroup( 'description', [req.body.description, req.body.id], function( err, result ) {
             if ( err ) return next( err );
-            res.json({});
+            res.send( 200 );
         });
     // Generate new group password
     } else if ( req.body.password && req.body.password == 'new' ) {
@@ -120,6 +120,7 @@ exports.update = function( req, res, next ) {
 
             db.updateGroup( 'password', [hash, req.body.id], function( err, result ) {
                 if ( err ) return next( err );
+
                 res.json({ password: password });
             });
         });

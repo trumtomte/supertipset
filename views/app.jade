@@ -6,7 +6,7 @@ html(lang="sv")
         meta(http-equiv="X-UA-Compatible" content="IE=edge,chrome=1")
         title Supertipset
         link(rel="stylesheet" href="assets/css/backend.css")
-    body(data-ng-app="supertipset" data-ng-controller="AppCtrl")
+    body(data-ng-app="supertipset")
         div.wrapper
 
             div.notifications(data-ng-notify="main")
@@ -15,12 +15,10 @@ html(lang="sv")
             a.logout(href="/logout") Logga ut
 
             div.header
-                // logo?
-
-                nav.nav
+                nav.nav(data-ng-controller="NavCtrl")
                     ul.nav-list
                         li.nav-item
-                            a.nav-link(href="#/bets" data-ng-class="{ active: isActive('/bets') }") Tipsa
+                            a.nav-link(href="#/bets" data-ng-class="{ active: isActive('/bets') }") Tippa
                         li.nav-item
                             a.nav-link(href="#/groups" data-ng-class="{ active: isActive('/groups') }") Ligor
                         li.nav-item
@@ -43,6 +41,6 @@ html(lang="sv")
         else
             script(src="assets/js/app.min.js")
 
+        // TODO alternate solution?
         script.
-            // Temporary
-            angular.module( 'supertipset' ).constant( 'consts.user_id', #{id} );
+            angular.module( 'supertipset' ).constant( 'consts.userID', #{id} );

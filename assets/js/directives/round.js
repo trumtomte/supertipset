@@ -5,14 +5,15 @@ angular.module( 'supertipset' ).directive( 'round', function() {
         replace: true,
         templateUrl: '/assets/templates/round.html',
         link: function( $scope, $element, $attr ) {
-            var today = new Date(),
-                roundStart = new Date( Date.parse( $scope.round.start ) ),
-                roundStop = new Date( Date.parse( $scope.round.stop ) );
+            var todayDate = new Date(),
+                rStartDate = new Date( Date.parse( $scope.round.start ) ),
+                rStopDate = new Date( Date.parse( $scope.round.stop ) );
 
-            if ( roundStart < today && roundStop > today ) {
+            $scope.isCurrentRound = false;
+
+            // If the round is within the date of today it is considered "current/active"
+            if ( rStartDate < todayDate && rStopDate > todayDate ) {
                 $scope.isCurrentRound = true;
-            } else {
-                $scope.isCurrentRound = false;
             }
         }
     };

@@ -6,6 +6,11 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupCtrl', ['$scope', 
     $scope.edit = function() {
         $scope.isEditing = ! $scope.isEditing;
     };
+    
+    // Go back in history
+    $scope.$back = function() {
+        window.history.back();
+    };
 
     $scope.save = function() {
         var success = function( result ) {

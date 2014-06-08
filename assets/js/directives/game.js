@@ -1,4 +1,4 @@
-angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ngNotify', 'pointsCalculator', 'ngDialog', function( api, id, notify, pointsCalculator, dialog ) {
+angular.module( 'supertipset' ).directive( 'game', ['api', 'ngNotify', 'ngDialog', 'consts.userID', 'calculator', function( api, notify, dialog, userID, calculator ) {
     var directive = {
         require: '^ngModel',
         transclude: true,
@@ -6,12 +6,13 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
         templateUrl: '/assets/templates/game.html',
         link: function( $scope, $element, $attr ) {
             // Dates to determine if the game is done (been played)
-            var today = new Date(),
-                gameStart = new Date( Date.parse( $scope.game.start ) );
+            var todayDate = new Date(),
+                gStartDate = new Date( Date.parse( $scope.game.start ) );
 
             // Check if the user has bets on this game
             var bets = _.find( $scope.bets, { round_id: $scope.round.id } );
 
+            // If bets are found, find a specific bet
             if ( bets ) {
                 $scope.bet = _.find( bets.bets, { game: $scope.game.id } );
             }
@@ -29,17 +30,18 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
             }
 
             // Dont allow betting if the game is done (been played)
-            if ( today > gameStart ) {
+            if ( todayDate > gStartDate ) {
                 $scope.isDone = true;
 
                 // If game is done and there were bets placed, calculate the score
                 if ( $scope.bet ) {
-                     $scope.points = pointsCalculator( $scope.game, $scope.bet );
+                     $scope.points = calculator( $scope.game, $scope.bet );
                 }
             } else {
                 $scope.isDone = false;
             }
 
+            // Update bet dialog
             $scope.updateBet = function() {
                 dialog.open({
                     template: '/assets/templates/edit-bet.html',
@@ -47,6 +49,7 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
                 });
             };
 
+            // Create bet dialog
             $scope.createBet = function() {
                 dialog.open({
                     template: '/assets/templates/place-bet.html',
@@ -57,15 +60,13 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
             // Update current user bets
             $scope.update = function( betOne, betTwo ) {
                 // If the user submits the same bet - do nothing
-                if ( $scope.bet.teams[0].bet == betOne &&
-                     $scope.bet.teams[1].bet == betTwo ) {
-                    dialog.close();
-                    return;
+                if ( $scope.bet.teams[0].bet == betOne && $scope.bet.teams[1].bet == betTwo ) {
+                    return dialog.close();
                 }
 
                 var bets = {
                     id: $scope.bet.id,
-                    user_id: id,
+                    user_id: userID,
                     team_1_bet: betOne,
                     team_2_bet: betTwo
                 };
@@ -75,6 +76,7 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
                     $scope.bet.teams[1].bet = betTwo;
                     $scope.betOne = $scope.bettingRange[betOne];
                     $scope.betTwo = $scope.bettingRange[betTwo];
+
                     notify( 'main' ).info( 'Tips redigerat!' );
                     dialog.close();
                 };
@@ -85,7 +87,7 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
             // Create new user bets
             $scope.create = function( betOne, betTwo ) {
                 var bets = {
-                    user_id: id,
+                    user_id: userID,
                     game_id: $scope.game.id,
                     team_1_bet: betOne,
                     team_2_bet: betTwo
@@ -94,16 +96,16 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'consts.user_id', 'ng
                 var success = function( result ) {
                     $scope.bet = {
                         id: result.insertId,
-                        user_id: id,
+                        user_id: userID,
                         game_id: $scope.game.id,
                         teams: [
                             { bet: betOne },
                             { bet: betTwo }
                         ]
                     };
-
                     $scope.betOne = $scope.bettingRange[betOne];
                     $scope.betTwo = $scope.bettingRange[betTwo];
+
                     notify( 'main' ).info( 'Tips sparat!' );
                     dialog.close();
                 };

@@ -1,12 +1,19 @@
-@import "normalize";
-@import "vendor";
-
-$linkcolor: #0077dd;
-
+// Variables
 $green: #1ABC9C;
 $blue: #3498DB;
 $orange: #F39C12;
 $red: #C0392B;
+
+$font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-size: 16px;
+$font-weight: 200;
+$line-height: 130%;
+$letter-spacing: 1px;
+
+// Imports
+@import "normalize";
+@import "vendor";
+
 
 *, *:before, *:after {
     -moz-box-sizing: border-box;
@@ -15,11 +22,11 @@ $red: #C0392B;
 }
 
 body {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 16px;
-    font-weight: 200;
-    letter-spacing: 1px;
-    line-height: 130%;
+    font-family: $font-family;
+    font-size: $font-size;
+    font-weight: $font-weight;
+    letter-spacing: $letter-spacing;
+    line-height: $line-height;
 }
 
 .wrapper {
@@ -494,6 +501,11 @@ body {
     }
 }
 
+.select-bets select {
+    width: 20%;
+    margin: 0 2%;
+}
+
 .special-bets {
     position: relative;
     margin-bottom: 40px;
@@ -501,7 +513,7 @@ body {
     .edit-special-bets-button {
         display: block;
         width: 110px;
-        margin: 0 auto 15px auto;
+        margin: 20px auto 15px auto;
         outline: none;
         border: 0;
         background: $blue;
@@ -662,73 +674,6 @@ body {
 .select-bets {
     text-align: center;
 }
-
-// Notifications
-.ng-notify-item {
-    position: fixed;
-    top: 10px;
-    left: 0;
-    right: 0;
-    max-width: 300px;
-    padding: 10px 15px;
-    margin: 0 auto;
-    text-align: center;
-    list-style: none;
-
-    // Temporary
-    border-radius: 4px;
-    background: $blue;
-    border: 1px solid darken($blue, 5%);
-    color: white;
-    box-shadow: 0px 2px 6px rgba(0,0,0,0.25);
-
-    p {
-        font-weight: 300;
-        margin: 0;
-    }
-}
-
-.ng-notify-item.ng-enter, .ng-notify-item.ng-move {
-    -webkit-transition: 0.4s linear all;
-    -moz-transition: 0.4s linear all;
-    -o-transition: 0.4s linear all;
-    transition: 0.4s linear all;
-    opacity: 0;
-}
-
-.ng-notify-item.ng-enter.ng-enter-active,
-.ng-notify-item.ng-move.ng-move-active {
-    opacity: 1;
-}
-
-.ng-notify-item.ng-leave {
-    -webkit-animation: 0.5s ng-notify-hide;
-    -moz-animation: 0.5s ng-notify-hide;
-    -o-animation: 0.5s ng-notify-hide;
-    animation: 0.5s ng-notify-hide;
-}
-
-@keyframes ng-notify-hide {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
-
-@-webkit-keyframes ng-notify-hide {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
-
-@-moz-keyframes ng-notify-hide {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
-
-@-o-keyframes ng-notify-hide {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
-
-
 
 // RESPONSIVE
 

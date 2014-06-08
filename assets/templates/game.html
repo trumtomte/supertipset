@@ -1,4 +1,5 @@
 <tr class="game">
+    <!-- Game has been played -->
     <td data-ng-if="isDone" class="date done">Avgjord</td>
     <td data-ng-if="isDone" class="teams">{{ game.teams[0].name }} - {{ game.teams[1].name }}</td>
     <td data-ng-if="isDone" class="result">{{ game.teams[0].result }} - {{ game.teams[1].result }}</td>
@@ -11,29 +12,16 @@
         <span data-ng-if="!bet">-</span>
     </td>
 
-
-    <td data-ng-if="!isDone" class="date">{{ game.start | date:'d/M' }}</td>
+    <!-- Game hasnt been played yet -->
+    <td data-ng-if="!isDone" class="date">{{ game.start | date:'d/M, HH:mm' }}</td>
     <td data-ng-if="!isDone" class="teams">{{ game.teams[0].name }} - {{ game.teams[1].name }}</td>
     <td data-ng-if="!isDone" class="results">-</td>
     <td data-ng-if="!isDone" class="bets">
-        <!--
-        <form data-ng-if="bet" data-ng-submit="update(betOne, betTwo)">
-            <select data-ng-model="betOne" data-ng-options="opt for opt in bettingRange"></select>
-            <select data-ng-model="betTwo" data-ng-options="opt for opt in bettingRange"></select>
-            <button type="submit">Spara</button>
-        </form>
-
-        <form data-ng-if="!bet" data-ng-submit="create(betOne, betTwo)">
-            <select data-ng-model="betOne" data-ng-options="opt for opt in bettingRange"></select>
-            <select data-ng-model="betTwo" data-ng-options="opt for opt in bettingRange"></select>
-            <button type="submit">Tipsa</button>
-        </form>
-        -->
         <span data-ng-if="bet">{{ bet.teams[0].bet }} - {{ bet.teams[1].bet }}</span>
         <span data-ng-if="!bet">0 - 0</span>
     </td>
     <td data-ng-if="!isDone">
-        <button data-ng-if="bet" data-ng-click="updateBet()" class="update-bet" type="button">Tipsa</button>
-        <button data-ng-if="!bet" data-ng-click="createBet()" class="create-bet" type="button">Tipsa</button>
+        <button data-ng-if="bet" data-ng-click="updateBet()" class="update-bet" type="button">Tippa</button>
+        <button data-ng-if="!bet" data-ng-click="createBet()" class="create-bet" type="button">Tippa</button>
     </td>
 </tr>

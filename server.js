@@ -3,19 +3,21 @@ var express     = require( 'express' ),
     auth        = require( './utilities/auth' ),
     middleware  = require( './utilities/middleware' ),
     routes      = {},
-    app         = express(),
-    // Custom router for API endpoints
+    server      = express(),
+    app         = express.Router(),
     api         = express.Router();
 
 // HTTP port
 var port = process.env.PORT || 3000,
     dev = process.env.DEV ? true : false;
 
-// Middleware configuration
-// TODO split into two separate routers (App/API)
-middleware.conf( app );
+server.set( 'view engine', 'jade' );
 
-[ // API Routes
+// Middleware for App and Api routes
+middleware.App( app );
+middleware.Api( api );
+
+[ // Require routes
     'users',
     'usergroups',
     'groups',
@@ -28,7 +30,9 @@ middleware.conf( app );
     'calculate'
 ].map( function( route ) { routes[route] = require( './routes/' + route ); });
 
-// API endpoints
+// ===============
+// API Endpoints
+// ===============
 api.use( auth.validate );
 api.get( '/users/:id',          routes.users.findOne );
 api.put( '/users/:id',          routes.users.update );
@@ -48,20 +52,33 @@ api.post( '/specialbets/:id',   routes.specialbets.create );
 api.get( '/teams',              routes.teams.all );
 api.get( '/teams/:id',          routes.teams.findOne );
 api.get( '/toplists',           routes.toplists.all );
-// Define API entry endpoint
-app.use( '/api', api );
+    
+// 404 Handler
+api.use( function( req, res, next ) {
+    res.json( 404, { statusCode: 404, error: 'API endpoint does not exist' } );
+});
+// Error handler
+api.use( function( err, req, res, next ) {
+    res.json( 500, { statusCode: 500, error: 'internal server error' } );
+});
 
-// Login
+// ====================
+// Application routes
+// ====================
 app.get( '/login',  routes.login.form );
 app.get( '/logout', routes.login.logout );
 app.post( '/login', routes.login.login );
+app.post( '/calculate', routes.calculate.game );
+app.post( '/users', routes.users.create );
 
-// Backend
+app.get( '/', function( req, res ) {
+    res.render( 'index' );
+});
+
 app.get( '/app', auth.check, function( req, res ) {
     res.render( 'app', { id: req.session.userId, dev: dev } );
 });
 
-app.post( '/calculate', routes.calculate.game );
 app.get( '/admin-calculate', function( req, res ) {
     res.render( 'admin', {
         error: req.query.error,
@@ -70,20 +87,14 @@ app.get( '/admin-calculate', function( req, res ) {
     });
 });
 
-// Frontend
-app.get( '/', function( req, res ) {
-    res.render( 'index' );
-});
-
 app.get( '/register', function( req, res ) {
     res.render( 'register', {
         error: req.query.error,
         token: req.csrfToken()
     });
 });
-app.post( '/users', routes.users.create );
 
-// 404 (passes the error to the error handler)
+// 404 Handler
 app.use( function( req, res, next ) {
     var err = new Error( 'Page Not Found' );
     err.status = 404;
@@ -92,18 +103,17 @@ app.use( function( req, res, next ) {
 
 // Error handler
 app.use( function( err, req, res, next ) {
-    // TODO more correctly split middleware between the App and API?
-    if ( req.path.split( '/' )[1] == 'api' ) {
-        console.log( err );
-        res.json( 500, { statusCode: 500, error: 'Internal Server Error' } );
-    } else {
-        err.status = err.status || 500;
-        res.status( err.status );
-        res.render( 'error', { status: err.status } );
-    }
+    // TODO better error pages
+    err.status = err.status || 500;
+    res.status( err.status );
+    res.render( 'error', { status: err.status } );
 });
 
+// Make server use App/Api endpoints
+server.use( '/api', api );
+server.use( '/', app );
+
 // Start listening for requests
-app.listen( port, function() {
+server.listen( port, function() {
     console.log( '[SERVER]: Started listening on port ' + port );
 });

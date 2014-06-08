@@ -1,24 +1,11 @@
-angular.module( 'supertipset.controllers' ).controller( 'BetsCtrl', ['$scope', '$route', 'ngNotify', 'api', function( $scope, $route, notify, api ) {
+angular.module( 'supertipset.controllers' ).controller( 'BetsCtrl', ['$scope', '$route', 'api', 'ngNotify', function( $scope, $route, api, notify ) {
     $scope.user = $route.current.locals.user.data.user;
     $scope.rounds = $route.current.locals.rounds.data.rounds;
     $scope.bets = $route.current.locals.bets.data.bets;
     $scope.teams = $route.current.locals.teams.data.teams;
-    // Determine if the tournament has started or not
-    $scope.hasStarted = false;
-    // Determine if the tournament hasnt started by checking the start date of the first round
-    if ( $scope.rounds && $scope.rounds.length ) {
-        var today = new Date(),
-            firstRoundStart = new Date( Date.parse( $scope.rounds[0].start ) );
-            
-        if ( today > firstRoundStart ) {
-           $scope.hasStarted = true; 
-        }
-    }
-
     $scope.isEditing = false;
-    $scope.edit = function() {
-        $scope.isEditing = ! $scope.isEditing;
-    };
+    // Bool to determine if the tournament has started or not
+    $scope.hasStarted = false;
     
     // Flatten array of teams for use in ng-select
     function flatten( ts ) {
@@ -40,8 +27,22 @@ angular.module( 'supertipset.controllers' ).controller( 'BetsCtrl', ['$scope', '
         return a;
     }
 
-    $scope.teamsFlat = flatten( $scope.teams );
+    // Determine if the tournament hasnt started by checking the start date of the first round
+    if ( $scope.rounds && $scope.rounds.length ) {
+        var todayDate = new Date(),
+            rStartDate = new Date( Date.parse( $scope.rounds[0].start ) );
+            
+        if ( todayDate > rStartDate ) {
+           $scope.hasStarted = true; 
+        }
+    }
 
+    $scope.edit = function() {
+        $scope.isEditing = ! $scope.isEditing;
+    };
+
+    $scope.teamsFlat = flatten( $scope.teams );
+    // Select choices
     $scope.selectedTeam = $scope.user.team.id ? _.find( $scope.teams, { id: $scope.user.team.id } ) : $scope.teams[0];
     $scope.selectedPlayer = $scope.user.player.id ? _.find( $scope.teamsFlat, { id: $scope.user.player.id } ) : $scope.teamsFlat[0];
     $scope.selectedGoals = $scope.user.player.goals || 0;
@@ -80,12 +81,11 @@ angular.module( 'supertipset.controllers' ).controller( 'BetsCtrl', ['$scope', '
             notify( 'main' ).info( 'Specialtips uppdaterat!' );
         };
 
-        if ( $scope.user.player.id ) {
-            api.specialbets.update( bets ).success( success );
-        } else {
+        if ( ! $scope.user.player.id ) {
             bets.tournament_id = 1;
-            api.specialbets.create( bets ).success( success );
         }
+
+        api.specialbets.create( bets ).success( success );
     };
 }]);
 

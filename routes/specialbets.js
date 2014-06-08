@@ -1,5 +1,6 @@
 var db = require( '../utilities/database' );
 
+// Update special bets for a user
 exports.update = function( req, res, next ) {
     var params = [
         req.body.player_id,
@@ -10,13 +11,14 @@ exports.update = function( req, res, next ) {
     
     db.updateSpecialBets( params, function( err, result ) {
         if ( err ) return next( err );
-        res.json( result );
+        res.send( 200 );
     });
 };
 
+// Create new special bets for a user
 exports.create = function( req, res, next ) {
     db.createSpecialBets( req.body, function( err, result ) {
         if ( err ) return next( err );
-        res.json( result );
+        res.send( 200 );
     });
 };

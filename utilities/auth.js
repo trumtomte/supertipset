@@ -6,7 +6,7 @@ exports.check = function( req, res, next ) {
     res.redirect( '/login?error=1' );
 };
 
-// Used to validate API requests (only allowed for active users
+// Used to validate API requests (only allowed for active users)
 exports.validate = function( req, res, next ) {
     if ( req.session.userId ) return next();
     res.json( 401, { statusCode: 401, error: 'Unauthorized request to API' } );

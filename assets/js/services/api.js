@@ -1,16 +1,17 @@
 angular.module( 'supertipset' ).factory( 'api', ['$http', '$cacheFactory', function( $http, $cacheFactory ) {
+    // Default HTTP cache object
+    var cache = $cacheFactory.get( '$http' );
+
+    // TODO proper solution / error notification?
     // API error handler
     function e( message, obj ) {
         return function( response ) {
-            // TODO notification?
             console.log( '[API ERROR]', message, obj, '[RESPONSE]', response );
         }
     }
 
-    var cache = $cacheFactory.get( '$http' );
-
     // API methods
-    return {
+    var methods = {
         // Users
         users: {
             findOne: function( id ) {
@@ -101,6 +102,7 @@ angular.module( 'supertipset' ).factory( 'api', ['$http', '$cacheFactory', funct
                 return $http.get( '/api/toplists', { cache: true } ).error( e( 'Unable to fetch all top lists' ) );
             }
         }
-
     };
+
+    return methods;
 }]);

@@ -1,5 +1,6 @@
 // Dependencies
-var express         = require( 'express' ),
+var crypto          = require( 'crypto' ),
+    express         = require( 'express' ),
     logger          = require( 'morgan' ),
     bodyparser      = require( 'body-parser' ),
     cookieParser    = require( 'cookie-parser' ),
@@ -7,12 +8,11 @@ var express         = require( 'express' ),
     csrf            = require( 'csurf' ),
     fs              = require( 'fs' );
 
-var cookieParserSecret = '1823uc98duaks9duoisdfsdjkhfhkq0weu0djdqwd',
-    cookieSessionSecret = 'pokrktg9031u4hhkadkKJDHKSD8QWEH1sdusd772EWJ';
+var cookieParserSecret = crypto.randomBytes( 64 ).toString( 'base64' ),
+    cookieSessionSecret = crypto.randomBytes( 64 ).toString( 'base64' );
 
-// Middleware application configuration
-exports.conf = function( app ) {
-    app.set( 'view engine', 'jade' );
+// Application configuration
+exports.App = function( app ) {
     app.use( logger() );
     app.use( function( req, res, next ) {
         // One of three static files
@@ -41,4 +41,14 @@ exports.conf = function( app ) {
         res.cookie( 'XSRF-TOKEN', req.csrfToken() );
         next();
     });
+
+};
+
+// API configuration
+exports.Api = function( api ) {
+    api.use( logger() );
+    api.use( bodyparser() );
+    api.use( cookieParser( cookieParserSecret ) );
+    api.use( cookieSession({ secret: cookieSessionSecret }) );
+    api.use( csrf() );
 };
