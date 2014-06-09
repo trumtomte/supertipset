@@ -32,9 +32,9 @@ function calculate( results, bets ) {
         points += 4;
     }
 
-    // If a user placed a bet equal to goals from one of the teams = 2 pts
+    // If a user placed a bet equal to goals from one of the teams = 1 pts
     if ( t1Result == t1Bet || t2Result == t2Bet ) {
-        points += 2;
+        points += 1;
     }
 
     return points;

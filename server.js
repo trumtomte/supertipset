@@ -59,6 +59,7 @@ api.use( function( req, res, next ) {
 });
 // Error handler
 api.use( function( err, req, res, next ) {
+    console.log( '[API]', err );
     res.json( 500, { statusCode: 500, error: 'internal server error' } );
 });
 
@@ -103,6 +104,7 @@ app.use( function( req, res, next ) {
 
 // Error handler
 app.use( function( err, req, res, next ) {
+    console.log( '[APP]', err );
     // TODO better error pages
     err.status = err.status || 500;
     res.status( err.status );

@@ -6,14 +6,21 @@ var crypto          = require( 'crypto' ),
     cookieParser    = require( 'cookie-parser' ),
     cookieSession   = require( 'cookie-session' ),
     csrf            = require( 'csurf' ),
+    compress        = require( 'compression' ),
     fs              = require( 'fs' );
 
+// Session Tokens
 var cookieParserSecret = crypto.randomBytes( 64 ).toString( 'base64' ),
     cookieSessionSecret = crypto.randomBytes( 64 ).toString( 'base64' );
+
+// Max Age for static content (1 day)
+var maxAge = 60 * 60 * 24;
 
 // Application configuration
 exports.App = function( app ) {
     app.use( logger() );
+    app.use( compress() );
+    // TODO Cache header?
     app.use( function( req, res, next ) {
         // One of three static files
         if ( req.url == '/robots.txt' ||
@@ -32,7 +39,7 @@ exports.App = function( app ) {
 
         next();
     });
-    app.use( '/assets', express.static( __dirname + '/../assets' ) );
+    app.use( '/assets', express.static( __dirname + '/../assets', { maxAge: maxAge } ) );
     app.use( bodyparser() );
     app.use( cookieParser( cookieParserSecret ) );
     app.use( cookieSession({ secret: cookieSessionSecret }) );

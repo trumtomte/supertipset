@@ -36,8 +36,12 @@ exports.findOne = function( req, res, next ) {
 
 // Create a new user
 exports.create = function( req, res, next ) {
-    if ( req.body.email == '' || req.body.username == '' ||
-         req.body.firstPassword == '' || req.body.secondPassword == '' ) {
+    if ( req.body.email == '' ||
+         req.body.username == '' ||
+         req.body.firstname == '' ||
+         req.body.lastname == '' ||
+         req.body.firstPassword == '' ||
+         req.body.secondPassword == '' ) {
         return res.redirect( '/register?error=1' );
      }
 
@@ -58,8 +62,10 @@ exports.create = function( req, res, next ) {
             if ( err ) return res.redirect( '/register?error=3' );
 
             var user = {
-                username: req.body.username,
                 email: req.body.email,
+                username: req.body.username,
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
                 password: hash
             };
 

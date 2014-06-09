@@ -1,7 +1,10 @@
 <tr class="game">
     <!-- Game has been played -->
     <td data-ng-if="isDone" class="date done">Avgjord</td>
-    <td data-ng-if="isDone" class="teams">{{ game.teams[0].name }} - {{ game.teams[1].name }}</td>
+    <td data-ng-if="isDone" class="teams">
+        {{ game.teams[0].name }} - {{ game.teams[1].name }}
+        <span data-ng-show="game.group">({{ game.group }})</span>
+    </td>
     <td data-ng-if="isDone" class="result">{{ game.teams[0].result }} - {{ game.teams[1].result }}</td>
     <td data-ng-if="isDone" class="bets">
         <span data-ng-if="bet">{{ bet.teams[0].bet }} - {{ bet.teams[1].bet }}</span>
@@ -14,7 +17,10 @@
 
     <!-- Game hasnt been played yet -->
     <td data-ng-if="!isDone" class="date">{{ game.start | date:'d/M, HH:mm' }}</td>
-    <td data-ng-if="!isDone" class="teams">{{ game.teams[0].name }} - {{ game.teams[1].name }}</td>
+    <td data-ng-if="!isDone" class="teams">
+        {{ game.teams[0].name }} - {{ game.teams[1].name }}
+        <span data-ng-show="game.group">({{ game.group }})</span>
+    </td>
     <td data-ng-if="!isDone" class="results">-</td>
     <td data-ng-if="!isDone" class="bets">
         <span data-ng-if="bet">{{ bet.teams[0].bet }} - {{ bet.teams[1].bet }}</span>

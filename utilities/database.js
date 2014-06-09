@@ -1,22 +1,40 @@
 var mysql = require( 'mysql' );
 
-// Create a MySQL connection
-var conn = mysql.createConnection({
-    host: process.env.MYSQL_HOST || 'localhost',
-    port: process.env.MYSQL_PORT || 3306,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASS || '',
-    database: process.env.MYSQL_DB || 'supertipset'
-});
+// Database object and configuration
+var conn,
+    config = {
+        host: process.env.MYSQL_HOST || 'localhost',
+        port: process.env.MYSQL_PORT || 3306,
+        user: process.env.MYSQL_USER,
+        password: process.env.MYSQL_PASS || '',
+        database: process.env.MYSQL_DB || 'supertipset'
+    };
 
-// Connect to the database
-conn.connect( function( err ) {
-    if ( err ) {
-        console.log( '[SERVER]: Unable to establish a database connection' ); 
-        throw err;
-    }
-    console.log( '[SERVER]: Database connection established' );
-});
+// Database connection handler
+function DBconnect() {
+    conn = mysql.createConnection( config );
+
+    conn.connect( function( err ) {
+        if ( err ) {
+            console.log( '[SERVER]: Unable to establish a database connection', err ); 
+            // Try to reconnect
+            setTimeout( DBconnect, 2000 );
+        }
+        console.log( '[SERVER]: Database connection established' );
+    });
+
+    conn.on( 'error', function( err ) {
+        console.log( '[DATABASE ERROR]', err );
+        if ( err.code === 'PROTOCOL_CONNECTION_LOST' ) {
+            // Try to reconnect
+            DBconnect();
+        } else {
+            throw err;
+        }
+    });
+}
+
+DBconnect();
 
 // TODO cleanup deluxé
 
@@ -33,7 +51,7 @@ var USERBETS_BY_ID =        'SELECT r.name AS round, r.id AS round_id, g.id AS g
     UPDATE_GROUP_PASS =     'UPDATE Groups SET password = ? WHERE id = ?',
     UPDATE_GROUP_ADMIN =    'UPDATE Groups SET user_id = ? WHERE id = ?',
     UPDATE_GROUP_DESC =     'UPDATE Groups SET description = ? WHERE id = ?',
-    ROUNDS_BY_ID =          'SELECT r.name AS round, r.id AS round_id, g.id AS game_id, r.start_date AS round_start, r.stop_date AS round_stop, g.start_date AS game_start, g.stop_date AS game_stop, g.team_1_id, g.team_2_id, res.team_1_goals AS team_1_result, res.team_2_goals AS team_2_result, (SELECT l.name FROM Teams AS l WHERE l.id = g.team_1_id) AS team_1_name, (SELECT l.name FROM Teams AS l WHERE l.id = g.team_2_id) AS team_2_name FROM Tournaments AS t INNER JOIN Rounds AS r ON t.id = r.tournament_id INNER JOIN Games AS g ON r.id = g.round_id LEFT JOIN Results as res ON g.id = res.game_id WHERE t.id = ? GROUP BY r.name, g.id ORDER BY g.id',
+    ROUNDS_BY_ID =          'SELECT r.name AS round, r.id AS round_id, g.id AS game_id, g.group_name AS group_name, r.start_date AS round_start, r.stop_date AS round_stop, g.start_date AS game_start, g.stop_date AS game_stop, g.team_1_id, g.team_2_id, res.team_1_goals AS team_1_result, res.team_2_goals AS team_2_result, (SELECT l.name FROM Teams AS l WHERE l.id = g.team_1_id) AS team_1_name, (SELECT l.name FROM Teams AS l WHERE l.id = g.team_2_id) AS team_2_name FROM Tournaments AS t INNER JOIN Rounds AS r ON t.id = r.tournament_id INNER JOIN Games AS g ON r.id = g.round_id LEFT JOIN Results as res ON g.id = res.game_id WHERE t.id = ? GROUP BY r.name, g.id ORDER BY g.id',
     USERGROUPS_BY_ID =      'SELECT g.id AS group_id, g.name AS group_name, g.user_id AS group_admin, (SELECT ug.id FROM UsersGroups AS ug WHERE ug.user_id = u.id AND ug.group_id = g.id LIMIT 1) AS relation, u.id AS id, u.username AS username, u.firstname AS firstname, u.lastname AS lastname, (COALESCE(SUM(p.points), 0) + COALESCE((SELECT bsr.player + bsr.goals + bsr.team FROM BetsSpecialResults AS bsr WHERE bsr.user_id = u.id), 0)) AS points, t.name AS team, t.id AS team_id FROM Groups AS g INNER JOIN UsersGroups AS ug ON g.id = ug.group_id INNER JOIN Users AS u ON ug.user_id = u.id LEFT JOIN Points AS p ON u.id = p.user_id INNER JOIN BetsSpecial AS bs ON u.id = bs.user_id INNER JOIN Teams AS t ON bs.team_id = t.id WHERE g.id IN ( SELECT g.id FROM Groups AS g INNER JOIN UsersGroups AS ug ON g.id = ug.group_id INNER JOIN Users AS u ON ug.user_id = u.id WHERE u.id = ? ) GROUP BY g.name, u.username ORDER BY g.name, points DESC',
     CREATE_USERGROUP =      'INSERT INTO UsersGroups SET ?',
     DELETE_USERGROUP =      'DELETE FROM UsersGroups WHERE id = ?',

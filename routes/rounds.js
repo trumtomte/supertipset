@@ -35,6 +35,7 @@ exports.find = function( req, res, next ) {
                     id: game.game_id,
                     start: game.game_start,
                     stop: game.game_stop,
+                    group: game.group_name,
                     teams: [
                         { id: game.team_1_id, result: game.team_1_result, name: game.team_1_name },
                         { id: game.team_2_id, result: game.team_2_result, name: game.team_2_name }

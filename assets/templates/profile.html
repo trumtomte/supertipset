@@ -1,11 +1,16 @@
 <div class="profile">
     <button data-ng-if="user.current" data-ng-click="passwordDialog()" class="change-password" type="button">Ändra lösenord</button>
-    <h1 class="username">{{ user.username }}</h1>
+    <h1 class="username">{{ user.firstname }} {{ user.lastname }} <small>({{ user.username }})</small></h1>
+
+    <div class="user-points-container">
+        <h6>POÄNG</h6>
+        <p class="user-points">{{ user.points }}</p>
+    </div>
 
     <table class="profile-items">
+        <caption>Specialtips</caption>
         <thead>
             <tr>
-                <th>POÄNG</th>
                 <th>LAG</th>
                 <th>SKYTTEKUNG</th>
                 <th>MÅL</th>
@@ -14,7 +19,6 @@
 
         <tbody>
             <tr>
-                <td>{{ user.points }}</td>
                 <td>{{ user.team.name | notnull:'-' }}</td>
                 <td>{{ user.player.firstname | notnull:'-' }} {{ user.player.lastname }}</td>
                 <td>{{ user.player.goals | notnull:0 }}</td>

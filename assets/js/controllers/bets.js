@@ -81,11 +81,13 @@ angular.module( 'supertipset.controllers' ).controller( 'BetsCtrl', ['$scope', '
             notify( 'main' ).info( 'Specialtips uppdaterat!' );
         };
 
-        if ( ! $scope.user.player.id ) {
+        // Create new special bets or update existing bets
+        if ( $scope.user.player.id ) {
+            api.specialbets.update( bets ).success( success );
+        } else {
             bets.tournament_id = 1;
+            api.specialbets.create( bets ).success( success );
         }
-
-        api.specialbets.create( bets ).success( success );
     };
 }]);
 

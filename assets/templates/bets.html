@@ -1,9 +1,14 @@
 <div class="special-bets">
+    <div class="user-points-container">
+        <h6>POÄNG</h6>
+        <p class="user-points">{{ user.points }}</p>
+    </div>
+
     <div data-ng-if="hasStarted">
         <table class="profile-summary">
+            <caption>Specialtips</caption>
             <thead>
                 <tr>
-                    <th>POÄNG</th>
                     <th>LAG</th>
                     <th>SKYTTEKUNG</th>
                     <th>MÅL</th>
@@ -12,7 +17,6 @@
 
             <tbody>
                 <tr>
-                    <td>{{ user.points }}</td>
                     <td>{{ user.team.name | notnull:'-' }}</td>
                     <td>{{ user.player.firstname | notnull:'-' }} {{ user.player.lastname }}</td>
                     <td>{{ user.player.goals | notnull:0 }}</td>
@@ -23,9 +27,12 @@
     <!-- Tournament hasnt started -->
     <div data-ng-if="!hasStarted">
         <table data-ng-hide="isEditing" class="profile-summary">
+            <caption>
+                Specialtips
+                <button data-ng-hide="isEditing" data-ng-click="edit()" class="edit-special-bets-button" type="button">Redigera</button>
+            </caption>
             <thead>
                 <tr>
-                    <th>POÄNG</th>
                     <th>LAG</th>
                     <th>SKYTTEKUNG</th>
                     <th>MÅL</th>
@@ -34,20 +41,18 @@
 
             <tbody>
                 <tr>
-                    <td>{{ user.points }}</td>
                     <td>{{ user.team.name | notnull:'-' }}</td>
                     <td>{{ user.player.firstname | notnull:'-' }} {{ user.player.lastname }}</td>
                     <td>{{ user.player.goals | notnull:0 }}</td>
                 </tr>
             </tbody>
         </table>
-        <button data-ng-hide="isEditing" data-ng-click="edit()" class="edit-special-bets-button" type="button">Specialtips</button>
 
         <form data-ng-show="isEditing" data-ng-submit="specialBet(selectedTeam, selectedPlayer, selectedGoals)" class="edit-special-bets">
             <table class="profile-summary">
+                <caption>Specialtips</caption>
                 <thead>
                     <tr>
-                        <th>POÄNG</th>
                         <th>LAG</th>
                         <th>SKYTTEKUNG</th>
                         <th>MÅL</th>
@@ -56,7 +61,6 @@
 
                 <tbody>
                     <tr>
-                        <td>{{ user.points }}</td>
                         <td>
                             <select data-ng-model="selectedTeam" data-ng-options="team.name for team in teams"></select>
                         </td>

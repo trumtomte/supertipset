@@ -139,6 +139,7 @@ CREATE TABLE Games (
     team_1_id   INT UNSIGNED NOT NULL,
     team_2_id   INT UNSIGNED NOT NULL,
     round_id    INT UNSIGNED NOT NULL,
+    group_name  VARCHAR(20) NOT NULL,
     start_date  TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     stop_date   TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
