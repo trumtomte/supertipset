@@ -7,6 +7,14 @@ angular.module( 'supertipset' ).factory( 'calculator', function() {
             t1Bet = bets.teams[0].bet,
             t2Bet = bets.teams[1].bet;
 
+        // Invalid input
+        if ( ! angular.isNumber( t1Result ) ||
+             ! angular.isNumber( t2Result ) ||
+             ! angular.isNumber( t1Bet ) ||
+             ! angular.isNumber( t2Bet ) ) {
+                 return 0;
+         }
+
         if ( t1Result == t1Bet &&
              t2Result == t2Bet ) {
             // Perfect bet gives 10 pts
