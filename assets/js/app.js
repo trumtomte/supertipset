@@ -67,6 +67,9 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
             }],
             groups: ['api', function( api ) {
                 return api.usergroups.find( userID );
+            }],
+            rounds: ['api', function( api ) {
+                return api.rounds.find( 1 );
             }]
         }
     });
@@ -81,6 +84,9 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
             }],
             groups: ['api', '$route', function( api, $route ) {
                 return api.usergroups.find( $route.current.params.id );
+            }],
+            rounds: ['api', function( api ) {
+                return api.rounds.find( 1 );
             }]
         }
     });

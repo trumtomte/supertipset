@@ -603,12 +603,59 @@ body {
     }
 
     .edit-special-bets {
-        width: 80%;
+        text-align: center;
         margin: 0 auto;
+
+        form {
+            display: inline-block;
+            width: 35%;
+        }
+
+        h4 {
+            font-size: 18px;
+            font-weight: 200;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: darken($green, 10%);
+            text-align: center;
+        }
 
         .profile-summary {
             width: 100%;
             margin-bottom: 10px;
+        }
+
+        .special-bets-items {
+            border-left: 1px solid $green;
+            border-right: 1px solid $green;
+            border-bottom: 1px solid $green;
+            border-radius: 4px 4px 0 0;
+            margin-bottom: 5px;
+        }
+
+        .special-bet-container {
+            text-align: center;
+
+            input, select {
+                margin: 15px;
+            }
+
+            label {
+                display: block;
+                font-weight: 300;
+                font-size: 12px;
+                color: darken($green, 10%);
+                padding: 5px 15px;
+                border-bottom: 1px solid $green;
+                border-top: 1px solid $green;
+
+            }
+
+            &:first-child {
+                label {
+                    border-radius: 4px 4px 0 0;
+                }
+            }
         }
 
         input {
@@ -725,6 +772,46 @@ body {
     }
 }
 
+
+@media (max-width: 800px) {
+    .toplist {
+        width: 98%;
+        margin: 0 auto 40px auto;
+        display: block;
+        padding: 0;
+    }
+}
+@media (max-width: 750px) {
+    .profile .change-password {
+        position: static;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .group {
+        max-width: 98%;
+    }
+    .logout {
+        position: static;
+        display: block;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .special-bets .edit-special-bets form {
+        width: 45%;
+    }
+}
+@media (max-width: 700px) {
+    .groups {
+        max-width: 98%;
+    }
+    .group-table {
+        thead th, tbody td {
+            font-size: 14px !important;
+        }
+    }
+}
+
 @media (max-width: 650px) {
     .groups-table .hidden-col {
         display: none;
@@ -732,6 +819,10 @@ body {
 
     .profile {
         width: 98% !important;
+    }
+
+    .special-bets .edit-special-bets form {
+        width: 65%;
     }
 }
 @media (max-width: 500px) {
@@ -779,9 +870,16 @@ body {
             }
         }
     }
+    
+    .special-bets .edit-special-bets form {
+        width: 90%;
+    }
 }
-
 @media (max-width: 420px) {
+    .special-bets .edit-special-bets-button {
+        position: static;
+    }
+
     .profile {
         .profile-items {
             tbody td {
@@ -810,39 +908,3 @@ body {
         }
     }
 }
-@media (max-width: 800px) {
-    .toplist {
-        width: 98%;
-        margin: 0 auto 40px auto;
-        display: block;
-        padding: 0;
-    }
-}
-@media (max-width: 750px) {
-    .profile .change-password {
-        position: static;
-        width: 100%;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-    .group {
-        max-width: 98%;
-    }
-    .logout {
-        position: static;
-        display: block;
-        text-align: center;
-        margin-bottom: 15px;
-    }
-}
-@media (max-width: 700px) {
-    .groups {
-        max-width: 98%;
-    }
-    .group-table {
-        thead th, tbody td {
-            font-size: 14px !important;
-        }
-    }
-}
-

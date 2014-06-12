@@ -1,10 +1,22 @@
 angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl', ['$scope', '$route', 'api', 'ngDialog', 'ngNotify', 'consts.userID', function( $scope, $route, api, dialog, notify, userID ) {
     $scope.user = $route.current.locals.user.data.user;
     $scope.groups = $route.current.locals.groups.data.groups;
+    $scope.rounds = $route.current.locals.rounds.data.rounds;
     $scope.user.current = false;
+    $scope.hasStarted = false;
 
     if ( ! $route.current.params.id || $route.current.params.id == userID ) {
         $scope.user.current = true;
+    }
+    
+    // Determine if the tournament hasnt started by checking the start date of the first round
+    if ( $scope.rounds && $scope.rounds.length ) {
+        var todayDate = new Date(),
+            rStartDate = new Date( Date.parse( $scope.rounds[0].start ) );
+            
+        if ( todayDate > rStartDate ) {
+           $scope.hasStarted = true; 
+        }
     }
 
     if ( $scope.groups ) {

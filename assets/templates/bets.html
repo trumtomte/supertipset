@@ -9,9 +9,10 @@
             <caption>Specialtips</caption>
             <thead>
                 <tr>
-                    <th>LAG</th>
+                    <th>VINNARE</th>
                     <th>SKYTTEKUNG</th>
                     <th>MÅL</th>
+                    <th>POÄNG</th>
                 </tr>
             </thead>
 
@@ -20,6 +21,7 @@
                     <td>{{ user.team.name | notnull:'-' }}</td>
                     <td>{{ user.player.firstname | notnull:'-' }} {{ user.player.lastname }}</td>
                     <td>{{ user.player.goals | notnull:0 }}</td>
+                    <td>0</td>
                 </tr>
             </tbody>
         </table>
@@ -29,13 +31,14 @@
         <table data-ng-hide="isEditing" class="profile-summary">
             <caption>
                 Specialtips
-                <button data-ng-hide="isEditing" data-ng-click="edit()" class="edit-special-bets-button" type="button">Redigera</button>
+                <button data-ng-hide="isEditing" data-ng-click="edit()" class="edit-special-bets-button" type="button">Tippa</button>
             </caption>
             <thead>
                 <tr>
-                    <th>LAG</th>
+                    <th>VINNARE</th>
                     <th>SKYTTEKUNG</th>
                     <th>MÅL</th>
+                    <th>POÄNG</th>
                 </tr>
             </thead>
 
@@ -44,39 +47,60 @@
                     <td>{{ user.team.name | notnull:'-' }}</td>
                     <td>{{ user.player.firstname | notnull:'-' }} {{ user.player.lastname }}</td>
                     <td>{{ user.player.goals | notnull:0 }}</td>
+                    <td>0</td>
                 </tr>
             </tbody>
         </table>
 
-        <form data-ng-show="isEditing" data-ng-submit="specialBet(selectedTeam, selectedPlayer, selectedGoals)" class="edit-special-bets">
-            <table class="profile-summary">
-                <caption>Specialtips</caption>
-                <thead>
-                    <tr>
-                        <th>LAG</th>
-                        <th>SKYTTEKUNG</th>
-                        <th>MÅL</th>
-                    </tr>
-                </thead>
+        <div data-ng-show="isEditing"class="edit-special-bets">
+            <form data-ng-submit="specialBet(selectedTeam, selectedPlayer, selectedGoals)">
+                <h4>Tippa specialtips</h4>
+                <div class="special-bets-items">
+                    <div class="special-bet-container">
+                        <label>VINNARE</label>
+                        <select data-ng-model="selectedTeam" data-ng-options="team.name for team in teams"></select>
+                    </div>
+                    <div class="special-bet-container">
+                        <label>SKYTTEKUNG</label>
+                        <select data-ng-model="selectedPlayer" data-ng-options="item.name group by item.group for item in teamsFlat"></select>
+                    </div>
+                    <div class="special-bet-container">
+                        <label>MÅL</label>
+                        <input data-ng-model="selectedGoals" type="number">
+                    </div>
+                </div>
 
-                <tbody>
-                    <tr>
-                        <td>
-                            <select data-ng-model="selectedTeam" data-ng-options="team.name for team in teams"></select>
-                        </td>
-                        <td>
-                            <select data-ng-model="selectedPlayer" data-ng-options="item.name group by item.group for item in teamsFlat"></select>
-                        </td>
-                        <td>
-                            <input data-ng-model="selectedGoals" type="number">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <button data-ng-click="edit()" type="button" class="btn btn-cancel">Avbryt</button>
-            <button type="submit" class="btn btn-ok">Spara</button>
-            <div style="clear:both;"></div>
-        </form>
+                <!--
+                <table class="profile-summary">
+                    <caption>Specialtips</caption>
+                    <thead>
+                        <tr>
+                            <th>VINNARE</th>
+                            <th>SKYTTEKUNG</th>
+                            <th>MÅL</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select data-ng-model="selectedTeam" data-ng-options="team.name for team in teams"></select>
+                            </td>
+                            <td>
+                                <select data-ng-model="selectedPlayer" data-ng-options="item.name group by item.group for item in teamsFlat"></select>
+                            </td>
+                            <td>
+                                <input data-ng-model="selectedGoals" type="number">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                -->
+                <button data-ng-click="edit()" type="button" class="btn btn-cancel">Avbryt</button>
+                <button type="submit" class="btn btn-ok">Spara</button>
+                <div style="clear:both;"></div>
+            </form>
+        </div>
     </div>
 </div>
 

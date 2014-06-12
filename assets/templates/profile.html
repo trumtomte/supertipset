@@ -7,13 +7,14 @@
         <p class="user-points">{{ user.points }}</p>
     </div>
 
-    <table class="profile-items">
+    <table data-ng-if="user.current || (!user.current && hasStarted)" class="profile-items">
         <caption>Specialtips</caption>
         <thead>
             <tr>
-                <th>LAG</th>
+                <th>VINNARE</th>
                 <th>SKYTTEKUNG</th>
                 <th>MÅL</th>
+                <th>POÄNG</th>
             </tr>
         </thead>
 
@@ -22,6 +23,7 @@
                 <td>{{ user.team.name | notnull:'-' }}</td>
                 <td>{{ user.player.firstname | notnull:'-' }} {{ user.player.lastname }}</td>
                 <td>{{ user.player.goals | notnull:0 }}</td>
+                <td>0</td>
             </tr>
         </tbody>
     </table>
