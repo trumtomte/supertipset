@@ -14,7 +14,7 @@ $blue: #3498DB;
 
 *, *:before, *:after {
     -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box; 
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -112,19 +112,41 @@ h1 {
 }
 h2 {
     font-size: 18px;
+    color: $blue;
 }
 
 .index {
     .wrapper {
         max-width: 500px;
-        margin: 10% auto 0 auto;
+        margin: 0 auto;
         text-align: center;
     }
 
     h1 {
         font-size: 50px;
         color: $green;
-        margin-bottom: 60px;
+        margin-bottom: 40px;
+    }
+    .beta{
+        font-size: 30%;
+        margin-left: 2%;
+        vertical-align: middle;
+        color: $blue;
+    }
+    .rules {
+        margin-top: 30px;
+        padding: 0px 1% 0 1%;
+    }
+    .rules{
+        p{
+            text-align: left;
+        }
+        li{
+            text-align: left;
+        }
+        a{
+            color: $blue;
+        }
     }
 
     .register, .login {
@@ -161,7 +183,7 @@ h2 {
     }
 
     .footer {
-        margin-top: 80px;
+
     }
 }
 

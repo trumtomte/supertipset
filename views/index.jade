@@ -9,19 +9,47 @@ html(lang="sv")
 
     body.index
         div.wrapper
-            h1 Supertipset
+            h1
+             | Supertipset
+             small.beta BETA
 
             a.register(href="/register") Registrera dig
             a.login(href="/login") Logga in
 
+            div.rules
+                h2 Spelregler
+                p Supertipset går ut på att tippa resultatet i samtliga matcher i VM. Först och främst är det gruppspelsmatcherna som ska tippas. Så fort finalspelet sätter igång läggs de matcherna ut här på sidan. Dina tips går att redigera fram till 30 min innan avspark i respektive match. Under Specialtips ska du tippa vilket lag som vinner VM, vilken spelare som gör flest mål och hur många mål denna spelare gör. Spelstopp för specialtipset är 12 juni, 21:30.
+                h2 Poängfördelning
+                ul
+                    li Rätt tipstecken (hemmavinst, oavgjort eller bortavinst): 4p
+                    li Rätt antal mål för ett av lagen i matchen: 1p
+                    li Rätt matchresultat: 10p
+                h2 Poängfördelning Specialtips
+                ul
+                    li Rätt VM-vinnare: 50p
+                    li Rätt skyttekung: 25p
+                    li Rätt antal mål för skyttekung: 25p (Ger endast poäng vid rätt skyttekung)
+
+                p Observera att alla resultat räknas efter ordinarie speltid!
+
+                h2 OBS! Viktig information
+                p Supertipset är för tillfället i betastadiet. Det betyder att vi fortfarande håller på med användartester och debugging. Vi kommer att göra förändringar och arbete främst under tiderna 08:00 – 10:00. Under dessa tider kan det vara svårt att logga in på Supertipset.
+                p Det kan även förekomma andra problem, till exempel kan servern bli överbelastad om för många användare skickar in sina tips samtidigt. Detta kan i synnerhet vara ett problem nära en deadline. Således bör ni vara ute i god tid och skicka gärna in ett grundtips över samtliga gruppspelsmatcher så att era matcher finns i Supertipset databas. Grundtipset går att uppdatera fram till deadlinen som är satt till 30 minuter innan respektive matchstart.
+                p Anmäl gärna alla buggar som ni stöter på även förslag till förbättringar mottas, skicka dessa till:
+                a.mail(href="mailto:supertipset2014@gmail.com") supertipset2014@gmail.com
+                p Skulle ni av någon anledning ha problem med att registrera ett resultat och deadlinen närmar sig går det bra, vid nödfall, att skicka ett mail till supertipset@yahoo.se med ditt önskade resultat. Observera att: skickar ni ett mail kommer detta resultat gälla över resultatet i databasen således ska ni bara skicka mail i absolut nödfall eftersom det inte går att uppdatera detta resultat från databasen. Skickar ni ett mail kommer vi lägga in detta resultat för hand och därmed så kommer det tidigare registrerade resultatet tas bort.
+                p Återigen vill vi påpeka att vi inte kan garantera att Supertipsets funktionalitet och drift. Vi tipsar därför att ni skapar ett analogt backupsystem för er liga. Till exempel genom att skicka in användarnas tips till ligans administratör. Vi hoppas givetvis att allt kommer flyta på bra utan större problem.
+                p Vi förbehåller oss rätten att förändra Supertipset på alla plan.
+                p Lycka till önskar vännerna från Supertipset.se
+
         footer.footer
             p &copy; Supertipset 2014
 
-        script
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        script.
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-          ga('create', 'UA-51835440-1', 'supertipset.se');
-          ga('send', 'pageview');
+            ga('create', 'UA-51835440-1', 'supertipset.se');
+            ga('send', 'pageview');
