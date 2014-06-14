@@ -25,7 +25,7 @@ function calculate( results, bets ) {
     if ( resultDiff > 0 && betDiff > 0 ) {
         points += 4;
     // Correctly placed the bet on team 2 as the winner
-    } else if ( resultDiff < 0 == betDiff < 0 ) {
+    } else if ( resultDiff < 0 && betDiff < 0 ) {
         points += 4;
     // Correctly placed the bet on a game draw
     } else if ( resultDiff == 0 && betDiff == 0 ) {

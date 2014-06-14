@@ -31,6 +31,8 @@ exports.find = function( req, res, next ) {
                 groupedBets[key][i] = {
                     id: b.bet_id,
                     game: b.game_id,
+                    game_start: b.game_start,
+                    game_stop: b.game_stop,
                     teams: [
                         { id: b.team_1_id, name: b.team_1_name, bet: b.team_1_bet },
                         { id: b.team_2_id, name: b.team_2_name, bet: b.team_2_bet }
