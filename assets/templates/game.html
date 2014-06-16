@@ -19,7 +19,7 @@
     <td data-ng-if="!isDone" class="date">{{ game.start | date:'d/M, HH:mm' }}</td>
     <td data-ng-if="!isDone" class="teams">
         {{ game.teams[0].name }} - {{ game.teams[1].name }}
-        <span data-ng-show="game.group">({{ game.group }})</span>
+        <span data-ng-show="game.group != ''">({{ game.group }})</span>
     </td>
     <td data-ng-if="!isDone" class="results">-</td>
     <td data-ng-if="!isDone" class="bets">

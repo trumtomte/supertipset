@@ -5,14 +5,26 @@ angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl', ['$scope'
     $scope.user.current = false;
     $scope.hasStarted = false;
 
+    var todayDate = new Date();
+
     if ( ! $route.current.params.id || $route.current.params.id == userID ) {
         $scope.user.current = true;
+    } else {
+        $scope.bets = $route.current.locals.bets.data.bets;
+        $scope.flatBets = _.flatten( $scope.bets, true, 'bets' );
+
+        $scope.flatBets.forEach( function( game ) {
+            var gStartDate = new Date( Date.parse( game.game_start ) );
+
+            if ( todayDate > gStartDate ) {
+                game.isDone = true;
+            }
+        });
     }
     
     // Determine if the tournament hasnt started by checking the start date of the first round
     if ( $scope.rounds && $scope.rounds.length ) {
-        var todayDate = new Date(),
-            rStartDate = new Date( Date.parse( $scope.rounds[0].start ) );
+        var rStartDate = new Date( Date.parse( $scope.rounds[0].start ) );
             
         if ( todayDate > rStartDate ) {
            $scope.hasStarted = true; 

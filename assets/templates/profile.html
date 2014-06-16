@@ -27,7 +27,6 @@
             </tr>
         </tbody>
     </table>
-
 </div>
 
 <div class="group-list">
@@ -60,4 +59,24 @@
         </tbody>
     </table>
     <p data-ng-if="!groups" class="no-groups">Du är inte medlem i någon liga.</p>
+</div>
+
+<div data-ng-if="flatBets" class="user-bets">
+    <table class="groups-table">
+        <caption>Tips</caption>
+        <thead>
+            <tr>
+                <th class="center hidden-col">#</th>
+                <th class="center">Match (grupp)</th>
+                <th class="center">Tips</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="game in flatBets" data-ng-if="game.isDone">
+                <td class="center hidden-col">{{ $index + 1 }}</td>
+                <td class="center">{{ game.teams[0].name }} - {{ game.teams[1].name }}</td>
+                <td class="center">{{ game.teams[0].bet }} - {{ game.teams[1].bet }}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
