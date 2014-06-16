@@ -24,7 +24,7 @@
     <td data-ng-if="!isDone" class="results">-</td>
     <td data-ng-if="!isDone" class="bets">
         <span data-ng-if="bet">{{ bet.teams[0].bet }} - {{ bet.teams[1].bet }}</span>
-        <span data-ng-if="!bet">0 - 0</span>
+        <span data-ng-if="!bet">X - X</span>
     </td>
     <td data-ng-if="!isDone">
         <button data-ng-if="bet" data-ng-click="updateBet()" class="update-bet" type="button">Tippa</button>
