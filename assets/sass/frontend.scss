@@ -97,7 +97,6 @@ body, html {
     }
 }
 
-
 h1, h2 {
     text-align: center;
     font-weight: $font-weight;
@@ -121,6 +120,12 @@ h2 {
         margin: 0 auto;
         text-align: center;
     }
+    .logo{
+        width: 250px;
+        height: 212px;
+        background-image: url(/assets/img/supertipset_letterpress.png);
+        margin: 4% auto;
+    }
 
     h1 {
         font-size: 50px;
@@ -128,7 +133,7 @@ h2 {
         margin-bottom: 40px;
     }
     .beta{
-        font-size: 30%;
+        font-size: 100%;
         margin-left: 2%;
         vertical-align: middle;
         color: $blue;
