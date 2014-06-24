@@ -1,28 +1,15 @@
 # TODO
 
-* ändra consts.user_id (användas i api service också?)
-
-- deployment, testa med virtualBox först?
-
-* Kontrollera problem vid generering av grupper (lösenord blir problematiskt ibland?)
-* Dela upp App + API router?
-* Responsiv
-* Refactor SASS
-* Cross browser
+* Refactor SASS (backend) ++ RWD
+* Cross-browser (IE)
 * SEO
+* Better separation of API and App (node.js)?
+    - API versioning
+        - res.type( 'application/vnd.supertipset-v1+json' )
+        - added support for accept headers (xml to start with)?
+* Send new password (to email, randomly generated)?
+* Admin backend
+* Multiple tournaments -> solution?
 
-* Skicka det nya grupp lösenordet till en mail?
-* "Glömt lösenord?" vid inloggning?
-* Kunna skicka in data för dom olika databas tabellerna ("admin" gränssnitt)
-* seeder.js för att generera random data?
-* Test suite?
+(* Tests ++ Seeder script)
 
-- Debug! -
-
-## Misc
-
-* API versioning (unnecessary atm)?
-    - res.type( 'application/vnd.supertipset-v1+json' )
-    - added support for accept headers (xml to start with)?
-
-* Redigera platser där tournament_id = x måste användas

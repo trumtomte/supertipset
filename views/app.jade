@@ -26,7 +26,7 @@ html(lang="sv")
                         li.nav-item
                             a.nav-link(href="#/profile" data-ng-class="{ active: isActive('/profile') }") Profil
 
-            div.main(data-ng-view)
+            div.main(data-ng-cloak data-ng-view)
 
             footer.footer
                 p &copy; Supertipset 2014
@@ -41,6 +41,7 @@ html(lang="sv")
         else
             script(src="assets/js/app.min.js")
 
-        // TODO alternate solution?
         script.
-            angular.module( 'supertipset' ).constant( 'consts.userID', #{id} );
+            angular.module( 'supertipset' )
+                .constant( 'userID', #{id} )
+                .constant( 'tournamentID', 1 );

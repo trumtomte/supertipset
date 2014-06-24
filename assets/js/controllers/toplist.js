@@ -1,3 +1,5 @@
-angular.module( 'supertipset.controllers' ).controller( 'TopListCtrl', ['$scope', '$route', function( $scope, $route ) {
-    $scope.toplists = $route.current.locals.toplists.data;
+angular.module( 'supertipset.controllers' ).controller( 'TopListCtrl',
+    ['$scope', 'toplists', function( $scope, toplists ) {
+    // All different types of top 10 lists
+    $scope.toplists = toplists.data;
 }]);

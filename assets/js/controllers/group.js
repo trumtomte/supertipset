@@ -1,21 +1,18 @@
-angular.module( 'supertipset.controllers' ).controller( 'GroupCtrl', ['$scope', '$route', 'api', 'ngNotify', 'ngDialog', function( $scope, $route, api, notify, dialog ) {
-    $scope.group = $route.current.locals.group.data.group;
-    $scope.user = $route.current.locals.user.data.user;
-    $scope.isEditing = false;
+angular.module( 'supertipset.controllers' ).controller( 'GroupCtrl',
+    ['$scope', 'GroupService', 'ngNotify', 'ngDialog', 'group', 'user',
+    function( $scope, GroupService, ngNotify, ngDialog, group, user ) {
 
-    $scope.edit = function() {
-        $scope.isEditing = ! $scope.isEditing;
-    };
+    $scope.group = group.data.group;
+    $scope.user = user.data.user;
+    $scope.editing = false;
     
-    // Go back in history
-    $scope.$back = function() {
+    $scope.back = function() {
         window.history.back();
     };
 
     $scope.save = function() {
-        var success = function( result ) {
-            $scope.isEditing = false;
-            notify( 'main' ).info( 'Gruppen är uppdaterad!' );
+        var success = function() {
+            ngNotify( 'main' ).info( 'Gruppen är uppdaterad!' );
         };
 
         var params = {
@@ -23,12 +20,12 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupCtrl', ['$scope', 
             description: $scope.group.description
         };
 
-        api.groups.update( params ).success( success );
+        GroupService.update( params ).success( success );
     };
 
     $scope.password = function() {
         var success = function( result ) {
-            dialog.open({
+            ngDialog.open({
                 template: '/assets/templates/password.html',
                 data: result.password
             });
@@ -39,7 +36,7 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupCtrl', ['$scope', 
             password: 'new'
         };
 
-        api.groups.update( params ).success( success );
+        GroupService.update( params ).success( success );
     };
 }]);
 

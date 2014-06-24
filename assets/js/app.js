@@ -1,26 +1,34 @@
 "use strict";
 
 // Application module
-angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 'ngProgressbar', 'supertipset.controllers'] )
+angular.module( 'supertipset', [
+    'ngRoute',
+    'ngAnimate',
+    'ngNotify',
+    'ngDialog',
+    'ngProgressbar',
+    'supertipset.controllers',
+    'supertipset.services'
+])
 
 // Routes
-.config( ['$routeProvider', 'consts.userID', function( $routeProvider, userID ) {
+.config( ['$routeProvider', 'userID', 'tournamentID', function( $routeProvider, userID, tournamentID ) {
     // Bet route
     var bets = {
         controller: 'BetsCtrl',
         templateUrl: '/assets/templates/bets.html',
         resolve: {
-            user: ['api', function( api ) {
-                return api.users.findOne( userID );
+            user: ['UserService', function( UserService ) {
+                return UserService.findOne( userID );
             }],
-            rounds: ['api', function( api ) {
-                return api.rounds.find( 1 );
+            rounds: ['RoundService', function( RoundService ) {
+                return RoundService.find( tournamentID );
             }],
-            bets: ['api', function( api ) {
-                return api.bets.find( userID );
+            bets: ['BetService', function( BetService ) {
+                return BetService.find( userID );
             }],
-            teams: ['api', function( api ) {
-                return api.teams.all();
+            teams: ['TeamService', function( TeamService ) {
+                return TeamService.all();
             }]
         }
     };
@@ -34,11 +42,11 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
         controller: 'GroupsCtrl',
         templateUrl: '/assets/templates/groups.html',
         resolve: {
-            user: ['api', function( api ) {
-                return api.users.findOne( userID );
+            user: ['UserService', function( UserService ) {
+                return UserService.findOne( userID );
             }],
-            groups: ['api', function( api ) {
-                return api.usergroups.find( userID );
+            groups: ['UserGroupService', function( UserGroupService ) {
+                return UserGroupService.find( userID );
             }]
         }
     });
@@ -48,11 +56,11 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
         controller: 'GroupCtrl',
         templateUrl: '/assets/templates/group.html',
         resolve: {
-            user: ['api', function( api ) {
-                return api.users.findOne( userID );
+            user: ['UserService', function( UserService ) {
+                return UserService.findOne( userID );
             }],
-            group: ['api', '$route', function( api, $route ) {
-                return api.groups.findOne( $route.current.params.id );
+            group: ['GroupService', '$route', function( GroupService, $route ) {
+                return GroupService.findOne( $route.current.params.id );
             }]
         }
     });
@@ -62,14 +70,17 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
         controller: 'ProfileCtrl',
         templateUrl: '/assets/templates/profile.html',
         resolve: {
-            user: ['api', function( api ) {
-                return api.users.findOne( userID );
+            user: ['UserService', function( UserService ) {
+                return UserService.findOne( userID );
             }],
-            groups: ['api', function( api ) {
-                return api.usergroups.find( userID );
+            groups: ['UserGroupService', function( UserGroupService ) {
+                return UserGroupService.find( userID );
             }],
-            rounds: ['api', function( api ) {
-                return api.rounds.find( 1 );
+            bets: ['BetService', function( BetService ) {
+                return BetService.find( userID );
+            }],
+            rounds: ['RoundService', function( RoundService ) {
+                return RoundService.find( tournamentID );
             }]
         }
     });
@@ -79,17 +90,17 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
         controller: 'ProfileCtrl',
         templateUrl: '/assets/templates/profile.html',
         resolve: {
-            user: ['api', '$route', function( api, $route ) {
-                return api.users.findOne( $route.current.params.id );
+            user: ['UserService', '$route', function( UserService, $route ) {
+                return UserService.findOne( $route.current.params.id );
             }],
-            groups: ['api', '$route', function( api, $route ) {
-                return api.usergroups.find( $route.current.params.id );
+            groups: ['UserGroupService', '$route', function( UserGroupService, $route ) {
+                return UserGroupService.find( $route.current.params.id );
             }],
-            bets: ['api', '$route', function( api, $route ) {
-                return api.bets.find( $route.current.params.id );
+            bets: ['BetService', '$route', function( BetService, $route ) {
+                return BetService.find( $route.current.params.id );
             }],
-            rounds: ['api', function( api ) {
-                return api.rounds.find( 1 );
+            rounds: ['RoundService', function( RoundService ) {
+                return RoundService.find( tournamentID );
             }]
         }
     });
@@ -99,27 +110,27 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
         controller: 'TopListCtrl',
         templateUrl: '/assets/templates/toplist.html',
         resolve: {
-            toplists: ['api', function( api ) {
-                return api.toplists.all();
+            toplists: ['TopListService', function( TopListService ) {
+                return TopListService.all();
             }]
         }
     });
 
     // Default
-    $routeProvider.otherwise( bets );
+    $routeProvider.otherwise({ redirectTo: '/' });
 }])
 
 // Navigation controller
-.controller( 'NavCtrl', ['$scope', '$location', '$rootScope', 'ngProgressbar', function( $scope, $location, $rootScope, progress ) {
+.controller( 'NavCtrl', ['$scope', '$location', '$rootScope', 'ngProgressbar', function( $scope, $location, $rootScope, ngProgressbar ) {
 
-    $rootScope.$on( '$routeChangeStart', function( a, b) {
-        progress.start();
+    $rootScope.$on( '$routeChangeStart', function() {
+        ngProgressbar.start();
     });
     $rootScope.$on( '$routeChangeSuccess', function() {
-        progress.complete();
+        ngProgressbar.complete();
     });
     $rootScope.$on( '$routeChangeError', function() {
-        progress.reset();
+        ngProgressbar.reset();
     });
 
     // Compare given path with the current location path
@@ -129,5 +140,6 @@ angular.module( 'supertipset', ['ngRoute', 'ngAnimate', 'ngNotify', 'ngDialog', 
     };
 }]);
 
-// Create module for controllers
+// Create a module for controllers and services
 angular.module( 'supertipset.controllers', [] );
+angular.module( 'supertipset.services', [] );

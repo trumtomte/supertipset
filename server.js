@@ -9,7 +9,7 @@ var express     = require( 'express' ),
 
 // HTTP port
 var port = process.env.PORT || 3000,
-    dev = process.env.DEV ? true : false;
+    dev = process.env.DEV || false;
 
 server.set( 'view engine', 'jade' );
 
@@ -33,7 +33,7 @@ middleware.Api( api );
 // ===============
 // API Endpoints
 // ===============
-api.use( auth.validate );
+// api.use( auth.validate );
 api.get( '/users/:id',          routes.users.findOne );
 api.put( '/users/:id',          routes.users.update );
 api.get( '/groups/:id',         routes.groups.findOne );
@@ -66,11 +66,11 @@ api.use( function( err, req, res, next ) {
 // ====================
 // Application routes
 // ====================
-app.get( '/login',  routes.login.form );
-app.get( '/logout', routes.login.logout );
-app.post( '/login', routes.login.login );
+app.get( '/login',      routes.login.form );
+app.get( '/logout',     routes.login.logout );
+app.post( '/login',     routes.login.login );
 app.post( '/calculate', routes.calculate.game );
-app.post( '/users', routes.users.create );
+app.post( '/users',     routes.users.create );
 
 app.get( '/', function( req, res ) {
     res.render( 'index' );
@@ -80,17 +80,18 @@ app.get( '/app', auth.check, function( req, res ) {
     res.render( 'app', { id: req.session.userId, dev: dev } );
 });
 
-app.get( '/admin-calculate', function( req, res ) {
-    res.render( 'admin', {
+app.get( '/register', function( req, res ) {
+    res.render( 'register', {
         error: req.query.error,
-        success: req.query.success,
         token: req.csrfToken()
     });
 });
 
-app.get( '/register', function( req, res ) {
-    res.render( 'register', {
+// TODO Proper admin backend
+app.get( '/admin-calculate', function( req, res ) {
+    res.render( 'admin', {
         error: req.query.error,
+        success: req.query.success,
         token: req.csrfToken()
     });
 });
@@ -111,11 +112,11 @@ app.use( function( err, req, res, next ) {
     res.render( 'error', { status: err.status } );
 });
 
-// Make server use App/Api endpoints
+// Make server use App/API endpoints
 server.use( '/api', api );
 server.use( '/', app );
 
-// Start listening for requests
+// Start listening for HTTP requests
 server.listen( port, function() {
     console.log( '[SERVER]: Started listening on port ' + port );
 });

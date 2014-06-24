@@ -56,9 +56,6 @@ gulp.task( 'watch', function() {
     gulp.watch( 'assets/sass/**/*.scss', ['styles'] );
 });
 
-// Default task
-gulp.task( 'default', ['scripts', 'scripts-min', 'styles']);
-
 // Clean build directory
 gulp.task( 'clean', function() {
     return gulp.src( ['build/*'], { read: false } )
@@ -94,3 +91,6 @@ gulp.task( 'build', ['scripts', 'scripts-min', 'styles'], function() {
     return gulp.src( src, { base: './' } )
         .pipe( gulp.dest( 'build' ) );
 });
+
+// Default task
+gulp.task( 'default', ['build']);

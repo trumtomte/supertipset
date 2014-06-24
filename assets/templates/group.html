@@ -1,5 +1,5 @@
 <div class="group">
-    <button data-ng-click="$back()" class="back-button" type="button">Tillbaka</button>
+    <button data-ng-click="back()" class="back-button" type="button">Tillbaka</button>
     <button data-ng-if="group.admin == user.id" data-ng-click="password()" class="group-password" type="button">Generera nytt lösenord</button>
 
     <h1>{{ group.name }} <span data-ng-if="group.admin == user.id">(admin)</span></h1>
@@ -7,15 +7,15 @@
     <p data-ng-if="group.admin != user.id" class="group-description">{{ group.description }}</p>
 
     <div data-ng-if="group.admin == user.id">
-        <p data-ng-hide="isEditing" class="group-description">
+        <p data-ng-hide="editing" class="group-description">
             {{ group.description }}
-            <button data-ng-click="edit()" class="edit-group-description" type="button">Redigera</button>
+            <button data-ng-click="editing = !editing" class="edit-group-description" type="button">Redigera</button>
         </p>
 
-        <form data-ng-show="isEditing" data-ng-submit="save()" class="group-description-form">
+        <form data-ng-show="editing" data-ng-submit="save()" class="group-description-form">
             <textarea data-ng-model="group.description"></textarea>
-            <button data-ng-click="edit()" type="button" class="btn btn-cancel">Avbryt</button>
-            <button type="submit" class="btn btn-ok">Spara</button>
+            <button data-ng-click="editing = !editing" type="button" class="btn btn-cancel">Avbryt</button>
+            <button data-ng-click="editing = !editing" type="submit" class="btn btn-ok">Spara</button>
             <div style="clear:both;"></div>
         </form>
     </div>
