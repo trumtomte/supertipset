@@ -1,4 +1,7 @@
-angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$scope', '$location', 'api', 'ngDialog', 'ngNotify', function( $scope, $location, api, dialog, notify ) {
+angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl',
+    ['$scope', '$location', 'GroupService', 'UserGroupService', 'ngDialog', 'ngNotify',
+    function( $scope, $location, GroupService, UserGroupService, ngDialog, ngNotify ) {
+
     $scope.message = '';
 
     // Set default choice for a new admin
@@ -11,22 +14,22 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
     $scope.leave = function( newAdmin ) {
         // Last user is leaving the group - remove it
         if ( $scope.group.users.length == 1 ) {
-            api.groups.remove( $scope.group.id );
+            GroupService.remove( $scope.group.id );
         }
 
         // New admin has been selected
         if ( newAdmin ) {
-            api.groups.update({ id: $scope.group.id, user_id: newAdmin.id });
+            GroupService.update({ id: $scope.group.id, user_id: newAdmin.id });
         }
 
         var success = function( result ) {
             $scope.groups.splice( $scope.groups.indexOf( $scope.group ), 1 );
-            notify( 'main' ).info( 'Du har lämnat ligan!' );
-            dialog.close();
+            ngNotify( 'main' ).info( 'Du har lämnat ligan!' );
+            ngDialog.close();
         };
 
         // Finally remove the user from a group
-        api.usergroups.remove({ relation: $scope.group.relation, id: $scope.user.id }).success( success );
+        UserGroupService.remove({ relation: $scope.group.relation, id: $scope.user.id }).success( success );
     };
 
     // Create a new group
@@ -46,9 +49,9 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
         }
 
         var success = function( result ) {
-            dialog.close( dialog.latestID );
+            ngDialog.close( ngDialog.latestID );
 
-            dialog.open({
+            ngDialog.open({
                 template: '/assets/templates/password.html',
                 data: result.password
             });
@@ -66,7 +69,7 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
             name: name
         };
 
-        api.groups.create( params ).success( success ).error( error );
+        GroupService.create( params ).success( success ).error( error );
     };
 
     // Add user to a group
@@ -87,12 +90,12 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
 
         // On success, close dialog and redirect to the group
         var success = function( result ) {
-            dialog.close();
-            notify( 'main' ).info( 'Du har gått med i ligan!' );
+            ngDialog.close();
+            ngNotify( 'main' ).info( 'Du har gått med i ligan!' );
             $location.path( '/groups/' + result.id );
         };
 
-        var error = function( result ) {
+        var error = function() {
             $scope.message = 'Fel kombination av liga och lösenord';
         };
 
@@ -102,6 +105,6 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl', ['$s
             password: password
         };
 
-        api.usergroups.create( params ).success( success ).error( error );
+        UserGroupService.create( params ).success( success ).error( error );
     };
 }]);

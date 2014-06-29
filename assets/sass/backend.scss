@@ -280,6 +280,18 @@ body {
 
 .user-bets {
     margin-top: 40px;
+
+    .groups-table {
+        width: 100%;
+
+        tr {
+            & .center:nth-child(2),
+            & .center:nth-child(3),
+            & .center:nth-child(4) {
+                width: 6%;
+            }
+        }
+    }
 }
 
 .groups-table {

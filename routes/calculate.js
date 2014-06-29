@@ -1,39 +1,35 @@
 var db = require( '../utilities/database' ),
     auth = require( '../utilities/auth' );
 
-// Return and calculate points given game results and user bets
 function calculate( results, bets ) {
-    // Game results (goals) and user bets (goals)
-    var t1Result = results[0],
-        t2Result = results[1],
-        t1Bet = bets[0],
-        t2Bet = bets[1];
+    // Team results and User bets
+    var r1 = results[0],
+        r2 = results[1],
+        b1 = bets[0],
+        b2 = bets[1];
 
-    if ( t1Result == t1Bet &&
-         t2Result == t2Bet ) {
-        // Perfect bet gives 10 pts
+    // Perfect bet gives 10 pts
+    if ( r1 == b1 && r2 == b2 ) {
         return 10;
     }
 
-    var points = 0;
+    var points = 0,
+        rDiff = r1 - r2,
+        bDiff = b1 - b2;
 
-    // Calculate difference in goals
-    var resultDiff = t1Result - t2Result,
-        betDiff = t1Bet - t2Bet;
-    
-    // Correctly placed the bet on team 1 as the winner
-    if ( resultDiff > 0 && betDiff > 0 ) {
+    // Team 1 won
+    if ( rDiff > 0 && bDiff > 0 ) {
         points += 4;
-    // Correctly placed the bet on team 2 as the winner
-    } else if ( resultDiff < 0 && betDiff < 0 ) {
+    // Team 2 won
+    } else if ( rDiff < 0 && bDiff < 0 ) {
         points += 4;
-    // Correctly placed the bet on a game draw
-    } else if ( resultDiff == 0 && betDiff == 0 ) {
+    // Draw
+    } else if ( rDiff == 0 && bDiff == 0 ) {
         points += 4;
     }
 
-    // If a user placed a bet equal to goals from one of the teams = 1 pts
-    if ( t1Result == t1Bet || t2Result == t2Bet ) {
+    // One bet equals goals for one team 
+    if ( r1 == b1 || r2 == b2 ) {
         points += 1;
     }
 

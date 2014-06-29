@@ -1,47 +1,52 @@
-angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl', ['$scope', '$route', 'api', 'ngDialog', 'ngNotify', 'consts.userID', function( $scope, $route, api, dialog, notify, userID ) {
-    $scope.user = $route.current.locals.user.data.user;
-    $scope.groups = $route.current.locals.groups.data.groups;
-    $scope.rounds = $route.current.locals.rounds.data.rounds;
-    $scope.user.current = false;
-    $scope.hasStarted = false;
+angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl',
+    ['$scope', '$route', 'UserService', 'ngDialog', 'ngNotify', 'calculator', 'userID', 'user', 'groups', 'rounds', 'bets',
+    function( $scope, $route, UserService, ngDialog, ngNotify, calculator, userID, user, groups, rounds, bets ) {
 
-    var todayDate = new Date();
+    $scope.user = user.data.user;
+    $scope.groups = groups.data.groups;
+    $scope.rounds = rounds.data.rounds;
+    $scope.bets = bets.data.bets;
+    $scope.user.current = ( ! $route.current.params.id || $route.current.params.id == userID ) ? true : false;
 
-    if ( ! $route.current.params.id || $route.current.params.id == userID ) {
-        $scope.user.current = true;
-    } else {
-        $scope.bets = $route.current.locals.bets.data.bets;
-        $scope.flatBets = _.flatten( $scope.bets, true, 'bets' );
+    var now = new Date();
 
-        $scope.flatBets.forEach( function( game ) {
-            var gStartDate = new Date( Date.parse( game.game_start ) );
+    // Compose list of bets when visiting user profiles
+    if ( ! $scope.user.current ) {
+        $scope.flatBets = (function( bets ) {
+            return _.flatten( _.map( bets, function( bet ) {
+                var round = _.find( $scope.rounds, { id: bet.round_id } );
 
-            if ( todayDate > gStartDate ) {
-                game.isDone = true;
-            }
-        });
+                return _.map( bet.bets, function( game ) {
+                    var gameStart = new Date( Date.parse( game.game_start ) ),
+                        results = _.find( round.games || [], { id: game.game } );
+
+                    return {
+                        isDone: now > gameStart ? true : false,
+                        teams: _.merge( game.teams, results.teams ),
+                        points: _.isNull( results.teams[0].result ) ? '-' : calculator( results, game )
+                    };
+                });
+            }));
+        })( $scope.bets );
     }
     
-    // Determine if the tournament hasnt started by checking the start date of the first round
-    if ( $scope.rounds && $scope.rounds.length ) {
-        var rStartDate = new Date( Date.parse( $scope.rounds[0].start ) );
-            
-        if ( todayDate > rStartDate ) {
-           $scope.hasStarted = true; 
-        }
+    // Check if the tournament has started
+    if ( $scope.rounds ) {
+        var roundStart = new Date( Date.parse( $scope.rounds[0].start ) );
+        $scope.hasStarted = now > roundStart ? true : false;
     }
 
+    // Get admin username for each group
     if ( $scope.groups ) {
-        $scope.groups.forEach( function( group ) {
-            var admin = _.find( group.users, { id: group.admin } );
-            group.admin_name = admin.username;
+        _.each( $scope.groups, function( group ) {
+            group.admin_name = _.find( group.users, { id: group.admin } ).username;
         });
     }
 
     // Leave a group dialog
     $scope.leaveDialog = function( group ) {
         $scope.group = group;
-        dialog.open({
+        ngDialog.open({
             template: '/assets/templates/leave-group.html',
             controller: 'GroupManagerCtrl',
             scope: $scope
@@ -50,7 +55,7 @@ angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl', ['$scope'
 
     // Change password dialog
     $scope.passwordDialog = function() {
-        dialog.open({
+        ngDialog.open({
             template: '/assets/templates/change-password.html',
             scope: $scope
         });
@@ -59,13 +64,13 @@ angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl', ['$scope'
     // API request for password change
     $scope.password = function( password, passwordRepeat ) {
         if ( password != passwordRepeat ) {
-            $scope.message = 'Upprepningen av lösenord stämmer inte';
+            $scope.message = 'Lösenorden matchar inte.';
             return;
         }
 
         var success = function() {
-            dialog.close();
-            notify( 'main' ).info( 'Lösenord uppdaterat!' );
+            ngDialog.close();
+            ngNotify( 'main' ).info( 'Lösenord uppdaterat!' );
         };
 
         var params = {
@@ -73,7 +78,7 @@ angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl', ['$scope'
             password: password
         };
 
-        api.users.update( params ).success( success );
+        UserService.update( params ).success( success );
     };
 }]);
 

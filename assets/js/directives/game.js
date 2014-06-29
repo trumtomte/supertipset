@@ -1,49 +1,36 @@
-angular.module( 'supertipset' ).directive( 'game', ['api', 'ngNotify', 'ngDialog', 'consts.userID', 'calculator', function( api, notify, dialog, userID, calculator ) {
+angular.module( 'supertipset' ).directive( 'game',
+    ['BetService', 'ngNotify', 'ngDialog', 'userID', 'calculator',
+    function( BetService, ngNotify, ngDialog, userID, calculator ) {
+
     var directive = {
         require: '^ngModel',
         transclude: true,
-        replace: true,
         templateUrl: '/assets/templates/game.html',
         link: function( $scope, $element, $attr ) {
-            // Dates to determine if the game is done (been played)
-            var todayDate = new Date(),
-                gStartDate = new Date( Date.parse( $scope.game.start ) );
+            // Dates to determine if the game is done
+            var now = new Date(),
+                gameStart = new Date( Date.parse( $scope.game.start ) ),
+                bets = _.find( $scope.bets, { round_id: $scope.round.id } );
 
-            // Check if the user has bets on this game
-            var bets = _.find( $scope.bets, { round_id: $scope.round.id } );
+            $scope.isDone = now > gameStart ? true : false;
+            $scope.isActive = ( $scope.isDone && _.isNull( $scope.game.teams[0].result )  ) ? true : false;
 
-            // If bets are found, find a specific bet
+            // If bets are found (for the current game), find a specific bet
             if ( bets ) {
                 $scope.bet = _.find( bets.bets, { game: $scope.game.id } );
             }
 
-            // Allowed values for bets
+            // Allowed values for bets and bet choices
             $scope.bettingRange = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+            $scope.betOne = $scope.bettingRange[$scope.bet ? $scope.bet.teams[0].bet : 0];
+            $scope.betTwo = $scope.bettingRange[$scope.bet ? $scope.bet.teams[1].bet : 0];
 
-            // Setup bets
-            if ( $scope.bet ) {
-                $scope.betOne = $scope.bettingRange[$scope.bet.teams[0].bet];
-                $scope.betTwo = $scope.bettingRange[$scope.bet.teams[1].bet];
-            } else {
-                $scope.betOne = $scope.bettingRange[0];
-                $scope.betTwo = $scope.bettingRange[0];
-            }
-
-            // Dont allow betting if the game is done (been played)
-            if ( todayDate > gStartDate ) {
-                $scope.isDone = true;
-
-                // If game is done and there were bets placed, calculate the score
-                if ( $scope.bet ) {
-                     $scope.points = calculator( $scope.game, $scope.bet );
-                }
-            } else {
-                $scope.isDone = false;
-            }
+            // If bets were placed and the game is done - calculate points
+            $scope.points = $scope.bet ? calculator( $scope.game, $scope.bet ) : 0;
 
             // Update bet dialog
             $scope.updateBet = function() {
-                dialog.open({
+                ngDialog.open({
                     template: '/assets/templates/edit-bet.html',
                     scope: $scope
                 });
@@ -51,7 +38,7 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'ngNotify', 'ngDialog
 
             // Create bet dialog
             $scope.createBet = function() {
-                dialog.open({
+                ngDialog.open({
                     template: '/assets/templates/place-bet.html',
                     scope: $scope
                 });
@@ -61,7 +48,8 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'ngNotify', 'ngDialog
             $scope.update = function( betOne, betTwo ) {
                 // If the user submits the same bet - do nothing
                 if ( $scope.bet.teams[0].bet == betOne && $scope.bet.teams[1].bet == betTwo ) {
-                    return dialog.close();
+                    ngDialog.close();
+                    return;
                 }
 
                 var bets = {
@@ -77,11 +65,11 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'ngNotify', 'ngDialog
                     $scope.betOne = $scope.bettingRange[betOne];
                     $scope.betTwo = $scope.bettingRange[betTwo];
 
-                    notify( 'main' ).info( 'Tips redigerat!' );
-                    dialog.close();
+                    ngNotify( 'main' ).info( 'Tips redigerat!' );
+                    ngDialog.close();
                 };
 
-                api.bets.update( bets ).success( success );
+                BetService.update( bets ).success( success );
             };
 
             // Create new user bets
@@ -106,11 +94,11 @@ angular.module( 'supertipset' ).directive( 'game', ['api', 'ngNotify', 'ngDialog
                     $scope.betOne = $scope.bettingRange[betOne];
                     $scope.betTwo = $scope.bettingRange[betTwo];
 
-                    notify( 'main' ).info( 'Tips sparat!' );
-                    dialog.close();
+                    ngNotify( 'main' ).info( 'Tips sparat!' );
+                    ngDilaog.close();
                 };
 
-                api.bets.create( bets ).success( success );
+                BetService.create( bets ).success( success );
             };
         }
     };

@@ -29,8 +29,7 @@ exports.find = function( req, res, next ) {
             var group = {
                 id: groupedGroups[key][0].group_id,
                 name: groupedGroups[key][0].group_name,
-                admin: groupedGroups[key][0].group_admin,
-                relation: groupedGroups[key][0].relation
+                admin: groupedGroups[key][0].group_admin
             };
 
             // Restructure each user object
@@ -46,6 +45,11 @@ exports.find = function( req, res, next ) {
                         name: user.team
                     }
                 };
+
+                // Get the user - group relation id and assign it to the group
+                if ( user.id == id ) {
+                    group.relation = user.relation;
+                }
             });
 
             group.users = limit > 0 ? groupedGroups[key].splice( 0, limit ) : groupedGroups[key];

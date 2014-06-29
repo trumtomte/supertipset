@@ -268,10 +268,9 @@ exports.getUserBetsByGame = function( id, fn ) {
 
 // Insert points for users based on game results and user bets
 exports.insertUserPoints = function( params, fn ) {
-    var sql = conn.query( INSERT_USER_POINTS, [params], function( err, res ) {
+    conn.query( INSERT_USER_POINTS, [params], function( err, res ) {
         fn( err, res );
     });
-    console.log(sql.sql);
 };
 
 // Update user password

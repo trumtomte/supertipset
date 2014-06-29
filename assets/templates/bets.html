@@ -18,20 +18,21 @@
 
             <tbody>
                 <tr>
-                    <td>{{ user.team.name | notnull:'-' }}</td>
-                    <td>{{ user.player.firstname | notnull:'-' }} {{ user.player.lastname }}</td>
-                    <td>{{ user.player.goals | notnull:0 }}</td>
+                    <td>{{ user.team.name ? user.team.name : '-' }}</td>
+                    <td>{{ user.player.firstname ? user.player.firstname : '-' }} {{ user.player.lastname }}</td>
+                    <td>{{ user.player.goals ? user.player.goals : 0 }}</td>
                     <td>0</td>
                 </tr>
             </tbody>
         </table>
     </div>
+
     <!-- Tournament hasnt started -->
     <div data-ng-if="!hasStarted">
-        <table data-ng-hide="isEditing" class="profile-summary">
+        <table data-ng-hide="editing" class="profile-summary">
             <caption>
                 Specialtips
-                <button data-ng-hide="isEditing" data-ng-click="edit()" class="edit-special-bets-button" type="button">Tippa</button>
+                <button data-ng-hide="editing" data-ng-click="editing = !editing" class="edit-special-bets-button" type="button">Tippa</button>
             </caption>
             <thead>
                 <tr>
@@ -44,15 +45,15 @@
 
             <tbody>
                 <tr>
-                    <td>{{ user.team.name | notnull:'-' }}</td>
-                    <td>{{ user.player.firstname | notnull:'-' }} {{ user.player.lastname }}</td>
-                    <td>{{ user.player.goals | notnull:0 }}</td>
+                    <td>{{ user.team.name ? user.team.name : '-' }}</td>
+                    <td>{{ user.player.firstname ? user.player.firstname : '-' }} {{ user.player.lastname }}</td>
+                    <td>{{ user.player.goals ? user.player.goals : 0 }}</td>
                     <td>0</td>
                 </tr>
             </tbody>
         </table>
 
-        <div data-ng-show="isEditing"class="edit-special-bets">
+        <div data-ng-show="editing"class="edit-special-bets">
             <form data-ng-submit="specialBet(selectedTeam, selectedPlayer, selectedGoals)">
                 <h4>Tippa specialtips</h4>
                 <div class="special-bets-items">
@@ -70,14 +71,13 @@
                     </div>
                 </div>
 
-                <button data-ng-click="edit()" type="button" class="btn btn-cancel">Avbryt</button>
-                <button type="submit" class="btn btn-ok">Spara</button>
+                <button data-ng-click="editing = !editing" type="button" class="btn btn-cancel">Avbryt</button>
+                <button data-ng-click="editing = !editing" type="submit" class="btn btn-ok">Spara</button>
                 <div style="clear:both;"></div>
             </form>
         </div>
     </div>
 </div>
-
 
 <div data-ng-if="rounds" data-ng-repeat="round in rounds" class="rounds">
     <div data-round data-ng-model="round"></div>

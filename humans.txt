@@ -1,3 +1,8 @@
-/* TEAM */
+# TEAM
 
-/* SITE */
+    Sebastian Bengtegård -- Developer
+    Johannes Karlsson -- Designer -- @johanneskason
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3, SASS, Angular.js, Node.js, lodash.js, gulp.js, Bower
