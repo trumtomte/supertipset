@@ -4,7 +4,9 @@ var gulp =  require( 'gulp' ),
     clean = require( 'gulp-clean' ),
     minify = require( 'gulp-minify-css' ),
     uglify = require( 'gulp-uglify' ),
-    concat = require( 'gulp-concat' );
+    browserify = require( 'browserify' ),
+    source = require( 'vinyl-source-stream' ),
+    rename = require( 'gulp-rename' );
 
 // Compile SASS to CSS and minify the CSS source
 gulp.task( 'styles', function() {
@@ -14,36 +16,22 @@ gulp.task( 'styles', function() {
         .pipe( minify() );
 });
 
-// Concatenate all JS files
-gulp.task( 'scripts', function() {
-    // AngularJS source files
-    var src = [
-        'assets/js/app.js',
-        'assets/js/services/*',
-        'assets/js/directives/*',
-        'assets/js/filters/*',
-        'assets/js/controllers/*'
-    ];
 
-    return gulp.src( src )
-        .pipe( concat( 'app.build.js' ) )
+var bundler = browserify( './assets/js/app.js' );
+
+// Browserify
+gulp.task( 'browserify', function() {
+    return bundler
+        .transform( 'brfs' )
+        .bundle({ debug: true })
+        .pipe( source( 'bundle.js' ) )
         .pipe( gulp.dest( 'assets/js' ) );
 });
 
-// Minify all JS to app.min.js
-gulp.task( 'scripts-min', function() {
-    // JS source files
-    var src = [
-        'assets/js/vendor/angular/angular.min.js',
-        'assets/js/vendor/angular-route/angular-route.min.js',
-        'assets/js/vendor/angular-animate/angular-animate.min.js',
-        'assets/js/vendor/ngDialog/js/ngDialog.min.js',
-        'assets/js/vendor/lodash/dist/lodash.min.js',
-        'assets/js/app.build.js'
-    ];
-
-    return gulp.src( src )
-        .pipe( concat( 'app.min.js' ) )
+// Uglify browserify source
+gulp.task( 'browserify-min', function() {
+    return gulp.src( 'assets/js/bundle.js' )
+        .pipe( rename( 'bundle.min.js' ) )
         .pipe( uglify() )
         .pipe( gulp.dest( 'assets/js' ) );
 });
@@ -51,7 +39,7 @@ gulp.task( 'scripts-min', function() {
 // Watch for changes
 gulp.task( 'watch', function() {
     // JS
-    gulp.watch( 'assets/js/**/*.js', ['scripts'] );
+    gulp.watch( ['assets/js/**/*.js', '!assets/js/bundle*'], ['browserify'] );
     // SASS
     gulp.watch( 'assets/sass/**/*.scss', ['styles'] );
 });
@@ -63,16 +51,16 @@ gulp.task( 'clean', function() {
 });
 
 // Build task
-gulp.task( 'build', ['scripts', 'scripts-min', 'styles'], function() {
+gulp.task( 'build', ['browserify', 'browserify-min', 'styles'], function() {
     var src = [
-        'assets/js/app.min.js',
+        'assets/js/bundle.js',
+        'assets/js/bundle.min.js',
         'assets/css/backend.css',
         'assets/css/frontend.css',
-        'assets/templates/*',
         'assets/images/*',
-        'assets/fonts/*',
         'routes/*',
         'views/*',
+        'models/*',
         'utilities/*',
         'server.js',
         'humans.txt',
