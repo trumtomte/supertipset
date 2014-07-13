@@ -1,50 +1,15 @@
-var db = require( '../utilities/database' );
+var bet = require( '../models/bet' ),
+    Bet = bet.Bet,
+    BetsCollection = bet.BetsCollection;
 
 // Get all bets based on user id
 exports.find = function( req, res, next ) {
-    db.getBets( req.params.id, function( err, rows ) {
-        if ( err ) return next( err );
+    var betsCollection = new BetsCollection( req.params.id );
 
-        if ( ! rows.length ) {
-            return res.json( 204, {} );
-        }
-
-        var groupedBets = {},
-            bets = [];
-
-        rows.forEach( function( row ) {
-            if ( ! ( row.round in groupedBets ) ) {
-                groupedBets[row.round] = [];
-            }
-
-            groupedBets[row.round].push( row );
-        });
-
-        for ( var key in groupedBets ) {
-            var bet = {
-                round: key,
-                round_id: groupedBets[key][0].round_id
-            };
-
-            // Restructure each bet object
-            groupedBets[key].forEach( function( b, i ) {
-                groupedBets[key][i] = {
-                    id: b.bet_id,
-                    game: b.game_id,
-                    game_start: b.game_start,
-                    game_stop: b.game_stop,
-                    teams: [
-                        { id: b.team_1_id, name: b.team_1_name, bet: b.team_1_bet },
-                        { id: b.team_2_id, name: b.team_2_name, bet: b.team_2_bet }
-                    ]
-                };
-            });
-
-            bet.bets = groupedBets[key];
-            bets.push( bet );
-        }
-
-        return res.json({ bets: bets });
+    betsCollection.fetch( function( err, data ) {
+        if ( err ) next( err );
+        if ( ! data ) return res.json( 204, {} );
+        res.json({ bets: data });
     });
 };
 
@@ -56,18 +21,20 @@ exports.update = function( req, res, next ) {
         req.body.id
     ];
 
-    db.updateBets( params, function( err, result ) {
-        if ( err ) return next( err );
+    var bet = new Bet( req.body.id );
 
-        return res.send( 200 );
+    bet.update( params, function( err ) {
+        if ( err ) return next( err );
+        res.json( 200 );
     });
 };
 
 // Place new bets
 exports.create = function( req, res, next ) {
-    db.createBets( req.body, function( err, result ) {
-        if ( err ) return next( err );
+    var bet = new Bet();
 
-        return res.json({ id: result.insertId });
+    bet.save( req.body, function( err, data ) {
+        if ( err ) return next( err );
+        res.json({ id: data.insertId });
     });
 };
