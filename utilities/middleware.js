@@ -17,10 +17,9 @@ var cookieParserSecret = crypto.randomBytes( 64 ).toString( 'base64' ),
 var maxAge = 60 * 60 * 24;
 
 // Application configuration
-exports.App = function( app ) {
+exports.app = function( app ) {
     app.use( logger() );
     app.use( compress() );
-    // TODO Cache header?
     app.use( function( req, res, next ) {
         // One of three static files
         if ( req.url == '/robots.txt' ||
@@ -52,7 +51,7 @@ exports.App = function( app ) {
 };
 
 // API configuration
-exports.Api = function( api ) {
+exports.api = function( api ) {
     api.use( logger() );
     api.use( bodyparser() );
     api.use( cookieParser( cookieParserSecret ) );
