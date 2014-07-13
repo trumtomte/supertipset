@@ -13,9 +13,9 @@ var port = process.env.PORT || 3000,
 
 server.set( 'view engine', 'jade' );
 
-// Middleware for App and Api routes
-middleware.App( app );
-middleware.Api( api );
+// Middleware configuration for the App and Api routers
+middleware.app( app );
+middleware.api( api );
 
 [ // Require routes
     'users',
@@ -34,24 +34,45 @@ middleware.Api( api );
 // API Endpoints
 // ===============
 // api.use( auth.validate );
-api.get( '/users/:id',          routes.users.findOne );
-api.put( '/users/:id',          routes.users.update );
-api.get( '/groups/:id',         routes.groups.findOne );
-api.delete( '/groups/:id',      routes.groups.remove );
-api.put( '/groups/:id',         routes.groups.update );
-api.post( '/groups',            routes.groups.create );
-api.get( '/rounds/:id',         routes.rounds.find );
-api.get( '/usergroups/:id',     routes.usergroups.find );
-api.delete( '/usergroups/:id',  routes.usergroups.remove );
-api.post( '/usergroups',        routes.usergroups.create );
-api.get( '/bets/:id',           routes.bets.find );
-api.put( '/bets/:id',           routes.bets.update );
-api.post( '/bets/:id',          routes.bets.create );
-api.put( '/specialbets/:id',    routes.specialbets.update );
-api.post( '/specialbets/:id',   routes.specialbets.create );
-api.get( '/teams',              routes.teams.all );
-api.get( '/teams/:id',          routes.teams.findOne );
-api.get( '/toplists',           routes.toplists.all );
+
+// Users
+api.route( '/users/:id' )
+    .get( routes.users.findOne )
+    .put( routes.users.update );
+
+// Groups
+api.route( '/groups/:id' )
+    .get( routes.groups.findOne )
+    .put( routes.groups.update )
+    .delete( routes.groups.remove );
+api.route( '/groups' ).post( routes.groups.create );
+
+// Rounds
+api.route( '/rounds/:id' ).get( routes.rounds.find );
+
+// User <-> Group relation
+api.route( '/usergroups/:id' )
+    .get( routes.usergroups.find )
+    .delete( routes.usergroups.remove );
+api.route( '/usergroups' ).post( routes.usergroups.create );
+
+// Bets
+api.route( '/bets/:id' )
+    .get( routes.bets.find )
+    .put( routes.bets.update )
+    .post( routes.bets.create );
+
+// Special bets
+api.route( '/specialbets/:id' )
+    .put( routes.specialbets.update )
+    .post( routes.specialbets.create );
+
+// Teams
+api.route( '/teams' ).get( routes.teams.all );
+api.route( '/teams/:id' ).get( routes.teams.findOne );
+
+// Top lists
+api.route( '/toplists' ).get( routes.toplists.all );
     
 // 404 Handler
 api.use( function( req, res, next ) {
@@ -67,8 +88,8 @@ api.use( function( err, req, res, next ) {
 // Application routes
 // ====================
 app.get( '/login',      routes.login.form );
-app.get( '/logout',     routes.login.logout );
 app.post( '/login',     routes.login.login );
+app.get( '/logout',     routes.login.logout );
 app.post( '/calculate', routes.calculate.game );
 app.post( '/users',     routes.users.create );
 
