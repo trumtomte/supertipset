@@ -1,4 +1,4 @@
-angular.module( 'supertipset.services' ).factory( 'calculator', function() {
+function CalculatorService() {
     return function( results, bets ) {
         var isN = angular.isNumber;
 
@@ -40,4 +40,6 @@ angular.module( 'supertipset.services' ).factory( 'calculator', function() {
 
         return points;
     };
-});
+}
+
+module.exports = CalculatorService;
