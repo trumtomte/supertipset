@@ -1,3 +1,6 @@
+// =======================
+// ngDialog
+// =======================
 @-webkit-keyframes ngdialog-fadeout {
   0% {
     opacity: 1;
@@ -298,7 +301,9 @@ body.ngdialog-open {
   color: #777;
 }
 
+// =======================
 // Progressbar
+// =======================
 #ng-progressbar {
     margin: 0;
     padding: 0;
@@ -326,7 +331,9 @@ body.ngdialog-open {
     z-index: 99999;
 }
 
+// =======================
 // Notifications
+// =======================
 @keyframes ng-notify-hide {
     from { opacity: 1; }
     to { opacity: 0; }

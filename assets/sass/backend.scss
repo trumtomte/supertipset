@@ -14,7 +14,6 @@ $letter-spacing: 1px;
 @import "normalize";
 @import "vendor";
 
-
 *, *:before, *:after {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box; 
@@ -483,7 +482,6 @@ body {
 }
 
 .profile {
-    width: 80%;
     margin: 0 auto 50px auto;
     position: relative;
 
@@ -512,45 +510,6 @@ body {
             font-size: 16px;
         }
     }
-
-    .profile-items {
-        border-collapse: separate;
-        width: 75%;
-        margin: 0 auto;
-        border: 1px solid $green;
-        border-radius: 4px;
-
-        caption {
-            font-size: 18px;
-            font-weight: 200;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            color: darken($green, 10%);
-        }
-        
-        thead th {
-            font-weight: 300;
-            font-size: 12px;
-            padding: 5px 15px;
-            color: darken($green, 10%);
-            border-bottom: 1px solid $green;
-        }
-
-        thead th, tbody td {
-            text-align: center;
-            border-right: 1px solid $green;
-
-            &:last-child {
-                border-right: 0;
-            }
-        }
-
-        tbody td {
-            padding: 15px;
-            font-size: 18px;
-            letter-spacing: 1px;
-        }
-    }
 }
 
 .select-bets select {
@@ -558,7 +517,7 @@ body {
     margin: 0 2%;
 }
 
-.special-bets {
+.special-bets-container {
     position: relative;
     margin-bottom: 40px;
 
@@ -578,7 +537,7 @@ body {
         }
     }
 
-    .profile-summary {
+    .special-bets {
         border-collapse: separate;
         width: 60%;
         margin: 0 auto;
@@ -649,7 +608,7 @@ body {
             margin-bottom: 5px;
         }
 
-        .special-bet-container {
+        .special-bet-group {
             text-align: center;
 
             input, select {
@@ -813,7 +772,7 @@ body {
         text-align: center;
         margin-bottom: 15px;
     }
-    .special-bets .edit-special-bets form {
+    .special-bets-container .edit-special-bets form {
         width: 45%;
     }
 }
@@ -837,7 +796,7 @@ body {
         width: 98% !important;
     }
 
-    .special-bets .edit-special-bets form {
+    .special-bets-container .edit-special-bets form {
         width: 65%;
     }
 }
@@ -907,13 +866,20 @@ body {
             }
         }
     }
-    .special-bets .profile-summary {
-        tbody td {
-            font-size: 14px;
-            padding: 8px;
+    .special-bets-container {
+        
+        .special-bets {
+            tbody td {
+                font-size: 14px;
+                padding: 8px;
+            }
+            thead th {
+                padding: 5px 8px;
+            }
         }
-        thead th {
-            padding: 5px 8px;
+
+        select {
+            font-size: 10px;
         }
     }
     .groups-table tbody td {
