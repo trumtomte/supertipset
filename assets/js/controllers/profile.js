@@ -1,11 +1,12 @@
-angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl',
-    ['$scope', '$route', 'UserService', 'ngDialog', 'ngNotify', 'calculator', 'userID', 'user', 'groups', 'rounds', 'bets',
-    function( $scope, $route, UserService, ngDialog, ngNotify, calculator, userID, user, groups, rounds, bets ) {
+var _ = require( 'lodash' );
 
+// Controller
+function ProfileCtrl( $scope, $route, UserService, ngDialog, ngNotify, calculator, userID, user, groups, rounds, bets, teams ) {
     $scope.user = user.data.user;
     $scope.groups = groups.data.groups;
     $scope.rounds = rounds.data.rounds;
     $scope.bets = bets.data.bets;
+    $scope.teams = teams.data.teams;
     $scope.user.current = ( ! $route.current.params.id || $route.current.params.id == userID ) ? true : false;
 
     var now = new Date();
@@ -13,7 +14,7 @@ angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl',
     // Compose list of bets when visiting user profiles
     if ( ! $scope.user.current ) {
         $scope.flatBets = (function( bets ) {
-            return _.flatten( _.map( bets, function( bet ) {
+            var flatBets = _.map( bets, function( bet ) {
                 var round = _.find( $scope.rounds, { id: bet.round_id } );
 
                 return _.map( bet.bets, function( game ) {
@@ -21,12 +22,28 @@ angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl',
                         results = _.find( round.games || [], { id: game.game } );
 
                     return {
+                        start: gameStart,
                         isDone: now > gameStart ? true : false,
                         teams: _.merge( game.teams, results.teams ),
                         points: _.isNull( results.teams[0].result ) ? '-' : calculator( results, game )
                     };
                 });
-            }));
+            });
+
+            flatBets = _.flatten( flatBets );
+            flatBets.sort( function( a, b ) {
+                if ( a.start > b.start ) {
+                    return 1;
+                }
+
+                if ( a.start < b.start ) {
+                    return -1;
+                }
+
+                return 0;
+            });
+
+            return flatBets;
         })( $scope.bets );
     }
     
@@ -47,7 +64,7 @@ angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl',
     $scope.leaveDialog = function( group ) {
         $scope.group = group;
         ngDialog.open({
-            template: '/assets/templates/leave-group.html',
+            template: 'leave-group.html',
             controller: 'GroupManagerCtrl',
             scope: $scope
         });
@@ -56,7 +73,7 @@ angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl',
     // Change password dialog
     $scope.passwordDialog = function() {
         ngDialog.open({
-            template: '/assets/templates/change-password.html',
+            template: 'change-password.html',
             scope: $scope
         });
     };
@@ -80,5 +97,23 @@ angular.module( 'supertipset.controllers' ).controller( 'ProfileCtrl',
 
         UserService.update( params ).success( success );
     };
-}]);
+}
 
+// Dependencies
+ProfileCtrl.$inject = [
+    '$scope',
+    '$route',
+    'UserService',
+    'ngDialog',
+    'ngNotify',
+    'calculator',
+    'userID',
+    'user',
+    'groups',
+    'rounds',
+    'bets',
+    'teams'
+];
+
+// Export the controller
+module.exports = ProfileCtrl;

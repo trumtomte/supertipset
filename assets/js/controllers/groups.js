@@ -1,6 +1,5 @@
-angular.module( 'supertipset.controllers' ).controller( 'GroupsCtrl',
-    ['$scope', 'ngDialog', 'groups', 'user', function( $scope, ngDialog, groups, user ) {
-
+// Controller
+function GroupsCtrl( $scope, ngDialog, groups, user ) {
     $scope.groups = groups.data.groups;
     $scope.user = user.data.user;
 
@@ -8,7 +7,7 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupsCtrl',
     $scope.leaveDialog = function( group ) {
         $scope.group = group;
         ngDialog.open({
-            template: '/assets/templates/leave-group.html',
+            template: 'leave-group.html',
             controller: 'GroupManagerCtrl',
             scope: $scope
         });
@@ -17,7 +16,7 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupsCtrl',
     // Create a new group dialog
     $scope.createDialog = function() {
         ngDialog.open({
-            template: '/assets/templates/create-group.html',
+            template: 'create-group.html',
             controller: 'GroupManagerCtrl',
             scope: $scope
         });
@@ -26,10 +25,15 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupsCtrl',
     // Join a group dialog
     $scope.joinDialog = function() {
         ngDialog.open({
-            template: '/assets/templates/join-group.html',
+            template: 'join-group.html',
             controller: 'GroupManagerCtrl',
             scope: $scope
         });
     };
-}]);
+}
 
+// Dependencies
+GroupsCtrl.$inject = ['$scope', 'ngDialog', 'groups', 'user'];
+
+// Export the controller
+module.exports = GroupsCtrl;

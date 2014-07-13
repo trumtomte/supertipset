@@ -1,7 +1,5 @@
-angular.module( 'supertipset.controllers' ).controller( 'GroupCtrl',
-    ['$scope', 'GroupService', 'ngNotify', 'ngDialog', 'group', 'user',
-    function( $scope, GroupService, ngNotify, ngDialog, group, user ) {
-
+// Controller
+function GroupCtrl( $scope, GroupService, ngNotify, ngDialog, group, user ) {
     $scope.group = group.data.group;
     $scope.user = user.data.user;
     $scope.editing = false;
@@ -26,7 +24,7 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupCtrl',
     $scope.password = function() {
         var success = function( result ) {
             ngDialog.open({
-                template: '/assets/templates/password.html',
+                template: 'password.html',
                 data: result.password
             });
         };
@@ -38,5 +36,10 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupCtrl',
 
         GroupService.update( params ).success( success );
     };
-}]);
+}
 
+// Dependencies
+GroupCtrl.$inject = ['$scope', 'GroupService', 'ngNotify', 'ngDialog', 'group', 'user'];
+
+// Export the controller
+module.exports = GroupCtrl;

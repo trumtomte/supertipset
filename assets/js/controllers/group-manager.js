@@ -1,7 +1,7 @@
-angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl',
-    ['$scope', '$location', 'GroupService', 'UserGroupService', 'ngDialog', 'ngNotify',
-    function( $scope, $location, GroupService, UserGroupService, ngDialog, ngNotify ) {
+var _ = require( 'lodash' );
 
+// Controller
+function GroupManagerCtrl( $scope, $location, GroupService, UserGroupService, ngDialog, ngNotify ) {
     $scope.message = '';
 
     // Set default choice for a new admin
@@ -52,7 +52,7 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl',
             ngDialog.close( ngDialog.latestID );
 
             ngDialog.open({
-                template: '/assets/templates/password.html',
+                template: 'password.html',
                 data: result.password
             });
 
@@ -107,4 +107,10 @@ angular.module( 'supertipset.controllers' ).controller( 'GroupManagerCtrl',
 
         UserGroupService.create( params ).success( success ).error( error );
     };
-}]);
+}
+
+// Dependencies
+GroupManagerCtrl.$inject = ['$scope', '$location', 'GroupService', 'UserGroupService', 'ngDialog', 'ngNotify'];
+
+// Export the controller
+module.exports = GroupManagerCtrl;
