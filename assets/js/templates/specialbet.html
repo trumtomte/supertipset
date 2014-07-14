@@ -1,0 +1,61 @@
+<!-- User points -->
+<div class="user-points-container">
+    <h6>POÄNG</h6>
+    <p class="user-points">{{ user.points }}</p>
+</div>
+
+<!-- User special bets -->
+<table data-ng-hide="editing" class="special-bets">
+    <caption>
+        Specialtips
+        <button
+            data-ng-if="!active"
+            data-ng-hide="editing"
+            data-ng-click="edit(true)"
+            class="edit-special-bets-button"
+            type="button">Tippa</button>
+    </caption>
+    <thead>
+        <tr>
+            <th>VINNARE</th>
+            <th>SKYTTEKUNG</th>
+            <th>MÅL</th>
+            <th>POÄNG</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>{{ user.team.name ? user.team.name : '-' }}</td>
+            <td>{{ user.player.firstname ? user.player.firstname : '-' }} {{ user.player.lastname }}</td>
+            <td>{{ user.player.goals ? user.player.goals : 0 }}</td>
+            <td>{{ user.specialbet_points ? user.specialbet_points : 0 }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Edit user special bets -->
+<div data-ng-show="editing" class="edit-special-bets">
+    <form data-ng-submit="submitBet(selectedTeam, selectedPlayer, selectedGoals)">
+        <h4>Tippa specialtips</h4>
+
+        <div class="special-bets-items">
+            <div class="special-bet-group">
+                <label>VINNARE</label>
+                <select data-ng-model="selectedTeam" data-ng-options="team.name for team in teams"></select>
+            </div>
+            <div class="special-bet-group">
+                <label>SKYTTEKUNG</label>
+                <select data-ng-model="selectedPlayer" data-ng-options="item.name group by item.group for item in teamsFlat"></select>
+            </div>
+            <div class="special-bet-group">
+                <label>MÅL</label>
+                <input data-ng-model="selectedGoals" type="number">
+            </div>
+        </div>
+
+        <button data-ng-click="edit(false)" type="button" class="btn btn-cancel">Avbryt</button>
+        <button data-ng-click="edit(false)" type="submit" class="btn btn-ok">Spara</button>
+        <div style="clear:both;"></div>
+    </form>
+</div>

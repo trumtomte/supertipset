@@ -1,0 +1,17 @@
+<div data-ng-class="{ active: isCurrentRound }" class="round">
+    <table class="games">
+        <caption>{{ round.name }}</caption>
+        <thead>
+            <tr>
+                <th>Deadline</th>
+                <th>Match (grupp)</th>
+                <th>Resultat</th>
+                <th>Tips</th>
+                <th>Poäng</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="game in round.games" data-game data-ng-model="game"></tr>
+        </tbody>
+    </table>
+</div>
