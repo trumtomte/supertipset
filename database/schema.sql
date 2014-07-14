@@ -78,7 +78,8 @@ CREATE TABLE BetsSpecialResults (
     team            TINYINT UNSIGNED NOT NULL,
     tournament_id   INT UNSIGNED NOT NULL,
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE KEY specialbets_by_tournament (user_id, tournament_id)
 ) ENGINE=InnoDB;
 
 --
