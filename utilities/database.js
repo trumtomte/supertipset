@@ -51,8 +51,8 @@ exports.queries = {
     UPDATE_GROUP:           'UPDATE Groups SET ',
     CREATE_USERGROUP:       'INSERT INTO UsersGroups SET ?',
     ROUNDS_BY_ID:           'SELECT r.name AS round, r.id AS round_id, g.id AS game_id, g.group_name AS group_name, r.start_date AS round_start, r.stop_date AS round_stop, g.start_date AS game_start, g.stop_date AS game_stop, g.team_1_id, g.team_2_id, res.team_1_goals AS team_1_result, res.team_2_goals AS team_2_result, (SELECT l.name FROM Teams AS l WHERE l.id = g.team_1_id) AS team_1_name, (SELECT l.name FROM Teams AS l WHERE l.id = g.team_2_id) AS team_2_name FROM Tournaments AS t INNER JOIN Rounds AS r ON t.id = r.tournament_id INNER JOIN Games AS g ON r.id = g.round_id LEFT JOIN Results as res ON g.id = res.game_id WHERE t.id = ? GROUP BY r.name, g.id ORDER BY g.id',
-    UPDATE_SPECIALBETS:     'UPDATE BetsSpecial SET player_id = ?, player_goals = ?, team_id = ? WHERE user_id = ?',
-    CREATE_SPECIALBETS:     'INSERT INTO BetsSpecial SET ?',
+    UPDATE_SPECIALBET:      'UPDATE BetsSpecial SET player_id = ?, player_goals = ?, team_id = ? WHERE user_id = ?',
+    CREATE_SPECIALBET:      'INSERT INTO BetsSpecial SET ?',
     ALL_TEAMS:              'SELECT t.id AS id, t.name AS team, p.id AS player_id, p.firstname AS player_firstname, p.lastname AS player_lastname FROM Teams AS t INNER JOIN Players AS p ON t.id = p.team_id ORDER BY t.name',
     TEAM_BY_ID:             'SELECT t.id AS id, t.name AS team, p.id AS player_id, p.firstname AS player_firstname, p.lastname AS player_lastname FROM Teams AS t INNER JOIN Players AS p ON t.id = p.team_id WHERE t.id = ? ORDER BY t.name',
     TOP_USERS:              'SELECT u.id, u.username, (COALESCE(SUM(p.points), 0) + COALESCE((SELECT bsr.player + bsr.goals + bsr.team FROM BetsSpecialResults AS bsr WHERE bsr.user_id = u.id), 0)) AS points FROM Users AS u LEFT JOIN Points AS p ON u.id = p.user_id GROUP BY u.username ORDER BY points DESC, u.username LIMIT 10',
@@ -61,7 +61,8 @@ exports.queries = {
     TOP_GROUPS_USERS:       'SELECT g.id, g.name, COUNT(DISTINCT u.id) AS total_users FROM Groups AS g INNER JOIN UsersGroups AS ug ON ug.group_id = g.id INNER JOIN Users AS u ON ug.user_id = u.id GROUP BY g.name ORDER BY total_users DESC LIMIT 10',
     TOP_GROUPS_POINTS:      'SELECT g.id, g.name, (COALESCE(SUM(p.points), 0) + COALESCE((SELECT bsr.player + bsr.goals + bsr.team FROM BetsSpecialResults AS bsr WHERE bsr.user_id = u.id), 0)) AS points FROM Groups AS g INNER JOIN UsersGroups AS ug ON ug.group_id = g.id INNER JOIN Users AS u ON ug.user_id = u.id LEFT JOIN Points AS p ON p.user_id = u.id GROUP BY g.name ORDER BY points DESC LIMIT 10',
     TOP_GROUPS_AVERAGE:     'SELECT g.id, g.name, FLOOR((COALESCE(SUM(p.points), 0) + COALESCE((SELECT bsr.player + bsr.goals + bsr.team FROM BetsSpecialResults AS bsr WHERE bsr.user_id = u.id), 0)) / COUNT(DISTINCT u.id)) AS average FROM Groups AS g INNER JOIN UsersGroups AS ug ON ug.group_id = g.id INNER JOIN Users AS u ON ug.user_id = u.id LEFT JOIN Points AS p ON p.user_id = u.id GROUP BY g.name ORDER BY average DESC LIMIT 10',
-    USER_BY_ID:             'SELECT u.id, u.username, u.firstname, u.lastname, u.password, (COALESCE(SUM(pts.points), 0) + COALESCE((SELECT bsr.player + bsr.goals + bsr.team FROM BetsSpecialResults AS bsr WHERE bsr.user_id = u.id), 0)) AS points, t.name AS team, t.id AS team_id, p.id AS player_id, p.firstname AS player_firstname, p.lastname AS player_lastname, p.team_id AS player_team, bs.player_goals AS player_goals FROM Users AS u LEFT JOIN Points AS pts ON u.id = pts.user_id INNER JOIN BetsSpecial AS bs ON u.id = bs.user_id INNER JOIN Teams AS t ON bs.team_id = t.id INNER JOIN Players AS p ON bs.player_id = p.id WHERE u.id = ?',
+    // ALL_USERS:              '',
+    USER_BY_ID:             'SELECT u.id, u.username, u.firstname, u.lastname, u.password, (COALESCE(SUM(pts.points), 0) + COALESCE((SELECT bsr.player + bsr.goals + bsr.team FROM BetsSpecialResults AS bsr WHERE bsr.user_id = u.id), 0)) AS points, COALESCE((SELECT bsr.player + bsr.goals + bsr.team FROM BetsSpecialResults AS bsr WHERE bsr.user_id = u.id), 0) AS specialbet_points, t.name AS team, t.id AS team_id, p.id AS player_id, p.firstname AS player_firstname, p.lastname AS player_lastname, p.team_id AS player_team, bs.player_goals AS player_goals FROM Users AS u LEFT JOIN Points AS pts ON u.id = pts.user_id INNER JOIN BetsSpecial AS bs ON u.id = bs.user_id INNER JOIN Teams AS t ON bs.team_id = t.id INNER JOIN Players AS p ON bs.player_id = p.id WHERE u.id = ?',
     USER_BY_NAME:           'SELECT id, username, password FROM Users WHERE username = ?',
     CREATE_USER:            'INSERT INTO Users SET ?',
     UPDATE_USER_PASS:       'UPDATE Users SET password = ? WHERE id = ?',
@@ -70,5 +71,8 @@ exports.queries = {
     DELETE_USERGROUP:       'DELETE FROM UsersGroups WHERE id = ?',
     RESULTS_BY_GAME_ID:     'SELECT id, team_1_goals, team_2_goals, game_id FROM Results WHERE game_id = ?',
     USERBETS_BY_GAME_ID:    'SELECT id, user_id, team_1_bet, team_2_bet, game_id FROM Bets WHERE game_id = ?',
-    INSERT_USERPOINTS:      'INSERT IGNORE INTO Points (points, game_id, user_id) VALUES ?'
+    INSERT_USERPOINTS:      'INSERT IGNORE INTO Points (points, game_id, user_id) VALUES ?',
+
+    SPECIALBETS_BY_ID: 'SELECT user_id, player_id, player_goals, team_id FROM BetsSpecial WHERE tournament_id = ?',
+    CREATE_SPECIALBET_RESULTS: 'INSERT IGNORE INTO BetsSpecialResults (user_id, player, goals, team, tournament_id) VALUES ?'
 };
