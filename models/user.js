@@ -1,6 +1,17 @@
 var db = require( '../utilities/database' ),
     auth = require( '../utilities/auth' );
 
+// function UserCollection() {}
+// 
+// UserCollection.prototype.fetch = function( callback ) {
+//     db.conn.query( db.queries.ALL_USERS, function( err, rows ) {
+//         if ( err || ! rows.length ) return callback( err, null );
+//         callback( err, rows );
+//     });
+// 
+//     return this;
+// };
+
 function User( id ) {
     this.id = id || 0;
 }
@@ -17,6 +28,7 @@ User.prototype.fetch = function( callback ) {
             firstname: r.firstname,
             lastname: r.lastname,
             points: r.points,
+            specialbet_points: r.specialbet_points,
             player: {
                 id: r.player_id,
                 firstname: r.player_firstname,
