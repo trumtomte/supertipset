@@ -87,11 +87,12 @@ api.use( function( err, req, res, next ) {
 // ====================
 // Application routes
 // ====================
-app.get( '/login',      routes.login.form );
-app.post( '/login',     routes.login.login );
-app.get( '/logout',     routes.login.logout );
-app.post( '/calculate', routes.calculate.game );
-app.post( '/users',     routes.users.create );
+app.get( '/login',              routes.login.form );
+app.post( '/login',             routes.login.login );
+app.get( '/logout',             routes.login.logout );
+app.post( '/users',             routes.users.create );
+app.post( '/calculate/game',    routes.calculate.game );
+app.post( '/calculate/special', routes.calculate.special );
 
 app.get( '/', function( req, res ) {
     res.render( 'index' );
