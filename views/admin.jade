@@ -20,8 +20,22 @@ html(lang="sv")
                 if success == 1
                     p.success-msg Uträkningen lyckades
 
-                form(method="POST" action="/calculate")
+                form(method="POST" action="/calculate/game")
                     input(type="text" name="id" placeholder="ID")
+                    input(type="password" name="password" placeholder="Lösenord")
+                    input(type="hidden" name="_csrf" value="#{token}")
+                    button(type="submit") Beräkna
+
+            div.form-container
+                p.info-msg Räkna ut poäng för specialtips för alla användare.
+
+                if error == 2
+                    p.error-msg Var vänlig försök igen
+
+                if success == 2
+                    p.success-msg Uträkningen lyckades
+
+                form(method="POST" action="/calculate/special")
                     input(type="password" name="password" placeholder="Lösenord")
                     input(type="hidden" name="_csrf" value="#{token}")
                     button(type="submit") Beräkna
