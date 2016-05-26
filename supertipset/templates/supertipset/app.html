@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Supertipset</title>
+        <meta charset="utf-8">
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'supertipset/css/main.css' %}">
+    </head>
+    <body>
+        <div id="mount"></div>
+        <!-- <script>window.serverState = { user: { id: {{ user_id }} }, tournament: 1 };</script> -->
+        <script>
+            window.tournamentID = 1;
+            window.userID = {{ user_id }};
+        </script>
+        <script src="{% static 'supertipset/js/bundle.js' %}"></script>
+    </body>
+</html>
