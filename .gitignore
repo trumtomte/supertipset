@@ -41,3 +41,4 @@ bin
 eggs
 lib
 pip-selfcheck.json
+migrations
