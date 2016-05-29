@@ -5,4 +5,4 @@
 
 # TECHNOLOGY COLOPHON
 
-    HTML5, CSS3, SASS, Angular.js, Node.js, lodash.js, gulp.js, Bower
+    HTML5, CSS3, React, Redux, Webpack, Python, Nginx, Postgres
