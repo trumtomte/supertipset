@@ -1,7 +1,8 @@
 # Logs
 logs
 *.log
-*.txt
+cmd.txt
+secret.txt
 
 # Runtime data
 pids
@@ -38,3 +39,5 @@ static
 fixtures
 bin
 eggs
+lib
+pip-selfcheck.json
