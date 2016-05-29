@@ -43,3 +43,4 @@ lib
 pip-selfcheck.json
 migrations
 include
+.Python
