@@ -36,3 +36,5 @@ build
 # django
 static
 fixtures
+bin
+eggs
