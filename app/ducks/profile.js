@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { assign } from './utils'
+import { baseURL, assign } from './utils'
 import { RECEIVE_LEAVE } from './groups'
 
 const INVALIDATE = 'supertipset/profile/INVALIDATE'
@@ -84,7 +84,7 @@ export function fetchProfile(id, tournament) {
 
         dispatch(requestProfile())
 
-        const url = `http://localhost:8001/api/users/${id}/detail/?tournament=${tournament}`
+        const url = `${baseURL}/api/users/${id}/detail/?tournament=${tournament}`
 
         return fetch(url)
             .then(res => {

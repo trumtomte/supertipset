@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { assign } from './utils'
+import { baseURL, assign } from './utils'
 
 const INVALIDATE = 'supsertipset/toplists/INVALIDATE'
 const REQUEST_USERS = 'supsertipset/toplists/REQUEST_USERS'
@@ -94,7 +94,7 @@ export function fetchUsersForTopLists(tournament) {
 
         dispatch(requestUsersForTopLists())
 
-        const url = `http://127.0.0.1:8001/api/users/deep/?tournament=${tournament}`
+        const url = `${baseURL}/api/users/deep/?tournament=${tournament}`
 
         return fetch(url)
             .then(res => {
@@ -135,7 +135,7 @@ export function fetchGroupsForTopLists(tournament) {
 
         dispatch(requestGroupsForTopLists())
 
-        const url = `http://127.0.0.1:8001/api/groups/deep/?tournament=${tournament}`
+        const url = `${baseURL}/api/groups/deep/?tournament=${tournament}`
 
         return fetch(url)
             .then(res => {

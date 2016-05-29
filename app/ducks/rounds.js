@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { assign } from './utils'
+import { baseURL, assign } from './utils'
 
 const INVALIDATE = 'supertipset/rounds/INVALIDATE'
 const REQUEST = 'supertipset/rounds/REQUEST'
@@ -65,7 +65,7 @@ export function fetchRounds(tournament) {
 
         dispatch(requestRounds())
 
-        const url = `http://127.0.0.1:8001/api/rounds/?tournament=${tournament}`
+        const url = `${baseURL}/api/rounds/?tournament=${tournament}`
 
         return fetch(url)
             .then(res => {

@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { assign } from './utils'
+import { baseURL, assign } from './utils'
 
 const REQUEST = 'supertipset/players/REQUEST'
 const RECEIVE = 'supertipset/players/RECEIVE'
@@ -51,7 +51,7 @@ export function fetchPlayers() {
 
         dispatch(requestPlayers())
 
-        const url = 'http://localhost:8001/api/players/'
+        const url = `${baseURL}/api/players/`
 
         return fetch(url)
             .then(res => {

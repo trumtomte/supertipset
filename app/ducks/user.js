@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import { successNotification } from './notification'
-import { assign, preparePut, preparePost } from './utils'
+import { baseURL, assign, preparePut, preparePost } from './utils'
 
 const INVALIDATE = 'supertipset/user/INVALIDATE'
 // User
@@ -90,7 +90,7 @@ export function fetchUser(id, tournament) {
 
         dispatch(requestUser())
 
-        const url = `http://localhost:8001/api/users/${id}/detail/?tournament=${tournament}`
+        const url = `${baseURL}/api/users/${id}/detail/?tournament=${tournament}`
 
         return fetch(url)
             .then(res => {
@@ -122,7 +122,7 @@ export function editUserPassword(id, username, password) {
             password
         })
 
-        const url = `http://127.0.0.1:8001/api/users/${id}/password/`
+        const url = `${baseURL}/api/users/${id}/password/`
 
         return fetch(url, payload)
             .then(res => {
@@ -159,7 +159,7 @@ export function placeBet(user, game, betTeamOne, betTeamTwo) {
             team_2_bet: betTeamTwo
         })
 
-        const url = 'http://localhost:8001/api/bets/'
+        const url = `${baseURL}/api/bets/`
 
         return fetch(url, payload)
             .then(res => {
@@ -197,7 +197,7 @@ export function placeSpecialBet(user, player, goals, team, tournament) {
             player_goals: goals
         })
 
-        const url = 'http://localhost:8001/api/specialbets/'
+        const url = `${baseURL}/api/specialbets/`
 
         return fetch(url, payload)
             .then(res => {

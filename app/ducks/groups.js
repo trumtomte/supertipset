@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import { browserHistory } from 'react-router'
 import { successNotification } from './notification'
-import { assign, preparePost, preparePut } from './utils'
+import { baseURL, assign, preparePost, preparePut } from './utils'
 
 const INVALIDATE = 'supertipset/groups/INVALIDATE'
 // Group
@@ -85,7 +85,7 @@ export function fetchGroups(user, tournament) {
 
         dispatch(requestGroups())
 
-        const url = `http://127.0.0.1:8001/api/groups/deep/?users=${user}&tournament=${tournament}`
+        const url = `${baseURL}/api/groups/deep/?users=${user}&tournament=${tournament}`
 
         return fetch(url)
             .then(res => {
@@ -118,7 +118,7 @@ export function createGroup(user, name, password, tournament) {
             tournament
         })
 
-        const url = 'http://127.0.0.1:8001/api/groups/'
+        const url = `${baseURL}/api/groups/`
 
         return fetch(url, payload)
             .then(res => {
@@ -156,7 +156,7 @@ export function joinGroup(user, name, password) {
             password
         })
 
-        const url = `http://127.0.0.1:8001/api/users/${user}/group/`
+        const url = `${baseURL}/api/users/${user}/group/`
 
         return fetch(url, payload)
             .then(res => {
@@ -194,7 +194,7 @@ export function leaveGroup(user, group, admin) {
             admin
         })
 
-        const url = `http://127.0.0.1:8001/api/groups/${group}/leave/`
+        const url = `${baseURL}/api/groups/${group}/leave/`
 
         return fetch(url, payload)
             .then(res => {
@@ -225,7 +225,7 @@ export function removeGroup(user, group) {
         dispatch(requestRemoveGroup())
 
         const payload = { method: 'DELETE' }
-        const url = `http://127.0.0.1:8001/api/groups/${group}/`
+        const url = `${baseURL}/api/groups/${group}/`
 
         return fetch(url, payload)
             .then(res => { 

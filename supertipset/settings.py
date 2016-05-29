@@ -30,11 +30,11 @@ except NameError:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
-DEBUG = os.environ.get('DJANGO_DEBUG', False)
+DEBUG = 'DJANGO_DEBUG' in os.environ
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '188.166.39.124']
-
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '188.166.39.124']
+ALLOWED_HOSTS = '*' # temporary
 
 # Application definition
 
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'corsheaders'
 ]
 
+# TODO needed?
 CORS_ORIGIN_ALLOW_ALL = True
 
 MIDDLEWARE_CLASSES = [

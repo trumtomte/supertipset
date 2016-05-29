@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import { successNotification } from './notification'
-import { assign, preparePost, preparePut } from './utils'
+import { baseURL, assign, preparePost, preparePut } from './utils'
 
 const INVALIDATE = 'supertipset/group/INVALIDATE'
 // Group
@@ -82,7 +82,7 @@ export function fetchGroup(id, tournament) {
 
         dispatch(requestGroup())
 
-        return fetch(`http://127.0.0.1:8001/api/groups/${id}/detail/?tournament=${tournament}`)
+        return fetch(`${baseURL}/api/groups/${id}/detail/?tournament=${tournament}`)
             .then(res => {
                 if (res.ok ) {
                     res.json().then(json => dispatch(receiveGroup(json)))
@@ -112,7 +112,7 @@ export function editGroupDescription(user, group, name, description) {
             description
         })
 
-        const url = `http://127.0.0.1:8001/api/groups/${group}/`
+        const url = `${baseURL}/api/groups/${group}/`
 
         return fetch(url, payload)
             .then(res => {
@@ -148,7 +148,7 @@ export function editGroupPassword(user, group, name, password) {
             password
         })
 
-        const url = `http://127.0.0.1:8001/api/groups/${group}/password/`
+        const url = `${baseURL}/api/groups/${group}/password/`
 
         return fetch(url, payload)
             .then(res => {
