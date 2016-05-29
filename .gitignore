@@ -42,3 +42,4 @@ eggs
 lib
 pip-selfcheck.json
 migrations
+include
