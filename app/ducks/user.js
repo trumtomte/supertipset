@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import { successNotification } from './notification'
 import { baseURL, assign, preparePut, preparePost } from './utils'
+import { RECEIVE_LEAVE, RECEIVE_JOIN, RECEIVE_CREATE } from './groups'
 
 const INVALIDATE = 'supertipset/user/INVALIDATE'
 // User
@@ -11,7 +12,7 @@ const REQUEST_BET = 'supertipset/user/REQUEST_BET'
 const RECEIVE_BET = 'supertipset/user/RECEIVE_BET'
 // Place special bet
 const REQUEST_SPECIAL_BET = 'supertipset/user/REQUEST_SPECIAL_BET'
-const RECEIVE_SPECIAL_BET = 'supertipset/user/RECEIVE_SPECIAL_BET'
+export const RECEIVE_SPECIAL_BET = 'supertipset/user/RECEIVE_SPECIAL_BET'
 // Change user password
 const REQUEST_EDIT_PASSWORD = 'supertipset/user/REQUEST_EDIT_PASSWORD'
 const RECEIVE_EDIT_PASSWORD = 'supertipset/user/RECEIVE_EDIT_PASSWORD'
@@ -50,6 +51,19 @@ export default function reducer(state = initialState, action) {
             return assign(state, {
                 data: assign(state.data, {
                     special_bets: state.data.special_bets.concat(action.specialBet)
+                })
+            })
+        case RECEIVE_CREATE:
+        case RECEIVE_JOIN:
+            return assign(state, {
+                data: assign(state.data, {
+                    groups: state.data.groups.concat(action.group)
+                })
+            })
+        case RECEIVE_LEAVE:
+            return assign(state, {
+                data: assign(state.data, {
+                    groups: state.data.groups.filter(group => group.id !== action.group.id)
                 })
             })
         // TODO listen to all actions?

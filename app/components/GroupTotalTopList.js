@@ -17,7 +17,7 @@ const reduceUserTotal = (a, n) => (
 const GroupTotalTopList = ({ groups }) => {
 
     if (groups.isFetching || groups.data.length == 0) {
-        return <p>Laddar grupper</p>
+        return <p>Laddar ligor...</p>
     }
 
     const orderedGroups = groups.data

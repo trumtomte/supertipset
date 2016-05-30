@@ -23,11 +23,11 @@ class Group extends Component {
 
         // TODO wont need this?
         if (!params.hasOwnProperty('id')) {
-            return <p>Gruppen finns inte</p>
+            return <p>Det finns ingen liga med detta ID.</p>
         }
 
         if (group.isFetching || group.data.length === 0) {
-            return <p>Ingen grupp</p>
+            return <p>Ligan laddas.</p>
         }
 
         const isAdmin = user.id === group.data.admin.id

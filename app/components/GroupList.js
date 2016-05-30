@@ -17,8 +17,12 @@ const group = (g, i) => {
 const sortByGroupName = (a, b) => a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1
 
 const GroupList = ({ groups }) => {
-    if (groups.isFetching || groups.data.length === 0) {
-        return <div className='groups'>Loading...</div>
+    if (groups.isFetching) {
+        return <div className='groups'><p>Laddar...</p></div>
+    }
+
+    if (groups.data.length === 0) {
+        return <div className='groups'><p>Du är inte med i några ligor.</p></div>
     }
 
     return (

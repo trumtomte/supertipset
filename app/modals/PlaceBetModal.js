@@ -5,15 +5,29 @@ import { placeBet } from '../ducks/user'
 import Modal from './Modal'
 
 const PlaceBetModal = ({ user, game, dispatch }) => {
-    // Mutable form-data
-    let data = {}
+    // Mutable form-data + defaults
+    let data = {
+        teamOne: 0,
+        teamTwo: 0
+    }
 
     const close = () => dispatch(closeModal())
 
     // TODO check if game has started etc
     const submit = (e) => {
         e.preventDefault()
-        dispatch(placeBet(user.id, game.id, data.teamOne, data.teamTwo))
+
+        if (user.data.bets.filter(b => b.game.id == game.id).length) {
+            console.log('has bet - should send PUT request')
+        }
+
+        dispatch(placeBet(
+            user.id,
+            game.id,
+            data.teamOne,
+            data.teamTwo
+        ))
+
         dispatch(closeModal())
     }
 
@@ -22,7 +36,7 @@ const PlaceBetModal = ({ user, game, dispatch }) => {
 
     return (
         <Modal submit={submit}>
-            <h2 className='modal-title'>Tipsa</h2>
+            <h2 className='modal-title'>Tippa</h2>
             <p className='modal-description'>
                 {game.team_1.name} -  {game.team_2.name}
             </p>
@@ -30,10 +44,14 @@ const PlaceBetModal = ({ user, game, dispatch }) => {
                 <input
                     onChange={setData}
                     ref={focus}
+                    defaultValue={0}
+                    min='0'
                     type='number'
                     name='teamOne' />
                 <input
                     onChange={setData}
+                    defaultValue={0}
+                    min='0'
                     type='number'
                     name='teamTwo' />
             </div>

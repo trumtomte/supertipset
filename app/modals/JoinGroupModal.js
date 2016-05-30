@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { closeModal } from '../ducks/modal'
-import { joinGroup } from '../ducks/group'
+import { joinGroup } from '../ducks/groups'
 import Modal from './Modal'
 
 const JoinGroupModal = ({ user, groups, dispatch }) => {

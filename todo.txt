@@ -1,15 +1,1 @@
 # TODO
-
-* Refactor SASS (backend) ++ RWD
-* Cross-browser (IE)
-* SEO
-* Better separation of API and App (node.js)?
-    - API versioning
-        - res.type( 'application/vnd.supertipset-v1+json' )
-        - added support for accept headers (xml to start with)?
-* Send new password (to email, randomly generated)?
-* Admin backend
-* Multiple tournaments -> solution?
-
-(* Tests ++ Seeder script)
-

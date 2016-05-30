@@ -27,7 +27,7 @@ class VisitorProfile extends Component {
         const { user, profile, params, dispatch } = this.props
 
         if (profile.isFetching || !profile.data.hasOwnProperty('id')) {
-            return <div className='profile-container'>Laddar</div>
+            return <div className='profile-container'><p>Laddar...</p></div>
         }
 
         const isCurrentUser = user.id === profile.data.id

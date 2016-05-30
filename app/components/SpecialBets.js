@@ -1,7 +1,7 @@
 import React from 'react'
 import { PlaceSpecialBetButton } from '../containers'
 
-const SpecialBets = ({ user, bettable }) => {
+const SpecialBets = ({ user, tournamentHasStarted, bettable }) => {
 
     // No special bets available yet
     if (user.isFetching || !user.data.hasOwnProperty('id')) {
@@ -66,7 +66,10 @@ const SpecialBets = ({ user, bettable }) => {
 
     return (
         <div className='special-bets-container'>
-            <h5>Specialtips</h5>
+            <h5>
+                Specialtips
+                {bettable && !tournamentHasStarted ? <PlaceSpecialBetButton /> : ''}
+            </h5>
             <div className='special-bets'>
                 <div className='winner'>
                     <h6>VINNARE</h6>

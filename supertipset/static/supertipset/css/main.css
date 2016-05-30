@@ -491,11 +491,11 @@ header nav {
     border-radius: 4px;
 }
 
-header nav .bets-link,
-header nav .groups-link,
-header nav .profile-link,
-header nav .toplists-link {
+header nav .link {
     border-right: 1px solid #17a689;
+}
+header nav .link:last-child {
+    border: 0;
 }
 
 header nav a,

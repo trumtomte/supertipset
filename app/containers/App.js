@@ -38,25 +38,25 @@ class App extends Component {
                         <Link
                             to="/s/bets"
                             activeStyle={ACTIVE}
-                            className='bets-link'>
+                            className='bets-link link'>
                             Tippa
                         </Link>
                         <Link
                             to="/s/groups"
                             activeStyle={ACTIVE}
-                            className='groups-link'>
+                            className='groups-link link'>
                             Ligor
                         </Link>
                         <Link
                             to="/s/toplists"
                             activeStyle={ACTIVE}
-                            className='toplists-link'>
+                            className='toplists-link link'>
                             Top 10
                         </Link>
                         <Link
                             to="/s/profile"
                             activeStyle={ACTIVE}
-                            className='profile-link'>
+                            className='profile-link link'>
                             Profil
                         </Link>
 

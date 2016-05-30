@@ -64,13 +64,13 @@
 
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 
-	var _reactRouterRedux = __webpack_require__(248);
+	var _reactRouterRedux = __webpack_require__(191);
 
-	var _reactRouter = __webpack_require__(191);
+	var _reactRouter = __webpack_require__(196);
 
-	var _containers = __webpack_require__(264);
+	var _containers = __webpack_require__(253);
 
-	var _index = __webpack_require__(341);
+	var _index = __webpack_require__(318);
 
 	var reducers = _interopRequireWildcard(_index);
 
@@ -21799,6 +21799,366 @@
 /* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.routerMiddleware = exports.routerActions = exports.goForward = exports.goBack = exports.go = exports.replace = exports.push = exports.CALL_HISTORY_METHOD = exports.routerReducer = exports.LOCATION_CHANGE = exports.syncHistoryWithStore = undefined;
+
+	var _reducer = __webpack_require__(192);
+
+	Object.defineProperty(exports, 'LOCATION_CHANGE', {
+	  enumerable: true,
+	  get: function get() {
+	    return _reducer.LOCATION_CHANGE;
+	  }
+	});
+	Object.defineProperty(exports, 'routerReducer', {
+	  enumerable: true,
+	  get: function get() {
+	    return _reducer.routerReducer;
+	  }
+	});
+
+	var _actions = __webpack_require__(193);
+
+	Object.defineProperty(exports, 'CALL_HISTORY_METHOD', {
+	  enumerable: true,
+	  get: function get() {
+	    return _actions.CALL_HISTORY_METHOD;
+	  }
+	});
+	Object.defineProperty(exports, 'push', {
+	  enumerable: true,
+	  get: function get() {
+	    return _actions.push;
+	  }
+	});
+	Object.defineProperty(exports, 'replace', {
+	  enumerable: true,
+	  get: function get() {
+	    return _actions.replace;
+	  }
+	});
+	Object.defineProperty(exports, 'go', {
+	  enumerable: true,
+	  get: function get() {
+	    return _actions.go;
+	  }
+	});
+	Object.defineProperty(exports, 'goBack', {
+	  enumerable: true,
+	  get: function get() {
+	    return _actions.goBack;
+	  }
+	});
+	Object.defineProperty(exports, 'goForward', {
+	  enumerable: true,
+	  get: function get() {
+	    return _actions.goForward;
+	  }
+	});
+	Object.defineProperty(exports, 'routerActions', {
+	  enumerable: true,
+	  get: function get() {
+	    return _actions.routerActions;
+	  }
+	});
+
+	var _sync = __webpack_require__(194);
+
+	var _sync2 = _interopRequireDefault(_sync);
+
+	var _middleware = __webpack_require__(195);
+
+	var _middleware2 = _interopRequireDefault(_middleware);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	exports.syncHistoryWithStore = _sync2['default'];
+	exports.routerMiddleware = _middleware2['default'];
+
+/***/ },
+/* 192 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.routerReducer = routerReducer;
+	/**
+	 * This action type will be dispatched when your history
+	 * receives a location change.
+	 */
+	var LOCATION_CHANGE = exports.LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
+
+	var initialState = {
+	  locationBeforeTransitions: null
+	};
+
+	/**
+	 * This reducer will update the state with the most recent location history
+	 * has transitioned to. This may not be in sync with the router, particularly
+	 * if you have asynchronously-loaded routes, so reading from and relying on
+	 * this state is discouraged.
+	 */
+	function routerReducer() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+
+	  var _ref = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+	  var type = _ref.type;
+	  var payload = _ref.payload;
+
+	  if (type === LOCATION_CHANGE) {
+	    return _extends({}, state, { locationBeforeTransitions: payload });
+	  }
+
+	  return state;
+	}
+
+/***/ },
+/* 193 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	/**
+	 * This action type will be dispatched by the history actions below.
+	 * If you're writing a middleware to watch for navigation events, be sure to
+	 * look for actions of this type.
+	 */
+	var CALL_HISTORY_METHOD = exports.CALL_HISTORY_METHOD = '@@router/CALL_HISTORY_METHOD';
+
+	function updateLocation(method) {
+	  return function () {
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return {
+	      type: CALL_HISTORY_METHOD,
+	      payload: { method: method, args: args }
+	    };
+	  };
+	}
+
+	/**
+	 * These actions correspond to the history API.
+	 * The associated routerMiddleware will capture these events before they get to
+	 * your reducer and reissue them as the matching function on your history.
+	 */
+	var push = exports.push = updateLocation('push');
+	var replace = exports.replace = updateLocation('replace');
+	var go = exports.go = updateLocation('go');
+	var goBack = exports.goBack = updateLocation('goBack');
+	var goForward = exports.goForward = updateLocation('goForward');
+
+	var routerActions = exports.routerActions = { push: push, replace: replace, go: go, goBack: goBack, goForward: goForward };
+
+/***/ },
+/* 194 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports['default'] = syncHistoryWithStore;
+
+	var _reducer = __webpack_require__(192);
+
+	var defaultSelectLocationState = function defaultSelectLocationState(state) {
+	  return state.routing;
+	};
+
+	/**
+	 * This function synchronizes your history state with the Redux store.
+	 * Location changes flow from history to the store. An enhanced history is
+	 * returned with a listen method that responds to store updates for location.
+	 *
+	 * When this history is provided to the router, this means the location data
+	 * will flow like this:
+	 * history.push -> store.dispatch -> enhancedHistory.listen -> router
+	 * This ensures that when the store state changes due to a replay or other
+	 * event, the router will be updated appropriately and can transition to the
+	 * correct router state.
+	 */
+	function syncHistoryWithStore(history, store) {
+	  var _ref = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+	  var _ref$selectLocationSt = _ref.selectLocationState;
+	  var selectLocationState = _ref$selectLocationSt === undefined ? defaultSelectLocationState : _ref$selectLocationSt;
+	  var _ref$adjustUrlOnRepla = _ref.adjustUrlOnReplay;
+	  var adjustUrlOnReplay = _ref$adjustUrlOnRepla === undefined ? true : _ref$adjustUrlOnRepla;
+
+	  // Ensure that the reducer is mounted on the store and functioning properly.
+	  if (typeof selectLocationState(store.getState()) === 'undefined') {
+	    throw new Error('Expected the routing state to be available either as `state.routing` ' + 'or as the custom expression you can specify as `selectLocationState` ' + 'in the `syncHistoryWithStore()` options. ' + 'Ensure you have added the `routerReducer` to your store\'s ' + 'reducers via `combineReducers` or whatever method you use to isolate ' + 'your reducers.');
+	  }
+
+	  var initialLocation = void 0;
+	  var currentLocation = void 0;
+	  var isTimeTraveling = void 0;
+	  var unsubscribeFromStore = void 0;
+	  var unsubscribeFromHistory = void 0;
+
+	  // What does the store say about current location?
+	  var getLocationInStore = function getLocationInStore(useInitialIfEmpty) {
+	    var locationState = selectLocationState(store.getState());
+	    return locationState.locationBeforeTransitions || (useInitialIfEmpty ? initialLocation : undefined);
+	  };
+
+	  // If the store is replayed, update the URL in the browser to match.
+	  if (adjustUrlOnReplay) {
+	    var handleStoreChange = function handleStoreChange() {
+	      var locationInStore = getLocationInStore(true);
+	      if (currentLocation === locationInStore) {
+	        return;
+	      }
+
+	      // Update address bar to reflect store state
+	      isTimeTraveling = true;
+	      currentLocation = locationInStore;
+	      history.transitionTo(_extends({}, locationInStore, {
+	        action: 'PUSH'
+	      }));
+	      isTimeTraveling = false;
+	    };
+
+	    unsubscribeFromStore = store.subscribe(handleStoreChange);
+	    handleStoreChange();
+	  }
+
+	  // Whenever location changes, dispatch an action to get it in the store
+	  var handleLocationChange = function handleLocationChange(location) {
+	    // ... unless we just caused that location change
+	    if (isTimeTraveling) {
+	      return;
+	    }
+
+	    // Remember where we are
+	    currentLocation = location;
+
+	    // Are we being called for the first time?
+	    if (!initialLocation) {
+	      // Remember as a fallback in case state is reset
+	      initialLocation = location;
+
+	      // Respect persisted location, if any
+	      if (getLocationInStore()) {
+	        return;
+	      }
+	    }
+
+	    // Tell the store to update by dispatching an action
+	    store.dispatch({
+	      type: _reducer.LOCATION_CHANGE,
+	      payload: location
+	    });
+	  };
+	  unsubscribeFromHistory = history.listen(handleLocationChange);
+
+	  // The enhanced history uses store as source of truth
+	  return _extends({}, history, {
+	    // The listeners are subscribed to the store instead of history
+
+	    listen: function listen(listener) {
+	      // Copy of last location.
+	      var lastPublishedLocation = getLocationInStore(true);
+
+	      // Keep track of whether we unsubscribed, as Redux store
+	      // only applies changes in subscriptions on next dispatch
+	      var unsubscribed = false;
+	      var unsubscribeFromStore = store.subscribe(function () {
+	        var currentLocation = getLocationInStore(true);
+	        if (currentLocation === lastPublishedLocation) {
+	          return;
+	        }
+	        lastPublishedLocation = currentLocation;
+	        if (!unsubscribed) {
+	          listener(lastPublishedLocation);
+	        }
+	      });
+
+	      // History listeners expect a synchronous call. Make the first call to the
+	      // listener after subscribing to the store, in case the listener causes a
+	      // location change (e.g. when it redirects)
+	      listener(lastPublishedLocation);
+
+	      // Let user unsubscribe later
+	      return function () {
+	        unsubscribed = true;
+	        unsubscribeFromStore();
+	      };
+	    },
+
+
+	    // It also provides a way to destroy internal listeners
+	    unsubscribe: function unsubscribe() {
+	      if (adjustUrlOnReplay) {
+	        unsubscribeFromStore();
+	      }
+	      unsubscribeFromHistory();
+	    }
+	  });
+	}
+
+/***/ },
+/* 195 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports['default'] = routerMiddleware;
+
+	var _actions = __webpack_require__(193);
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	/**
+	 * This middleware captures CALL_HISTORY_METHOD actions to redirect to the
+	 * provided history object. This will prevent these actions from reaching your
+	 * reducer or any middleware that comes after this one.
+	 */
+	function routerMiddleware(history) {
+	  return function () {
+	    return function (next) {
+	      return function (action) {
+	        if (action.type !== _actions.CALL_HISTORY_METHOD) {
+	          return next(action);
+	        }
+
+	        var _action$payload = action.payload;
+	        var method = _action$payload.method;
+	        var args = _action$payload.args;
+
+	        history[method].apply(history, _toConsumableArray(args));
+	      };
+	    };
+	  };
+	}
+
+/***/ },
+/* 196 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* components */
 	'use strict';
 
@@ -21806,19 +22166,19 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _Router2 = __webpack_require__(192);
+	var _Router2 = __webpack_require__(197);
 
 	var _Router3 = _interopRequireDefault(_Router2);
 
 	exports.Router = _Router3['default'];
 
-	var _Link2 = __webpack_require__(228);
+	var _Link2 = __webpack_require__(233);
 
 	var _Link3 = _interopRequireDefault(_Link2);
 
 	exports.Link = _Link3['default'];
 
-	var _IndexLink2 = __webpack_require__(229);
+	var _IndexLink2 = __webpack_require__(234);
 
 	var _IndexLink3 = _interopRequireDefault(_IndexLink2);
 
@@ -21826,25 +22186,25 @@
 
 	/* components (configuration) */
 
-	var _IndexRedirect2 = __webpack_require__(230);
+	var _IndexRedirect2 = __webpack_require__(235);
 
 	var _IndexRedirect3 = _interopRequireDefault(_IndexRedirect2);
 
 	exports.IndexRedirect = _IndexRedirect3['default'];
 
-	var _IndexRoute2 = __webpack_require__(232);
+	var _IndexRoute2 = __webpack_require__(237);
 
 	var _IndexRoute3 = _interopRequireDefault(_IndexRoute2);
 
 	exports.IndexRoute = _IndexRoute3['default'];
 
-	var _Redirect2 = __webpack_require__(231);
+	var _Redirect2 = __webpack_require__(236);
 
 	var _Redirect3 = _interopRequireDefault(_Redirect2);
 
 	exports.Redirect = _Redirect3['default'];
 
-	var _Route2 = __webpack_require__(233);
+	var _Route2 = __webpack_require__(238);
 
 	var _Route3 = _interopRequireDefault(_Route2);
 
@@ -21852,19 +22212,19 @@
 
 	/* mixins */
 
-	var _History2 = __webpack_require__(234);
+	var _History2 = __webpack_require__(239);
 
 	var _History3 = _interopRequireDefault(_History2);
 
 	exports.History = _History3['default'];
 
-	var _Lifecycle2 = __webpack_require__(235);
+	var _Lifecycle2 = __webpack_require__(240);
 
 	var _Lifecycle3 = _interopRequireDefault(_Lifecycle2);
 
 	exports.Lifecycle = _Lifecycle3['default'];
 
-	var _RouteContext2 = __webpack_require__(236);
+	var _RouteContext2 = __webpack_require__(241);
 
 	var _RouteContext3 = _interopRequireDefault(_RouteContext2);
 
@@ -21872,72 +22232,72 @@
 
 	/* utils */
 
-	var _useRoutes2 = __webpack_require__(237);
+	var _useRoutes2 = __webpack_require__(242);
 
 	var _useRoutes3 = _interopRequireDefault(_useRoutes2);
 
 	exports.useRoutes = _useRoutes3['default'];
 
-	var _RouteUtils = __webpack_require__(222);
+	var _RouteUtils = __webpack_require__(227);
 
 	exports.createRoutes = _RouteUtils.createRoutes;
 
-	var _RouterContext2 = __webpack_require__(224);
+	var _RouterContext2 = __webpack_require__(229);
 
 	var _RouterContext3 = _interopRequireDefault(_RouterContext2);
 
 	exports.RouterContext = _RouterContext3['default'];
 
-	var _RoutingContext2 = __webpack_require__(238);
+	var _RoutingContext2 = __webpack_require__(243);
 
 	var _RoutingContext3 = _interopRequireDefault(_RoutingContext2);
 
 	exports.RoutingContext = _RoutingContext3['default'];
 
-	var _PropTypes2 = __webpack_require__(223);
+	var _PropTypes2 = __webpack_require__(228);
 
 	var _PropTypes3 = _interopRequireDefault(_PropTypes2);
 
 	exports.PropTypes = _PropTypes3['default'];
 
-	var _match2 = __webpack_require__(239);
+	var _match2 = __webpack_require__(244);
 
 	var _match3 = _interopRequireDefault(_match2);
 
 	exports.match = _match3['default'];
 
-	var _useRouterHistory2 = __webpack_require__(243);
+	var _useRouterHistory2 = __webpack_require__(248);
 
 	var _useRouterHistory3 = _interopRequireDefault(_useRouterHistory2);
 
 	exports.useRouterHistory = _useRouterHistory3['default'];
 
-	var _PatternUtils = __webpack_require__(216);
+	var _PatternUtils = __webpack_require__(221);
 
 	exports.formatPattern = _PatternUtils.formatPattern;
 
 	/* histories */
 
-	var _browserHistory2 = __webpack_require__(244);
+	var _browserHistory2 = __webpack_require__(249);
 
 	var _browserHistory3 = _interopRequireDefault(_browserHistory2);
 
 	exports.browserHistory = _browserHistory3['default'];
 
-	var _hashHistory2 = __webpack_require__(247);
+	var _hashHistory2 = __webpack_require__(252);
 
 	var _hashHistory3 = _interopRequireDefault(_hashHistory2);
 
 	exports.hashHistory = _hashHistory3['default'];
 
-	var _createMemoryHistory2 = __webpack_require__(240);
+	var _createMemoryHistory2 = __webpack_require__(245);
 
 	var _createMemoryHistory3 = _interopRequireDefault(_createMemoryHistory2);
 
 	exports.createMemoryHistory = _createMemoryHistory3['default'];
 
 /***/ },
-/* 192 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -21950,11 +22310,11 @@
 
 	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-	var _historyLibCreateHashHistory = __webpack_require__(193);
+	var _historyLibCreateHashHistory = __webpack_require__(198);
 
 	var _historyLibCreateHashHistory2 = _interopRequireDefault(_historyLibCreateHashHistory);
 
-	var _historyLibUseQueries = __webpack_require__(210);
+	var _historyLibUseQueries = __webpack_require__(215);
 
 	var _historyLibUseQueries2 = _interopRequireDefault(_historyLibUseQueries);
 
@@ -21962,21 +22322,21 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _createTransitionManager = __webpack_require__(213);
+	var _createTransitionManager = __webpack_require__(218);
 
 	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
 
-	var _PropTypes = __webpack_require__(223);
+	var _PropTypes = __webpack_require__(228);
 
-	var _RouterContext = __webpack_require__(224);
+	var _RouterContext = __webpack_require__(229);
 
 	var _RouterContext2 = _interopRequireDefault(_RouterContext);
 
-	var _RouteUtils = __webpack_require__(222);
+	var _RouteUtils = __webpack_require__(227);
 
-	var _RouterUtils = __webpack_require__(227);
+	var _RouterUtils = __webpack_require__(232);
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
@@ -22153,7 +22513,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 193 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -22164,25 +22524,25 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(194);
+	var _warning = __webpack_require__(199);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _invariant = __webpack_require__(195);
+	var _invariant = __webpack_require__(200);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _Actions = __webpack_require__(196);
+	var _Actions = __webpack_require__(201);
 
-	var _PathUtils = __webpack_require__(197);
+	var _PathUtils = __webpack_require__(202);
 
-	var _ExecutionEnvironment = __webpack_require__(198);
+	var _ExecutionEnvironment = __webpack_require__(203);
 
-	var _DOMUtils = __webpack_require__(199);
+	var _DOMUtils = __webpack_require__(204);
 
-	var _DOMStateStorage = __webpack_require__(200);
+	var _DOMStateStorage = __webpack_require__(205);
 
-	var _createDOMHistory = __webpack_require__(201);
+	var _createDOMHistory = __webpack_require__(206);
 
 	var _createDOMHistory2 = _interopRequireDefault(_createDOMHistory);
 
@@ -22405,7 +22765,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 194 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -22472,7 +22832,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 195 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -22530,7 +22890,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 196 */
+/* 201 */
 /***/ function(module, exports) {
 
 	/**
@@ -22566,7 +22926,7 @@
 	};
 
 /***/ },
-/* 197 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -22577,7 +22937,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(194);
+	var _warning = __webpack_require__(199);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -22619,7 +22979,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 198 */
+/* 203 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22629,7 +22989,7 @@
 	exports.canUseDOM = canUseDOM;
 
 /***/ },
-/* 199 */
+/* 204 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22709,7 +23069,7 @@
 	}
 
 /***/ },
-/* 200 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/*eslint-disable no-empty */
@@ -22721,7 +23081,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(194);
+	var _warning = __webpack_require__(199);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -22788,7 +23148,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 201 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -22799,15 +23159,15 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _invariant = __webpack_require__(195);
+	var _invariant = __webpack_require__(200);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _ExecutionEnvironment = __webpack_require__(198);
+	var _ExecutionEnvironment = __webpack_require__(203);
 
-	var _DOMUtils = __webpack_require__(199);
+	var _DOMUtils = __webpack_require__(204);
 
-	var _createHistory = __webpack_require__(202);
+	var _createHistory = __webpack_require__(207);
 
 	var _createHistory2 = _interopRequireDefault(_createHistory);
 
@@ -22834,7 +23194,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 202 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -22845,29 +23205,29 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(194);
+	var _warning = __webpack_require__(199);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _deepEqual = __webpack_require__(203);
+	var _deepEqual = __webpack_require__(208);
 
 	var _deepEqual2 = _interopRequireDefault(_deepEqual);
 
-	var _PathUtils = __webpack_require__(197);
+	var _PathUtils = __webpack_require__(202);
 
-	var _AsyncUtils = __webpack_require__(206);
+	var _AsyncUtils = __webpack_require__(211);
 
-	var _Actions = __webpack_require__(196);
+	var _Actions = __webpack_require__(201);
 
-	var _createLocation2 = __webpack_require__(207);
+	var _createLocation2 = __webpack_require__(212);
 
 	var _createLocation3 = _interopRequireDefault(_createLocation2);
 
-	var _runTransitionHook = __webpack_require__(208);
+	var _runTransitionHook = __webpack_require__(213);
 
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 
-	var _deprecate = __webpack_require__(209);
+	var _deprecate = __webpack_require__(214);
 
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 
@@ -23128,12 +23488,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 203 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pSlice = Array.prototype.slice;
-	var objectKeys = __webpack_require__(204);
-	var isArguments = __webpack_require__(205);
+	var objectKeys = __webpack_require__(209);
+	var isArguments = __webpack_require__(210);
 
 	var deepEqual = module.exports = function (actual, expected, opts) {
 	  if (!opts) opts = {};
@@ -23228,7 +23588,7 @@
 
 
 /***/ },
-/* 204 */
+/* 209 */
 /***/ function(module, exports) {
 
 	exports = module.exports = typeof Object.keys === 'function'
@@ -23243,7 +23603,7 @@
 
 
 /***/ },
-/* 205 */
+/* 210 */
 /***/ function(module, exports) {
 
 	var supportsArgumentsClass = (function(){
@@ -23269,7 +23629,7 @@
 
 
 /***/ },
-/* 206 */
+/* 211 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23332,7 +23692,7 @@
 	}
 
 /***/ },
-/* 207 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23343,13 +23703,13 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(194);
+	var _warning = __webpack_require__(199);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _Actions = __webpack_require__(196);
+	var _Actions = __webpack_require__(201);
 
-	var _PathUtils = __webpack_require__(197);
+	var _PathUtils = __webpack_require__(202);
 
 	function createLocation() {
 	  var location = arguments.length <= 0 || arguments[0] === undefined ? '/' : arguments[0];
@@ -23389,7 +23749,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 208 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23398,7 +23758,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(194);
+	var _warning = __webpack_require__(199);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -23419,7 +23779,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 209 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23428,7 +23788,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(194);
+	var _warning = __webpack_require__(199);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -23444,7 +23804,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 210 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23455,19 +23815,19 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(194);
+	var _warning = __webpack_require__(199);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _queryString = __webpack_require__(211);
+	var _queryString = __webpack_require__(216);
 
-	var _runTransitionHook = __webpack_require__(208);
+	var _runTransitionHook = __webpack_require__(213);
 
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 
-	var _PathUtils = __webpack_require__(197);
+	var _PathUtils = __webpack_require__(202);
 
-	var _deprecate = __webpack_require__(209);
+	var _deprecate = __webpack_require__(214);
 
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 
@@ -23626,11 +23986,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 211 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var strictUriEncode = __webpack_require__(212);
+	var strictUriEncode = __webpack_require__(217);
 
 	exports.extract = function (str) {
 		return str.split('?')[1] || '';
@@ -23698,7 +24058,7 @@
 
 
 /***/ },
-/* 212 */
+/* 217 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23710,7 +24070,7 @@
 
 
 /***/ },
-/* 213 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23723,27 +24083,27 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
-	var _historyLibActions = __webpack_require__(196);
+	var _historyLibActions = __webpack_require__(201);
 
-	var _computeChangedRoutes2 = __webpack_require__(215);
+	var _computeChangedRoutes2 = __webpack_require__(220);
 
 	var _computeChangedRoutes3 = _interopRequireDefault(_computeChangedRoutes2);
 
-	var _TransitionUtils = __webpack_require__(217);
+	var _TransitionUtils = __webpack_require__(222);
 
-	var _isActive2 = __webpack_require__(219);
+	var _isActive2 = __webpack_require__(224);
 
 	var _isActive3 = _interopRequireDefault(_isActive2);
 
-	var _getComponents = __webpack_require__(220);
+	var _getComponents = __webpack_require__(225);
 
 	var _getComponents2 = _interopRequireDefault(_getComponents);
 
-	var _matchRoutes = __webpack_require__(221);
+	var _matchRoutes = __webpack_require__(226);
 
 	var _matchRoutes2 = _interopRequireDefault(_matchRoutes);
 
@@ -24014,7 +24374,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 214 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -24024,7 +24384,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(194);
+	var _warning = __webpack_require__(199);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -24042,14 +24402,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 215 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _PatternUtils = __webpack_require__(216);
+	var _PatternUtils = __webpack_require__(221);
 
 	function routeParamsChanged(route, prevState, nextState) {
 	  if (!route.path) return false;
@@ -24112,7 +24472,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 216 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -24126,7 +24486,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _invariant = __webpack_require__(195);
+	var _invariant = __webpack_require__(200);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
@@ -24345,7 +24705,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 217 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -24356,9 +24716,9 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _AsyncUtils = __webpack_require__(218);
+	var _AsyncUtils = __webpack_require__(223);
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
@@ -24440,7 +24800,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 218 */
+/* 223 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -24535,7 +24895,7 @@
 	}
 
 /***/ },
-/* 219 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24543,7 +24903,7 @@
 	exports.__esModule = true;
 	exports['default'] = isActive;
 
-	var _PatternUtils = __webpack_require__(216);
+	var _PatternUtils = __webpack_require__(221);
 
 	function deepEqual(a, b) {
 	  if (a == b) return true;
@@ -24667,14 +25027,14 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 220 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _AsyncUtils = __webpack_require__(218);
+	var _AsyncUtils = __webpack_require__(223);
 
 	function getComponentsForRoute(location, route, callback) {
 	  if (route.component || route.components) {
@@ -24705,7 +25065,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 221 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -24714,15 +25074,15 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
-	var _AsyncUtils = __webpack_require__(218);
+	var _AsyncUtils = __webpack_require__(223);
 
-	var _PatternUtils = __webpack_require__(216);
+	var _PatternUtils = __webpack_require__(221);
 
-	var _RouteUtils = __webpack_require__(222);
+	var _RouteUtils = __webpack_require__(227);
 
 	function getChildRoutes(route, location, callback) {
 	  if (route.childRoutes) {
@@ -24917,7 +25277,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 222 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -24937,7 +25297,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
@@ -25037,7 +25397,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 223 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25095,7 +25455,7 @@
 	};
 
 /***/ },
-/* 224 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25106,7 +25466,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _invariant = __webpack_require__(195);
+	var _invariant = __webpack_require__(200);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
@@ -25114,17 +25474,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _deprecateObjectProperties = __webpack_require__(225);
+	var _deprecateObjectProperties = __webpack_require__(230);
 
 	var _deprecateObjectProperties2 = _interopRequireDefault(_deprecateObjectProperties);
 
-	var _getRouteParams = __webpack_require__(226);
+	var _getRouteParams = __webpack_require__(231);
 
 	var _getRouteParams2 = _interopRequireDefault(_getRouteParams);
 
-	var _RouteUtils = __webpack_require__(222);
+	var _RouteUtils = __webpack_require__(227);
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
@@ -25255,7 +25615,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 225 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/*eslint no-empty: 0*/
@@ -25266,7 +25626,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
@@ -25318,14 +25678,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 226 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _PatternUtils = __webpack_require__(216);
+	var _PatternUtils = __webpack_require__(221);
 
 	/**
 	 * Extracts an object of params the given route cares about from
@@ -25347,7 +25707,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 227 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25361,7 +25721,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _deprecateObjectProperties = __webpack_require__(225);
+	var _deprecateObjectProperties = __webpack_require__(230);
 
 	var _deprecateObjectProperties2 = _interopRequireDefault(_deprecateObjectProperties);
 
@@ -25386,7 +25746,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 228 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25403,7 +25763,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
@@ -25556,7 +25916,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 229 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25571,7 +25931,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Link = __webpack_require__(228);
+	var _Link = __webpack_require__(233);
 
 	var _Link2 = _interopRequireDefault(_Link);
 
@@ -25591,7 +25951,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 230 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25604,19 +25964,19 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
-	var _invariant = __webpack_require__(195);
+	var _invariant = __webpack_require__(200);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _Redirect = __webpack_require__(231);
+	var _Redirect = __webpack_require__(236);
 
 	var _Redirect2 = _interopRequireDefault(_Redirect);
 
-	var _PropTypes = __webpack_require__(223);
+	var _PropTypes = __webpack_require__(228);
 
 	var _React$PropTypes = _react2['default'].PropTypes;
 	var string = _React$PropTypes.string;
@@ -25661,7 +26021,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 231 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25674,15 +26034,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _invariant = __webpack_require__(195);
+	var _invariant = __webpack_require__(200);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _RouteUtils = __webpack_require__(222);
+	var _RouteUtils = __webpack_require__(227);
 
-	var _PatternUtils = __webpack_require__(216);
+	var _PatternUtils = __webpack_require__(221);
 
-	var _PropTypes = __webpack_require__(223);
+	var _PropTypes = __webpack_require__(228);
 
 	var _React$PropTypes = _react2['default'].PropTypes;
 	var string = _React$PropTypes.string;
@@ -25770,7 +26130,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 232 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25783,17 +26143,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
-	var _invariant = __webpack_require__(195);
+	var _invariant = __webpack_require__(200);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _RouteUtils = __webpack_require__(222);
+	var _RouteUtils = __webpack_require__(227);
 
-	var _PropTypes = __webpack_require__(223);
+	var _PropTypes = __webpack_require__(228);
 
 	var func = _react2['default'].PropTypes.func;
 
@@ -25837,7 +26197,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 233 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25850,13 +26210,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _invariant = __webpack_require__(195);
+	var _invariant = __webpack_require__(200);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _RouteUtils = __webpack_require__(222);
+	var _RouteUtils = __webpack_require__(227);
 
-	var _PropTypes = __webpack_require__(223);
+	var _PropTypes = __webpack_require__(228);
 
 	var _React$PropTypes = _react2['default'].PropTypes;
 	var string = _React$PropTypes.string;
@@ -25899,7 +26259,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 234 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25908,11 +26268,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
-	var _PropTypes = __webpack_require__(223);
+	var _PropTypes = __webpack_require__(228);
 
 	/**
 	 * A mixin that adds the "history" instance variable to components.
@@ -25935,7 +26295,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 235 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25944,7 +26304,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
@@ -25952,7 +26312,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _invariant = __webpack_require__(195);
+	var _invariant = __webpack_require__(200);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
@@ -26010,7 +26370,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 236 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26019,7 +26379,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
@@ -26062,7 +26422,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 237 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26075,15 +26435,15 @@
 
 	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-	var _historyLibUseQueries = __webpack_require__(210);
+	var _historyLibUseQueries = __webpack_require__(215);
 
 	var _historyLibUseQueries2 = _interopRequireDefault(_historyLibUseQueries);
 
-	var _createTransitionManager = __webpack_require__(213);
+	var _createTransitionManager = __webpack_require__(218);
 
 	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
@@ -26119,7 +26479,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 238 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26132,11 +26492,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _RouterContext = __webpack_require__(224);
+	var _RouterContext = __webpack_require__(229);
 
 	var _RouterContext2 = _interopRequireDefault(_RouterContext);
 
-	var _routerWarning = __webpack_require__(214);
+	var _routerWarning = __webpack_require__(219);
 
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 
@@ -26157,7 +26517,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 239 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26170,21 +26530,21 @@
 
 	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-	var _invariant = __webpack_require__(195);
+	var _invariant = __webpack_require__(200);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _createMemoryHistory = __webpack_require__(240);
+	var _createMemoryHistory = __webpack_require__(245);
 
 	var _createMemoryHistory2 = _interopRequireDefault(_createMemoryHistory);
 
-	var _createTransitionManager = __webpack_require__(213);
+	var _createTransitionManager = __webpack_require__(218);
 
 	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
 
-	var _RouteUtils = __webpack_require__(222);
+	var _RouteUtils = __webpack_require__(227);
 
-	var _RouterUtils = __webpack_require__(227);
+	var _RouterUtils = __webpack_require__(232);
 
 	/**
 	 * A high-level API to be used for server-side rendering.
@@ -26244,7 +26604,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 240 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26254,15 +26614,15 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _historyLibUseQueries = __webpack_require__(210);
+	var _historyLibUseQueries = __webpack_require__(215);
 
 	var _historyLibUseQueries2 = _interopRequireDefault(_historyLibUseQueries);
 
-	var _historyLibUseBasename = __webpack_require__(241);
+	var _historyLibUseBasename = __webpack_require__(246);
 
 	var _historyLibUseBasename2 = _interopRequireDefault(_historyLibUseBasename);
 
-	var _historyLibCreateMemoryHistory = __webpack_require__(242);
+	var _historyLibCreateMemoryHistory = __webpack_require__(247);
 
 	var _historyLibCreateMemoryHistory2 = _interopRequireDefault(_historyLibCreateMemoryHistory);
 
@@ -26282,7 +26642,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 241 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26293,15 +26653,15 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _ExecutionEnvironment = __webpack_require__(198);
+	var _ExecutionEnvironment = __webpack_require__(203);
 
-	var _PathUtils = __webpack_require__(197);
+	var _PathUtils = __webpack_require__(202);
 
-	var _runTransitionHook = __webpack_require__(208);
+	var _runTransitionHook = __webpack_require__(213);
 
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 
-	var _deprecate = __webpack_require__(209);
+	var _deprecate = __webpack_require__(214);
 
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 
@@ -26422,7 +26782,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 242 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26433,19 +26793,19 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(194);
+	var _warning = __webpack_require__(199);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _invariant = __webpack_require__(195);
+	var _invariant = __webpack_require__(200);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _PathUtils = __webpack_require__(197);
+	var _PathUtils = __webpack_require__(202);
 
-	var _Actions = __webpack_require__(196);
+	var _Actions = __webpack_require__(201);
 
-	var _createHistory = __webpack_require__(202);
+	var _createHistory = __webpack_require__(207);
 
 	var _createHistory2 = _interopRequireDefault(_createHistory);
 
@@ -26582,7 +26942,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 243 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26592,11 +26952,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _historyLibUseQueries = __webpack_require__(210);
+	var _historyLibUseQueries = __webpack_require__(215);
 
 	var _historyLibUseQueries2 = _interopRequireDefault(_historyLibUseQueries);
 
-	var _historyLibUseBasename = __webpack_require__(241);
+	var _historyLibUseBasename = __webpack_require__(246);
 
 	var _historyLibUseBasename2 = _interopRequireDefault(_historyLibUseBasename);
 
@@ -26611,7 +26971,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 244 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26620,11 +26980,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _historyLibCreateBrowserHistory = __webpack_require__(245);
+	var _historyLibCreateBrowserHistory = __webpack_require__(250);
 
 	var _historyLibCreateBrowserHistory2 = _interopRequireDefault(_historyLibCreateBrowserHistory);
 
-	var _createRouterHistory = __webpack_require__(246);
+	var _createRouterHistory = __webpack_require__(251);
 
 	var _createRouterHistory2 = _interopRequireDefault(_createRouterHistory);
 
@@ -26632,7 +26992,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 245 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26643,21 +27003,21 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _invariant = __webpack_require__(195);
+	var _invariant = __webpack_require__(200);
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _Actions = __webpack_require__(196);
+	var _Actions = __webpack_require__(201);
 
-	var _PathUtils = __webpack_require__(197);
+	var _PathUtils = __webpack_require__(202);
 
-	var _ExecutionEnvironment = __webpack_require__(198);
+	var _ExecutionEnvironment = __webpack_require__(203);
 
-	var _DOMUtils = __webpack_require__(199);
+	var _DOMUtils = __webpack_require__(204);
 
-	var _DOMStateStorage = __webpack_require__(200);
+	var _DOMStateStorage = __webpack_require__(205);
 
-	var _createDOMHistory = __webpack_require__(201);
+	var _createDOMHistory = __webpack_require__(206);
 
 	var _createDOMHistory2 = _interopRequireDefault(_createDOMHistory);
 
@@ -26814,7 +27174,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 246 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26823,7 +27183,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _useRouterHistory = __webpack_require__(243);
+	var _useRouterHistory = __webpack_require__(248);
 
 	var _useRouterHistory2 = _interopRequireDefault(_useRouterHistory);
 
@@ -26838,7 +27198,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 247 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26847,11 +27207,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _historyLibCreateHashHistory = __webpack_require__(193);
+	var _historyLibCreateHashHistory = __webpack_require__(198);
 
 	var _historyLibCreateHashHistory2 = _interopRequireDefault(_historyLibCreateHashHistory);
 
-	var _createRouterHistory = __webpack_require__(246);
+	var _createRouterHistory = __webpack_require__(251);
 
 	var _createRouterHistory2 = _interopRequireDefault(_createRouterHistory);
 
@@ -26859,378 +27219,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 248 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.routerMiddleware = exports.routerActions = exports.goForward = exports.goBack = exports.go = exports.replace = exports.push = exports.CALL_HISTORY_METHOD = exports.routerReducer = exports.LOCATION_CHANGE = exports.syncHistoryWithStore = undefined;
-
-	var _reducer = __webpack_require__(249);
-
-	Object.defineProperty(exports, 'LOCATION_CHANGE', {
-	  enumerable: true,
-	  get: function get() {
-	    return _reducer.LOCATION_CHANGE;
-	  }
-	});
-	Object.defineProperty(exports, 'routerReducer', {
-	  enumerable: true,
-	  get: function get() {
-	    return _reducer.routerReducer;
-	  }
-	});
-
-	var _actions = __webpack_require__(250);
-
-	Object.defineProperty(exports, 'CALL_HISTORY_METHOD', {
-	  enumerable: true,
-	  get: function get() {
-	    return _actions.CALL_HISTORY_METHOD;
-	  }
-	});
-	Object.defineProperty(exports, 'push', {
-	  enumerable: true,
-	  get: function get() {
-	    return _actions.push;
-	  }
-	});
-	Object.defineProperty(exports, 'replace', {
-	  enumerable: true,
-	  get: function get() {
-	    return _actions.replace;
-	  }
-	});
-	Object.defineProperty(exports, 'go', {
-	  enumerable: true,
-	  get: function get() {
-	    return _actions.go;
-	  }
-	});
-	Object.defineProperty(exports, 'goBack', {
-	  enumerable: true,
-	  get: function get() {
-	    return _actions.goBack;
-	  }
-	});
-	Object.defineProperty(exports, 'goForward', {
-	  enumerable: true,
-	  get: function get() {
-	    return _actions.goForward;
-	  }
-	});
-	Object.defineProperty(exports, 'routerActions', {
-	  enumerable: true,
-	  get: function get() {
-	    return _actions.routerActions;
-	  }
-	});
-
-	var _sync = __webpack_require__(251);
-
-	var _sync2 = _interopRequireDefault(_sync);
-
-	var _middleware = __webpack_require__(252);
-
-	var _middleware2 = _interopRequireDefault(_middleware);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	exports.syncHistoryWithStore = _sync2['default'];
-	exports.routerMiddleware = _middleware2['default'];
-
-/***/ },
-/* 249 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	exports.routerReducer = routerReducer;
-	/**
-	 * This action type will be dispatched when your history
-	 * receives a location change.
-	 */
-	var LOCATION_CHANGE = exports.LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
-
-	var initialState = {
-	  locationBeforeTransitions: null
-	};
-
-	/**
-	 * This reducer will update the state with the most recent location history
-	 * has transitioned to. This may not be in sync with the router, particularly
-	 * if you have asynchronously-loaded routes, so reading from and relying on
-	 * this state is discouraged.
-	 */
-	function routerReducer() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-
-	  var _ref = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-	  var type = _ref.type;
-	  var payload = _ref.payload;
-
-	  if (type === LOCATION_CHANGE) {
-	    return _extends({}, state, { locationBeforeTransitions: payload });
-	  }
-
-	  return state;
-	}
-
-/***/ },
-/* 250 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	/**
-	 * This action type will be dispatched by the history actions below.
-	 * If you're writing a middleware to watch for navigation events, be sure to
-	 * look for actions of this type.
-	 */
-	var CALL_HISTORY_METHOD = exports.CALL_HISTORY_METHOD = '@@router/CALL_HISTORY_METHOD';
-
-	function updateLocation(method) {
-	  return function () {
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-
-	    return {
-	      type: CALL_HISTORY_METHOD,
-	      payload: { method: method, args: args }
-	    };
-	  };
-	}
-
-	/**
-	 * These actions correspond to the history API.
-	 * The associated routerMiddleware will capture these events before they get to
-	 * your reducer and reissue them as the matching function on your history.
-	 */
-	var push = exports.push = updateLocation('push');
-	var replace = exports.replace = updateLocation('replace');
-	var go = exports.go = updateLocation('go');
-	var goBack = exports.goBack = updateLocation('goBack');
-	var goForward = exports.goForward = updateLocation('goForward');
-
-	var routerActions = exports.routerActions = { push: push, replace: replace, go: go, goBack: goBack, goForward: goForward };
-
-/***/ },
-/* 251 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	exports['default'] = syncHistoryWithStore;
-
-	var _reducer = __webpack_require__(249);
-
-	var defaultSelectLocationState = function defaultSelectLocationState(state) {
-	  return state.routing;
-	};
-
-	/**
-	 * This function synchronizes your history state with the Redux store.
-	 * Location changes flow from history to the store. An enhanced history is
-	 * returned with a listen method that responds to store updates for location.
-	 *
-	 * When this history is provided to the router, this means the location data
-	 * will flow like this:
-	 * history.push -> store.dispatch -> enhancedHistory.listen -> router
-	 * This ensures that when the store state changes due to a replay or other
-	 * event, the router will be updated appropriately and can transition to the
-	 * correct router state.
-	 */
-	function syncHistoryWithStore(history, store) {
-	  var _ref = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-	  var _ref$selectLocationSt = _ref.selectLocationState;
-	  var selectLocationState = _ref$selectLocationSt === undefined ? defaultSelectLocationState : _ref$selectLocationSt;
-	  var _ref$adjustUrlOnRepla = _ref.adjustUrlOnReplay;
-	  var adjustUrlOnReplay = _ref$adjustUrlOnRepla === undefined ? true : _ref$adjustUrlOnRepla;
-
-	  // Ensure that the reducer is mounted on the store and functioning properly.
-	  if (typeof selectLocationState(store.getState()) === 'undefined') {
-	    throw new Error('Expected the routing state to be available either as `state.routing` ' + 'or as the custom expression you can specify as `selectLocationState` ' + 'in the `syncHistoryWithStore()` options. ' + 'Ensure you have added the `routerReducer` to your store\'s ' + 'reducers via `combineReducers` or whatever method you use to isolate ' + 'your reducers.');
-	  }
-
-	  var initialLocation = void 0;
-	  var currentLocation = void 0;
-	  var isTimeTraveling = void 0;
-	  var unsubscribeFromStore = void 0;
-	  var unsubscribeFromHistory = void 0;
-
-	  // What does the store say about current location?
-	  var getLocationInStore = function getLocationInStore(useInitialIfEmpty) {
-	    var locationState = selectLocationState(store.getState());
-	    return locationState.locationBeforeTransitions || (useInitialIfEmpty ? initialLocation : undefined);
-	  };
-
-	  // If the store is replayed, update the URL in the browser to match.
-	  if (adjustUrlOnReplay) {
-	    var handleStoreChange = function handleStoreChange() {
-	      var locationInStore = getLocationInStore(true);
-	      if (currentLocation === locationInStore) {
-	        return;
-	      }
-
-	      // Update address bar to reflect store state
-	      isTimeTraveling = true;
-	      currentLocation = locationInStore;
-	      history.transitionTo(_extends({}, locationInStore, {
-	        action: 'PUSH'
-	      }));
-	      isTimeTraveling = false;
-	    };
-
-	    unsubscribeFromStore = store.subscribe(handleStoreChange);
-	    handleStoreChange();
-	  }
-
-	  // Whenever location changes, dispatch an action to get it in the store
-	  var handleLocationChange = function handleLocationChange(location) {
-	    // ... unless we just caused that location change
-	    if (isTimeTraveling) {
-	      return;
-	    }
-
-	    // Remember where we are
-	    currentLocation = location;
-
-	    // Are we being called for the first time?
-	    if (!initialLocation) {
-	      // Remember as a fallback in case state is reset
-	      initialLocation = location;
-
-	      // Respect persisted location, if any
-	      if (getLocationInStore()) {
-	        return;
-	      }
-	    }
-
-	    // Tell the store to update by dispatching an action
-	    store.dispatch({
-	      type: _reducer.LOCATION_CHANGE,
-	      payload: location
-	    });
-	  };
-	  unsubscribeFromHistory = history.listen(handleLocationChange);
-
-	  // The enhanced history uses store as source of truth
-	  return _extends({}, history, {
-	    // The listeners are subscribed to the store instead of history
-
-	    listen: function listen(listener) {
-	      // Copy of last location.
-	      var lastPublishedLocation = getLocationInStore(true);
-
-	      // Keep track of whether we unsubscribed, as Redux store
-	      // only applies changes in subscriptions on next dispatch
-	      var unsubscribed = false;
-	      var unsubscribeFromStore = store.subscribe(function () {
-	        var currentLocation = getLocationInStore(true);
-	        if (currentLocation === lastPublishedLocation) {
-	          return;
-	        }
-	        lastPublishedLocation = currentLocation;
-	        if (!unsubscribed) {
-	          listener(lastPublishedLocation);
-	        }
-	      });
-
-	      // History listeners expect a synchronous call. Make the first call to the
-	      // listener after subscribing to the store, in case the listener causes a
-	      // location change (e.g. when it redirects)
-	      listener(lastPublishedLocation);
-
-	      // Let user unsubscribe later
-	      return function () {
-	        unsubscribed = true;
-	        unsubscribeFromStore();
-	      };
-	    },
-
-
-	    // It also provides a way to destroy internal listeners
-	    unsubscribe: function unsubscribe() {
-	      if (adjustUrlOnReplay) {
-	        unsubscribeFromStore();
-	      }
-	      unsubscribeFromHistory();
-	    }
-	  });
-	}
-
-/***/ },
-/* 252 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports['default'] = routerMiddleware;
-
-	var _actions = __webpack_require__(250);
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-	/**
-	 * This middleware captures CALL_HISTORY_METHOD actions to redirect to the
-	 * provided history object. This will prevent these actions from reaching your
-	 * reducer or any middleware that comes after this one.
-	 */
-	function routerMiddleware(history) {
-	  return function () {
-	    return function (next) {
-	      return function (action) {
-	        if (action.type !== _actions.CALL_HISTORY_METHOD) {
-	          return next(action);
-	        }
-
-	        var _action$payload = action.payload;
-	        var method = _action$payload.method;
-	        var args = _action$payload.args;
-
-	        history[method].apply(history, _toConsumableArray(args));
-	      };
-	    };
-	  };
-	}
-
-/***/ },
-/* 253 */,
-/* 254 */,
-/* 255 */,
-/* 256 */,
-/* 257 */,
-/* 258 */,
-/* 259 */,
-/* 260 */,
-/* 261 */,
-/* 262 */,
-/* 263 */,
-/* 264 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27240,75 +27229,75 @@
 	});
 	exports.EditUserPasswordButton = exports.EditGroupPasswordButton = exports.EditGroupDescriptionButton = exports.LeaveGroupButton = exports.JoinGroupButton = exports.CreateGroupButton = exports.ChangeTournamentButton = exports.PlaceSpecialBetButton = exports.PlaceBetButton = exports.Notifications = exports.Modals = exports.VisitorProfile = exports.UserProfile = exports.TopLists = exports.Groups = exports.Group = exports.Bets = exports.App = undefined;
 
-	var _App2 = __webpack_require__(265);
+	var _App2 = __webpack_require__(254);
 
 	var _App3 = _interopRequireDefault(_App2);
 
-	var _Bets2 = __webpack_require__(298);
+	var _Bets2 = __webpack_require__(265);
 
 	var _Bets3 = _interopRequireDefault(_Bets2);
 
-	var _Group2 = __webpack_require__(301);
+	var _Group2 = __webpack_require__(288);
 
 	var _Group3 = _interopRequireDefault(_Group2);
 
-	var _Groups2 = __webpack_require__(305);
+	var _Groups2 = __webpack_require__(292);
 
 	var _Groups3 = _interopRequireDefault(_Groups2);
 
-	var _TopLists2 = __webpack_require__(362);
+	var _TopLists2 = __webpack_require__(296);
 
 	var _TopLists3 = _interopRequireDefault(_TopLists2);
 
-	var _UserProfile2 = __webpack_require__(363);
+	var _UserProfile2 = __webpack_require__(298);
 
 	var _UserProfile3 = _interopRequireDefault(_UserProfile2);
 
-	var _VisitorProfile2 = __webpack_require__(364);
+	var _VisitorProfile2 = __webpack_require__(300);
 
 	var _VisitorProfile3 = _interopRequireDefault(_VisitorProfile2);
 
-	var _Modals2 = __webpack_require__(312);
+	var _Modals2 = __webpack_require__(301);
 
 	var _Modals3 = _interopRequireDefault(_Modals2);
 
-	var _Notifications2 = __webpack_require__(313);
+	var _Notifications2 = __webpack_require__(314);
 
 	var _Notifications3 = _interopRequireDefault(_Notifications2);
 
-	var _PlaceBetButton2 = __webpack_require__(353);
+	var _PlaceBetButton2 = __webpack_require__(315);
 
 	var _PlaceBetButton3 = _interopRequireDefault(_PlaceBetButton2);
 
-	var _PlaceSpecialBetButton2 = __webpack_require__(354);
+	var _PlaceSpecialBetButton2 = __webpack_require__(287);
 
 	var _PlaceSpecialBetButton3 = _interopRequireDefault(_PlaceSpecialBetButton2);
 
-	var _ChangeTournamentButton2 = __webpack_require__(355);
+	var _ChangeTournamentButton2 = __webpack_require__(263);
 
 	var _ChangeTournamentButton3 = _interopRequireDefault(_ChangeTournamentButton2);
 
-	var _CreateGroupButton2 = __webpack_require__(356);
+	var _CreateGroupButton2 = __webpack_require__(295);
 
 	var _CreateGroupButton3 = _interopRequireDefault(_CreateGroupButton2);
 
-	var _JoinGroupButton2 = __webpack_require__(357);
+	var _JoinGroupButton2 = __webpack_require__(294);
 
 	var _JoinGroupButton3 = _interopRequireDefault(_JoinGroupButton2);
 
-	var _LeaveGroupButton2 = __webpack_require__(358);
+	var _LeaveGroupButton2 = __webpack_require__(316);
 
 	var _LeaveGroupButton3 = _interopRequireDefault(_LeaveGroupButton2);
 
-	var _EditGroupDescriptionButton2 = __webpack_require__(359);
+	var _EditGroupDescriptionButton2 = __webpack_require__(290);
 
 	var _EditGroupDescriptionButton3 = _interopRequireDefault(_EditGroupDescriptionButton2);
 
-	var _EditGroupPasswordButton2 = __webpack_require__(360);
+	var _EditGroupPasswordButton2 = __webpack_require__(291);
 
 	var _EditGroupPasswordButton3 = _interopRequireDefault(_EditGroupPasswordButton2);
 
-	var _EditUserPasswordButton2 = __webpack_require__(361);
+	var _EditUserPasswordButton2 = __webpack_require__(317);
 
 	var _EditUserPasswordButton3 = _interopRequireDefault(_EditUserPasswordButton2);
 
@@ -27334,7 +27323,7 @@
 	exports.EditUserPasswordButton = _EditUserPasswordButton3.default;
 
 /***/ },
-/* 265 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27351,17 +27340,17 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _reactRouter = __webpack_require__(191);
+	var _reactRouter = __webpack_require__(196);
 
-	var _tournaments = __webpack_require__(328);
+	var _tournaments = __webpack_require__(255);
 
-	var _user = __webpack_require__(330);
+	var _user = __webpack_require__(259);
 
-	var _teams = __webpack_require__(332);
+	var _teams = __webpack_require__(261);
 
-	var _players = __webpack_require__(333);
+	var _players = __webpack_require__(262);
 
-	var _ChangeTournamentButton = __webpack_require__(355);
+	var _ChangeTournamentButton = __webpack_require__(263);
 
 	var _ChangeTournamentButton2 = _interopRequireDefault(_ChangeTournamentButton);
 
@@ -27428,7 +27417,7 @@
 	                            {
 	                                to: '/s/bets',
 	                                activeStyle: ACTIVE,
-	                                className: 'bets-link' },
+	                                className: 'bets-link link' },
 	                            'Tippa'
 	                        ),
 	                        _react2.default.createElement(
@@ -27436,7 +27425,7 @@
 	                            {
 	                                to: '/s/groups',
 	                                activeStyle: ACTIVE,
-	                                className: 'groups-link' },
+	                                className: 'groups-link link' },
 	                            'Ligor'
 	                        ),
 	                        _react2.default.createElement(
@@ -27444,7 +27433,7 @@
 	                            {
 	                                to: '/s/toplists',
 	                                activeStyle: ACTIVE,
-	                                className: 'toplists-link' },
+	                                className: 'toplists-link link' },
 	                            'Top 10'
 	                        ),
 	                        _react2.default.createElement(
@@ -27452,7 +27441,7 @@
 	                            {
 	                                to: '/s/profile',
 	                                activeStyle: ACTIVE,
-	                                className: 'profile-link' },
+	                                className: 'profile-link link' },
 	                            'Profil'
 	                        ),
 	                        !tournaments.isFetching && tournaments.data.length > 1 ? _react2.default.createElement(_ChangeTournamentButton2.default, null) : ''
@@ -27486,20 +27475,112 @@
 	})(App);
 
 /***/ },
-/* 266 */,
-/* 267 */
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = tournaments;
+	exports.requestTournaments = requestTournaments;
+	exports.receiveTournaments = receiveTournaments;
+	exports.fetchTournaments = fetchTournaments;
+
+	var _isomorphicFetch = __webpack_require__(256);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _utils = __webpack_require__(258);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var REQUEST = 'supertipset/tournaments/REQUEST';
+	var RECEIVE = 'supertipset/tournaments/RECEIVE';
+
+	var initialState = {
+	    isFetching: false,
+	    data: []
+	};
+
+	function tournaments() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case REQUEST:
+	            return (0, _utils.assign)(state, {
+	                isFetching: true
+	            });
+	        case RECEIVE:
+	            return (0, _utils.assign)(state, {
+	                isFetching: false,
+	                data: action.tournaments
+	            });
+	        default:
+	            return state;
+	    }
+	}
+
+	function requestTournaments() {
+	    return { type: REQUEST };
+	}
+
+	function receiveTournaments(tournaments) {
+	    return { type: RECEIVE, tournaments: tournaments };
+	}
+
+	function shouldFetch(tournaments) {
+	    if (tournaments.isFetching) {
+	        return false;
+	    } else if (tournaments.data.length == 0) {
+	        return true;
+	    }
+	}
+
+	function fetchTournaments() {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var tournaments = _getState.tournaments;
+
+
+	        if (!shouldFetch(tournaments)) {
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestTournaments());
+
+	        var url = _utils.baseURL + '/api/tournaments/';
+
+	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receiveTournaments(json));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to fetch tournaments');
+	            }
+	        });
+	    };
+	}
+
+/***/ },
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(268);
+	__webpack_require__(257);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 268 */
+/* 257 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -27894,11 +27975,964 @@
 
 
 /***/ },
-/* 269 */,
-/* 270 */,
-/* 271 */,
-/* 272 */,
-/* 273 */
+/* 258 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.assign = assign;
+	exports.prepare = prepare;
+	exports.preparePost = preparePost;
+	exports.preparePut = preparePut;
+	var baseURL = exports.baseURL = '';
+	// export const baseURL = 'http://127.0.0.1:8001'
+
+	function assign(state, newState) {
+	    return Object.assign({}, state, newState);
+	}
+
+	function prepare(method, body) {
+	    return {
+	        method: method,
+	        headers: new Headers({ 'Content-type': 'application/json' }),
+	        body: JSON.stringify(body)
+	    };
+	}
+
+	function preparePost(body) {
+	    return prepare('POST', body);
+	}
+
+	function preparePut(body) {
+	    return prepare('PUT', body);
+	}
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.RECEIVE_SPECIAL_BET = undefined;
+	exports.default = reducer;
+	exports.invalidateUser = invalidateUser;
+	exports.requestUser = requestUser;
+	exports.receiveUser = receiveUser;
+	exports.fetchUser = fetchUser;
+	exports.requestEditUserPassword = requestEditUserPassword;
+	exports.receiveEditUserPassword = receiveEditUserPassword;
+	exports.editUserPassword = editUserPassword;
+	exports.requestBet = requestBet;
+	exports.receiveBet = receiveBet;
+	exports.placeBet = placeBet;
+	exports.requestSpecialBet = requestSpecialBet;
+	exports.receiveSpecialBet = receiveSpecialBet;
+	exports.placeSpecialBet = placeSpecialBet;
+
+	var _isomorphicFetch = __webpack_require__(256);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _notification = __webpack_require__(260);
+
+	var _utils = __webpack_require__(258);
+
+	var _groups = __webpack_require__(293);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var INVALIDATE = 'supertipset/user/INVALIDATE';
+	// User
+	var REQUEST = 'supertipset/user/REQUEST';
+	var RECEIVE = 'supertipset/user/RECEIVE';
+	// Place bet
+	var REQUEST_BET = 'supertipset/user/REQUEST_BET';
+	var RECEIVE_BET = 'supertipset/user/RECEIVE_BET';
+	// Place special bet
+	var REQUEST_SPECIAL_BET = 'supertipset/user/REQUEST_SPECIAL_BET';
+	var RECEIVE_SPECIAL_BET = exports.RECEIVE_SPECIAL_BET = 'supertipset/user/RECEIVE_SPECIAL_BET';
+	// Change user password
+	var REQUEST_EDIT_PASSWORD = 'supertipset/user/REQUEST_EDIT_PASSWORD';
+	var RECEIVE_EDIT_PASSWORD = 'supertipset/user/RECEIVE_EDIT_PASSWORD';
+
+	var initialState = {
+	    isFetching: false,
+	    didInvalidate: false,
+	    id: window.userID,
+	    data: {}
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case INVALIDATE:
+	            return (0, _utils.assign)(state, {
+	                didInvalidate: true
+	            });
+	        case REQUEST:
+	            return (0, _utils.assign)(state, {
+	                isFetching: true,
+	                didInvalidate: false
+	            });
+	        case RECEIVE:
+	            return (0, _utils.assign)(state, {
+	                isFetching: false,
+	                didInvalidate: false,
+	                data: action.user
+	            });
+	        case RECEIVE_BET:
+	            return (0, _utils.assign)(state, {
+	                data: (0, _utils.assign)(state.data, {
+	                    bets: state.data.bets.concat(action.bet)
+	                })
+	            });
+	        case RECEIVE_SPECIAL_BET:
+	            return (0, _utils.assign)(state, {
+	                data: (0, _utils.assign)(state.data, {
+	                    special_bets: state.data.special_bets.concat(action.specialBet)
+	                })
+	            });
+	        case _groups.RECEIVE_CREATE:
+	        case _groups.RECEIVE_JOIN:
+	            return (0, _utils.assign)(state, {
+	                data: (0, _utils.assign)(state.data, {
+	                    groups: state.data.groups.concat(action.group)
+	                })
+	            });
+	        case _groups.RECEIVE_LEAVE:
+	            return (0, _utils.assign)(state, {
+	                data: (0, _utils.assign)(state.data, {
+	                    groups: state.data.groups.filter(function (group) {
+	                        return group.id !== action.group.id;
+	                    })
+	                })
+	            });
+	        // TODO listen to all actions?
+	        default:
+	            return state;
+	    }
+	}
+
+	function invalidateUser() {
+	    return { type: INVALIDATE };
+	}
+
+	function requestUser() {
+	    return { type: REQUEST };
+	}
+
+	function receiveUser(user) {
+	    return { type: RECEIVE, user: user };
+	}
+
+	function shouldFetch(user) {
+	    if (user.isFetching) {
+	        return false;
+	    } else if (!user.data.hasOwnProperty('id')) {
+	        return true;
+	    } else {
+	        return user.didInvalidate;
+	    }
+	}
+
+	function fetchUser(id, tournament) {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var user = _getState.user;
+
+
+	        if (!shouldFetch(user)) {
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestUser());
+
+	        var url = _utils.baseURL + '/api/users/' + id + '/detail/?tournament=' + tournament;
+
+	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receiveUser(json));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to fetch user');
+	            }
+	        });
+	    };
+	}
+
+	function requestEditUserPassword() {
+	    return { type: REQUEST_EDIT_PASSWORD };
+	}
+
+	function receiveEditUserPassword(user) {
+	    return { type: RECEIVE_EDIT_PASSWORD, user: user };
+	}
+
+	function editUserPassword(id, username, password) {
+	    return function (dispatch) {
+	        dispatch(requestEditUserPassword());
+
+	        var payload = (0, _utils.preparePut)({
+	            id: id,
+	            username: username,
+	            password: password
+	        });
+
+	        var url = _utils.baseURL + '/api/users/' + id + '/password/';
+
+	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    dispatch(receiveEditUserPassword(json));
+	                    // TODO better notification message?
+	                    dispatch((0, _notification.successNotification)('Du har redigerat ditt lösenord!'));
+	                });
+	            } else {
+	                // TODO Error handling
+	                console.log('unable to change user password');
+	            }
+	        });
+	    };
+	}
+
+	function requestBet() {
+	    return { type: REQUEST_BET };
+	}
+
+	function receiveBet(bet) {
+	    return { type: RECEIVE_BET, bet: bet };
+	}
+
+	function placeBet(user, game, betTeamOne, betTeamTwo) {
+	    return function (dispatch) {
+	        dispatch(requestBet());
+
+	        var payload = (0, _utils.preparePost)({
+	            user: user,
+	            game: game,
+	            team_1_bet: betTeamOne,
+	            team_2_bet: betTeamTwo
+	        });
+
+	        var url = _utils.baseURL + '/api/bets/';
+
+	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    dispatch(receiveBet(json));
+	                    // TODO better notification message?
+	                    dispatch((0, _notification.successNotification)('Tips sparat!'));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to place bet');
+	            }
+	        });
+	    };
+	}
+
+	function requestSpecialBet() {
+	    return { type: REQUEST_SPECIAL_BET };
+	}
+
+	function receiveSpecialBet(specialBet) {
+	    return { type: RECEIVE_SPECIAL_BET, specialBet: specialBet };
+	}
+
+	function placeSpecialBet(user, player, goals, team, tournament) {
+	    return function (dispatch) {
+	        dispatch(requestSpecialBet());
+
+	        var payload = (0, _utils.preparePost)({
+	            user: user,
+	            team: team,
+	            player: player,
+	            tournament: tournament,
+	            player_goals: goals
+	        });
+
+	        var url = _utils.baseURL + '/api/specialbets/';
+
+	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    dispatch(receiveSpecialBet(json));
+	                    // TODO better notification message?
+	                    dispatch((0, _notification.successNotification)('Specialtips sparat!'));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to place special bet');
+	            }
+	        });
+	    };
+	}
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.hideNotification = hideNotification;
+	exports.showNotification = showNotification;
+	exports.publishNotification = publishNotification;
+	exports.successNotification = successNotification;
+
+	var _utils = __webpack_require__(258);
+
+	var HIDE = 'supertipset/notification/HIDE';
+	var SHOW = 'supertipset/notification/SHOW';
+
+	var SUCCESS = 'supertipset/notification/SUCCESS';
+
+	var initialState = {
+	    notificationType: undefined,
+	    notificationProps: {}
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case SHOW:
+	            return (0, _utils.assign)(state, {
+	                notificationType: action.notificationType,
+	                notificationProps: action.notificationProps
+	            });
+	        case HIDE:
+	            return (0, _utils.assign)(state, initialState);
+	        default:
+	            return state;
+	    }
+	}
+
+	function hideNotification() {
+	    return { type: HIDE };
+	}
+
+	function showNotification(notificationType, notificationProps) {
+	    return { type: SHOW, notificationType: notificationType, notificationProps: notificationProps };
+	}
+
+	function publishNotification(type, props) {
+	    return function (dispatch, getState) {
+	        setTimeout(function () {
+	            if (getState().notification.notificationType) {
+	                dispatch(hideNotification());
+	            }
+	        }, 3000);
+
+	        dispatch(showNotification(type, props));
+	    };
+	}
+
+	function successNotification(message) {
+	    return publishNotification(SUCCESS, { message: message });
+	}
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.requestTeams = requestTeams;
+	exports.receiveTeams = receiveTeams;
+	exports.fetchTeams = fetchTeams;
+
+	var _isomorphicFetch = __webpack_require__(256);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _utils = __webpack_require__(258);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var REQUEST = 'supertipset/teams/REQUEST';
+	var RECEIVE = 'supertipset/teams/RECEIVE';
+
+	var initialState = {
+	    isFetching: false,
+	    data: []
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case REQUEST:
+	            return (0, _utils.assign)(state, {
+	                isFetching: true
+	            });
+	        case RECEIVE:
+	            return (0, _utils.assign)(state, {
+	                isFetching: false,
+	                data: action.teams
+	            });
+	        default:
+	            return state;
+	    }
+	}
+
+	function requestTeams() {
+	    return { type: REQUEST };
+	}
+
+	function receiveTeams(teams) {
+	    return { type: RECEIVE, teams: teams };
+	}
+
+	function shouldFetch(teams) {
+	    if (teams.isFetching) {
+	        return false;
+	    } else if (teams.data.length == 0) {
+	        return true;
+	    }
+	}
+
+	function fetchTeams() {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var teams = _getState.teams;
+
+
+	        if (!shouldFetch(teams)) {
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestTeams());
+
+	        var url = _utils.baseURL + '/api/teams/';
+
+	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receiveTeams(json));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to fetch teams');
+	            }
+	        });
+	    };
+	}
+
+/***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.requestPlayers = requestPlayers;
+	exports.receivePlayers = receivePlayers;
+	exports.fetchPlayers = fetchPlayers;
+
+	var _isomorphicFetch = __webpack_require__(256);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _utils = __webpack_require__(258);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var REQUEST = 'supertipset/players/REQUEST';
+	var RECEIVE = 'supertipset/players/RECEIVE';
+
+	var initialState = {
+	    isFetching: false,
+	    data: []
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case REQUEST:
+	            return (0, _utils.assign)(state, {
+	                isFetching: true
+	            });
+	        case RECEIVE:
+	            return (0, _utils.assign)(state, {
+	                isFetching: false,
+	                data: action.players
+	            });
+	        default:
+	            return state;
+	    }
+	}
+
+	function requestPlayers() {
+	    return { type: REQUEST };
+	}
+
+	function receivePlayers(players) {
+	    return { type: RECEIVE, players: players };
+	}
+
+	function shouldFetch(players) {
+	    if (players.isFetching) {
+	        return false;
+	    } else if (players.data.length == 0) {
+	        return true;
+	    }
+	}
+
+	function fetchPlayers() {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var players = _getState.players;
+
+
+	        if (!shouldFetch(players)) {
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestPlayers());
+
+	        var url = _utils.baseURL + '/api/players/';
+
+	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receivePlayers(json));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to fetch players');
+	            }
+	        });
+	    };
+	}
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ChangeTournamentButton = function ChangeTournamentButton(_ref) {
+	    var tournament = _ref.tournament;
+	    var tournaments = _ref.tournaments;
+	    var openModal = _ref.openModal;
+
+	    var name = tournaments.data.filter(function (t) {
+	        return t.id == tournament;
+	    })[0].name;
+
+	    // TODO what should be the display text?
+	    return _react2.default.createElement(
+	        'button',
+	        { onClick: openModal, className: 'change-tournament', type: 'button' },
+	        name
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        tournament: state.tournament,
+	        tournaments: state.tournaments
+	    };
+	},
+	// Dispatch to props
+	function (dispatch) {
+	    return {
+	        openModal: function openModal() {
+	            return dispatch((0, _modal.openChangeTournamentModal)());
+	        }
+	    };
+	})(ChangeTournamentButton);
+
+/***/ },
+/* 264 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.closeModal = closeModal;
+	exports.openBetModal = openBetModal;
+	exports.openSpecialBetModal = openSpecialBetModal;
+	exports.openJoinGroupModal = openJoinGroupModal;
+	exports.openCreateGroupModal = openCreateGroupModal;
+	exports.openLeaveGroupModal = openLeaveGroupModal;
+	exports.openEditGroupDescriptionModal = openEditGroupDescriptionModal;
+	exports.openEditGroupPasswordModal = openEditGroupPasswordModal;
+	exports.openEditUserPasswordModal = openEditUserPasswordModal;
+	exports.openChangeTournamentModal = openChangeTournamentModal;
+
+	var _utils = __webpack_require__(258);
+
+	// open / close
+	var OPEN = 'supertipset/modal/OPEN';
+	var CLOSE = 'supertipset/modal/CLOSE';
+	// different modal types
+	var BET = 'supertipset/modal/BET';
+	var SPECIAL_BET = 'supertipset/modal/SPECIAL_BET';
+	var JOIN_GROUP = 'supertipset/modal/JOIN_GROUP';
+	var CREATE_GROUP = 'supertipset/modal/CREATE_GROUP';
+	var LEAVE_GROUP = 'supertipset/modal/LEAVE_GROUP';
+	var EDIT_GROUP_DESCRIPTION = 'supertipset/modal/EDIT_GROUP_DESCRIPTION';
+	var EDIT_GROUP_PASSWORD = 'supertipset/modal/EDIT_GROUP_PASSWORD';
+	var EDIT_USER_PASSWORD = 'supertipset/modal/EDIT_USER_PASSWORD';
+	var CHANGE_TOURNAMENT = 'supertipset/modal/CHANGE_TOURNAMENT';
+
+	var initialState = {
+	    modalType: undefined,
+	    modalProps: {}
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case OPEN:
+	            return (0, _utils.assign)(state, {
+	                modalType: action.modalType,
+	                modalProps: action.modalProps
+	            });
+	        case CLOSE:
+	            return (0, _utils.assign)(state, initialState);
+	        default:
+	            return state;
+	    }
+	}
+
+	function closeModal() {
+	    return { type: CLOSE };
+	}
+
+	function openBetModal(game) {
+	    return {
+	        type: OPEN,
+	        modalType: BET,
+	        modalProps: { game: game }
+	    };
+	}
+
+	function openSpecialBetModal() {
+	    return {
+	        type: OPEN,
+	        modalType: SPECIAL_BET,
+	        modalProps: {}
+	    };
+	}
+
+	function openJoinGroupModal() {
+	    return {
+	        type: OPEN,
+	        modalType: JOIN_GROUP,
+	        modalProps: {}
+	    };
+	}
+
+	function openCreateGroupModal() {
+	    return {
+	        type: OPEN,
+	        modalType: CREATE_GROUP,
+	        modalProps: {}
+	    };
+	}
+
+	function openLeaveGroupModal(group) {
+	    return {
+	        type: OPEN,
+	        modalType: LEAVE_GROUP,
+	        modalProps: { group: group }
+	    };
+	}
+
+	function openEditGroupDescriptionModal(group) {
+	    return {
+	        type: OPEN,
+	        modalType: EDIT_GROUP_DESCRIPTION,
+	        modalProps: { group: group }
+	    };
+	}
+
+	function openEditGroupPasswordModal(group) {
+	    return {
+	        type: OPEN,
+	        modalType: EDIT_GROUP_PASSWORD,
+	        modalProps: { group: group }
+	    };
+	}
+
+	function openEditUserPasswordModal(user) {
+	    return {
+	        type: OPEN,
+	        modalType: EDIT_USER_PASSWORD,
+	        modalProps: { user: user }
+	    };
+	}
+
+	function openChangeTournamentModal() {
+	    return {
+	        type: OPEN,
+	        modalType: CHANGE_TOURNAMENT,
+	        modalProps: {}
+	    };
+	}
+
+/***/ },
+/* 265 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _rounds = __webpack_require__(266);
+
+	var _components = __webpack_require__(267);
+
+	var _PlaceSpecialBetButton = __webpack_require__(287);
+
+	var _PlaceSpecialBetButton2 = _interopRequireDefault(_PlaceSpecialBetButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Bets = function (_Component) {
+	    _inherits(Bets, _Component);
+
+	    function Bets(props) {
+	        _classCallCheck(this, Bets);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Bets).call(this, props));
+	    }
+
+	    _createClass(Bets, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _props = this.props;
+	            var dispatch = _props.dispatch;
+	            var user = _props.user;
+	            var tournament = _props.tournament;
+	            // TODO do i need to re-fetch user here?
+
+	            dispatch((0, _rounds.fetchRounds)(tournament));
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _props2 = this.props;
+	            var user = _props2.user;
+	            var rounds = _props2.rounds;
+	            var tournament = _props2.tournament;
+	            var tournaments = _props2.tournaments;
+
+	            // If we should continue to show the special bets button
+
+	            var now = new Date();
+	            var currTournament = tournaments.data.filter(function (t) {
+	                return t.id == tournament;
+	            })[0];
+	            var currTournamentDate = currTournament ? new Date(currTournament.start_date) : false;
+	            var tournamentHasStarted = now > currTournamentDate;
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'bets-container' },
+	                _react2.default.createElement(_components.Points, {
+	                    user: user }),
+	                _react2.default.createElement(_components.SpecialBets, {
+	                    user: user,
+	                    tournamentHasStarted: tournamentHasStarted,
+	                    bettable: true }),
+	                _react2.default.createElement(_components.Rounds, {
+	                    rounds: rounds })
+	            );
+	        }
+	    }]);
+
+	    return Bets;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        user: state.user,
+	        rounds: state.rounds,
+	        tournament: state.tournament,
+	        tournaments: state.tournaments
+	    };
+	})(Bets);
+
+/***/ },
+/* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.invalidateRounds = invalidateRounds;
+	exports.requestRounds = requestRounds;
+	exports.receiveRounds = receiveRounds;
+	exports.fetchRounds = fetchRounds;
+
+	var _isomorphicFetch = __webpack_require__(256);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _utils = __webpack_require__(258);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var INVALIDATE = 'supertipset/rounds/INVALIDATE';
+	var REQUEST = 'supertipset/rounds/REQUEST';
+	var RECEIVE = 'supertipset/rounds/RECEIVE';
+
+	var initialState = {
+	    isFetching: false,
+	    didInvalidate: false,
+	    data: []
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case INVALIDATE:
+	            return (0, _utils.assign)(state, {
+	                didInvalidate: true
+	            });
+	        case REQUEST:
+	            return (0, _utils.assign)(state, {
+	                isFetching: true,
+	                didInvalidate: false
+	            });
+	        case RECEIVE:
+	            return (0, _utils.assign)(state, {
+	                isFetching: false,
+	                didInvalidate: false,
+	                data: action.rounds
+	            });
+	        default:
+	            return state;
+	    }
+	}
+
+	function invalidateRounds() {
+	    return { type: INVALIDATE };
+	}
+
+	function requestRounds() {
+	    return { type: REQUEST };
+	}
+
+	function receiveRounds(rounds) {
+	    return { type: RECEIVE, rounds: rounds };
+	}
+
+	function shouldFetch(rounds) {
+	    if (rounds.isFetching) {
+	        return false;
+	    } else if (rounds.data.length == 0) {
+	        return true;
+	    } else {
+	        return rounds.didInvalidate;
+	    }
+	}
+
+	function fetchRounds(tournament) {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var rounds = _getState.rounds;
+
+
+	        if (!shouldFetch(rounds)) {
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestRounds());
+
+	        var url = _utils.baseURL + '/api/rounds/?tournament=' + tournament;
+
+	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receiveRounds(json));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to fetch rounds');
+	            }
+	        });
+	    };
+	}
+
+/***/ },
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27908,79 +28942,79 @@
 	});
 	exports.ErrorNotification = exports.SuccessNotification = exports.UserTopBets = exports.UserTotalTopList = exports.GroupMembersTopList = exports.GroupTotalTopList = exports.GroupAverageTopList = exports.GroupMembers = exports.GroupListSummary = exports.GroupList = exports.ProfileBets = exports.Profile = exports.Game = exports.Round = exports.Rounds = exports.SpecialBets = exports.Points = exports.Tournaments = exports.BackButton = undefined;
 
-	var _BackButton2 = __webpack_require__(296);
+	var _BackButton2 = __webpack_require__(268);
 
 	var _BackButton3 = _interopRequireDefault(_BackButton2);
 
-	var _Tournaments2 = __webpack_require__(274);
+	var _Tournaments2 = __webpack_require__(269);
 
 	var _Tournaments3 = _interopRequireDefault(_Tournaments2);
 
-	var _Points2 = __webpack_require__(275);
+	var _Points2 = __webpack_require__(270);
 
 	var _Points3 = _interopRequireDefault(_Points2);
 
-	var _SpecialBets2 = __webpack_require__(276);
+	var _SpecialBets2 = __webpack_require__(271);
 
 	var _SpecialBets3 = _interopRequireDefault(_SpecialBets2);
 
-	var _Rounds2 = __webpack_require__(277);
+	var _Rounds2 = __webpack_require__(272);
 
 	var _Rounds3 = _interopRequireDefault(_Rounds2);
 
-	var _Round2 = __webpack_require__(278);
+	var _Round2 = __webpack_require__(273);
 
 	var _Round3 = _interopRequireDefault(_Round2);
 
-	var _Game2 = __webpack_require__(279);
+	var _Game2 = __webpack_require__(274);
 
 	var _Game3 = _interopRequireDefault(_Game2);
 
-	var _Profile2 = __webpack_require__(365);
+	var _Profile2 = __webpack_require__(275);
 
 	var _Profile3 = _interopRequireDefault(_Profile2);
 
-	var _ProfileBets2 = __webpack_require__(320);
+	var _ProfileBets2 = __webpack_require__(277);
 
 	var _ProfileBets3 = _interopRequireDefault(_ProfileBets2);
 
-	var _GroupList2 = __webpack_require__(280);
+	var _GroupList2 = __webpack_require__(278);
 
 	var _GroupList3 = _interopRequireDefault(_GroupList2);
 
-	var _GroupListSummary2 = __webpack_require__(317);
+	var _GroupListSummary2 = __webpack_require__(276);
 
 	var _GroupListSummary3 = _interopRequireDefault(_GroupListSummary2);
 
-	var _GroupMembers2 = __webpack_require__(281);
+	var _GroupMembers2 = __webpack_require__(279);
 
 	var _GroupMembers3 = _interopRequireDefault(_GroupMembers2);
 
-	var _GroupAverageTopList2 = __webpack_require__(321);
+	var _GroupAverageTopList2 = __webpack_require__(280);
 
 	var _GroupAverageTopList3 = _interopRequireDefault(_GroupAverageTopList2);
 
-	var _GroupTotalTopList2 = __webpack_require__(322);
+	var _GroupTotalTopList2 = __webpack_require__(281);
 
 	var _GroupTotalTopList3 = _interopRequireDefault(_GroupTotalTopList2);
 
-	var _GroupMembersTopList2 = __webpack_require__(323);
+	var _GroupMembersTopList2 = __webpack_require__(282);
 
 	var _GroupMembersTopList3 = _interopRequireDefault(_GroupMembersTopList2);
 
-	var _UserTotalTopList2 = __webpack_require__(324);
+	var _UserTotalTopList2 = __webpack_require__(283);
 
 	var _UserTotalTopList3 = _interopRequireDefault(_UserTotalTopList2);
 
-	var _UserTopBets2 = __webpack_require__(367);
+	var _UserTopBets2 = __webpack_require__(284);
 
 	var _UserTopBets3 = _interopRequireDefault(_UserTopBets2);
 
-	var _SuccessNotification2 = __webpack_require__(295);
+	var _SuccessNotification2 = __webpack_require__(285);
 
 	var _SuccessNotification3 = _interopRequireDefault(_SuccessNotification2);
 
-	var _ErrorNotification2 = __webpack_require__(366);
+	var _ErrorNotification2 = __webpack_require__(286);
 
 	var _ErrorNotification3 = _interopRequireDefault(_ErrorNotification2);
 
@@ -28007,7 +29041,40 @@
 	exports.ErrorNotification = _ErrorNotification3.default;
 
 /***/ },
-/* 274 */
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var goBack = function goBack() {
+	    return history.go(-1);
+	};
+
+	var BackButton = function BackButton() {
+	    return _react2.default.createElement(
+	        'button',
+	        {
+	            onClick: goBack,
+	            className: 'back-button',
+	            type: 'button' },
+	        'Tillbaka'
+	    );
+	};
+
+	exports.default = BackButton;
+
+/***/ },
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28048,7 +29115,7 @@
 	exports.default = Tournaments;
 
 /***/ },
-/* 275 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28091,7 +29158,7 @@
 	exports.default = Points;
 
 /***/ },
-/* 276 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28104,12 +29171,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _containers = __webpack_require__(264);
+	var _containers = __webpack_require__(253);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SpecialBets = function SpecialBets(_ref) {
 	    var user = _ref.user;
+	    var tournamentHasStarted = _ref.tournamentHasStarted;
 	    var bettable = _ref.bettable;
 
 
@@ -28269,7 +29337,8 @@
 	        _react2.default.createElement(
 	            'h5',
 	            null,
-	            'Specialtips'
+	            'Specialtips',
+	            bettable && !tournamentHasStarted ? _react2.default.createElement(_containers.PlaceSpecialBetButton, null) : ''
 	        ),
 	        _react2.default.createElement(
 	            'div',
@@ -28339,7 +29408,7 @@
 	exports.default = SpecialBets;
 
 /***/ },
-/* 277 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28352,7 +29421,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Round = __webpack_require__(278);
+	var _Round = __webpack_require__(273);
 
 	var _Round2 = _interopRequireDefault(_Round);
 
@@ -28370,7 +29439,7 @@
 	        return _react2.default.createElement(
 	            'div',
 	            { className: 'rounds' },
-	            'Loading...'
+	            'Laddar...'
 	        );
 	    }
 
@@ -28384,7 +29453,7 @@
 	exports.default = Rounds;
 
 /***/ },
-/* 278 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28397,7 +29466,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Game = __webpack_require__(279);
+	var _Game = __webpack_require__(274);
 
 	var _Game2 = _interopRequireDefault(_Game);
 
@@ -28464,7 +29533,7 @@
 	exports.default = Round;
 
 /***/ },
-/* 279 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28479,7 +29548,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _containers = __webpack_require__(264);
+	var _containers = __webpack_require__(253);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28562,7 +29631,7 @@
 	            _react2.default.createElement(
 	                'span',
 	                { className: 'pts' },
-	                bet ? 0 : _react2.default.createElement(_containers.PlaceBetButton, { game: game })
+	                _react2.default.createElement(_containers.PlaceBetButton, { game: game })
 	            )
 	        );
 	    }
@@ -28606,7 +29675,7 @@
 	})(Game);
 
 /***/ },
-/* 280 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28619,11 +29688,285 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(191);
+	var _Points = __webpack_require__(270);
 
-	var _containers = __webpack_require__(264);
+	var _Points2 = _interopRequireDefault(_Points);
 
-	var _GroupMembers = __webpack_require__(281);
+	var _SpecialBets = __webpack_require__(271);
+
+	var _SpecialBets2 = _interopRequireDefault(_SpecialBets);
+
+	var _GroupListSummary = __webpack_require__(276);
+
+	var _GroupListSummary2 = _interopRequireDefault(_GroupListSummary);
+
+	var _ProfileBets = __webpack_require__(277);
+
+	var _ProfileBets2 = _interopRequireDefault(_ProfileBets);
+
+	var _containers = __webpack_require__(253);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Profile = function Profile(_ref) {
+	    var profile = _ref.profile;
+	    var tournamentHasStarted = _ref.tournamentHasStarted;
+	    var isCurrentUser = _ref.isCurrentUser;
+
+
+	    var fullname = profile.data.firstname + ' ' + profile.data.lastname;
+	    var username = _react2.default.createElement(
+	        'small',
+	        null,
+	        '(',
+	        profile.data.username,
+	        ')'
+	    );
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'profile' },
+	        isCurrentUser ? _react2.default.createElement(_containers.EditUserPasswordButton, null) : '',
+	        _react2.default.createElement(
+	            'h2',
+	            null,
+	            fullname,
+	            ' ',
+	            username
+	        ),
+	        _react2.default.createElement(_Points2.default, { user: profile }),
+	        _react2.default.createElement(_SpecialBets2.default, {
+	            user: profile,
+	            tournamentHasStarted: tournamentHasStarted,
+	            bettable: isCurrentUser }),
+	        _react2.default.createElement(_GroupListSummary2.default, {
+	            user: profile,
+	            groups: profile.data.groups,
+	            isCurrentUser: isCurrentUser }),
+	        !isCurrentUser && profile.data.bets.length ? _react2.default.createElement(_ProfileBets2.default, {
+	            bets: profile.data.bets,
+	            points: profile.data.points }) : ''
+	    );
+	};
+
+	exports.default = Profile;
+
+/***/ },
+/* 276 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(196);
+
+	var _containers = __webpack_require__(253);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var groupSummary = function groupSummary(user, isCurrentUser) {
+	    return function (g, i) {
+	        return _react2.default.createElement(
+	            'div',
+	            { key: i, className: 'group-summary-row' },
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'pos' },
+	                i + 1
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'name' },
+	                _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: '/s/groups/' + g.id },
+	                    g.name
+	                )
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'members' },
+	                g.users.length
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'admin' },
+	                user.data.id == g.admin.id ? g.admin.username : _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: '/s/profile/' + g.admin.id },
+	                    g.admin.username
+	                )
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'leave' },
+	                isCurrentUser ? _react2.default.createElement(_containers.LeaveGroupButton, { group: g }) : ''
+	            )
+	        );
+	    };
+	};
+
+	var GroupListSummary = function GroupListSummary(_ref) {
+	    var user = _ref.user;
+	    var groups = _ref.groups;
+	    var isCurrentUser = _ref.isCurrentUser;
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'groups-summary' },
+	        _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Ligor'
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'group-headers' },
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'pos' },
+	                '#'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'name' },
+	                'Liga'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'members' },
+	                'Medlemmar'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'admin' },
+	                'Admin'
+	            ),
+	            _react2.default.createElement('h6', { className: 'leave' })
+	        ),
+	        groups.map(groupSummary(user, isCurrentUser))
+	    );
+	};
+
+	exports.default = GroupListSummary;
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var showBet = function showBet(points) {
+	    return function (bet, i) {
+	        var p = points.filter(function (point) {
+	            return point.game === bet.game.id;
+	        });
+
+	        return _react2.default.createElement(
+	            'div',
+	            { key: i, className: 'profile-bet' },
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'game' },
+	                bet.game.team_1.name + ' - ' + bet.game.team_2.name
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'res' },
+	                bet.game.result.length ? bet.game.result[0].team_1_goals + ' - ' + bet.game.result[0].team_2_goals : '-'
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'bet' },
+	                bet.team_1_bet + ' - ' + bet.team_1_bet
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'points' },
+	                p.length ? p[0].points : '-'
+	            )
+	        );
+	    };
+	};
+
+	var ProfileBets = function ProfileBets(_ref) {
+	    var bets = _ref.bets;
+	    var points = _ref.points;
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'profile-bets-container' },
+	        _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Tips'
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'profile-bets-headers' },
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'game' },
+	                'Match (grupp)'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'res' },
+	                'Resultat'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'bet' },
+	                'Tips'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'points' },
+	                'Poäng'
+	            )
+	        ),
+	        bets.map(showBet(points))
+	    );
+	};
+
+	exports.default = ProfileBets;
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(196);
+
+	var _containers = __webpack_require__(253);
+
+	var _GroupMembers = __webpack_require__(279);
 
 	var _GroupMembers2 = _interopRequireDefault(_GroupMembers);
 
@@ -28653,11 +29996,27 @@
 	var GroupList = function GroupList(_ref) {
 	    var groups = _ref.groups;
 
-	    if (groups.isFetching || groups.data.length === 0) {
+	    if (groups.isFetching) {
 	        return _react2.default.createElement(
 	            'div',
 	            { className: 'groups' },
-	            'Loading...'
+	            _react2.default.createElement(
+	                'p',
+	                null,
+	                'Laddar...'
+	            )
+	        );
+	    }
+
+	    if (groups.data.length === 0) {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'groups' },
+	            _react2.default.createElement(
+	                'p',
+	                null,
+	                'Du är inte med i några ligor.'
+	            )
 	        );
 	    }
 
@@ -28671,7 +30030,7 @@
 	exports.default = GroupList;
 
 /***/ },
-/* 281 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28684,7 +30043,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(191);
+	var _reactRouter = __webpack_require__(196);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28782,20 +30141,7 @@
 	exports.default = GroupMembers;
 
 /***/ },
-/* 282 */,
-/* 283 */,
-/* 284 */,
-/* 285 */,
-/* 286 */,
-/* 287 */,
-/* 288 */,
-/* 289 */,
-/* 290 */,
-/* 291 */,
-/* 292 */,
-/* 293 */,
-/* 294 */,
-/* 295 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28808,706 +30154,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRedux = __webpack_require__(177);
-
-	var _notification = __webpack_require__(331);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var SuccessNotification = function SuccessNotification(_ref) {
-	    var dispatch = _ref.dispatch;
-	    var message = _ref.message;
-
-	    var hide = function hide() {
-	        return dispatch((0, _notification.hideNotification)());
-	    };
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'notification success', onClick: hide },
-	        _react2.default.createElement(
-	            'p',
-	            null,
-	            message
-	        )
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(function (state) {
-	    return { notification: state.notification };
-	})(SuccessNotification);
-
-/***/ },
-/* 296 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var goBack = function goBack() {
-	    return history.go(-1);
-	};
-
-	var BackButton = function BackButton() {
-	    return _react2.default.createElement(
-	        'button',
-	        {
-	            onClick: goBack,
-	            className: 'back-button',
-	            type: 'button' },
-	        'Tillbaka'
-	    );
-	};
-
-	exports.default = BackButton;
-
-/***/ },
-/* 297 */,
-/* 298 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _rounds = __webpack_require__(334);
-
-	var _components = __webpack_require__(273);
-
-	var _PlaceSpecialBetButton = __webpack_require__(354);
-
-	var _PlaceSpecialBetButton2 = _interopRequireDefault(_PlaceSpecialBetButton);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Bets = function (_Component) {
-	    _inherits(Bets, _Component);
-
-	    function Bets(props) {
-	        _classCallCheck(this, Bets);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Bets).call(this, props));
-	    }
-
-	    _createClass(Bets, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var _props = this.props;
-	            var dispatch = _props.dispatch;
-	            var user = _props.user;
-	            var tournament = _props.tournament;
-	            // TODO do i need to re-fetch user here?
-
-	            dispatch((0, _rounds.fetchRounds)(tournament));
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _props2 = this.props;
-	            var user = _props2.user;
-	            var rounds = _props2.rounds;
-
-
-	            return _react2.default.createElement(
-	                'div',
-	                { className: 'bets-container' },
-	                _react2.default.createElement(_components.Points, { user: user }),
-	                _react2.default.createElement(_components.SpecialBets, { user: user, bettable: true }),
-	                _react2.default.createElement(_components.Rounds, { rounds: rounds })
-	            );
-	        }
-	    }]);
-
-	    return Bets;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        user: state.user,
-	        rounds: state.rounds,
-	        tournament: state.tournament
-	    };
-	})(Bets);
-
-/***/ },
-/* 299 */,
-/* 300 */,
-/* 301 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _group = __webpack_require__(336);
-
-	var _components = __webpack_require__(273);
-
-	var _EditGroupDescriptionButton = __webpack_require__(359);
-
-	var _EditGroupDescriptionButton2 = _interopRequireDefault(_EditGroupDescriptionButton);
-
-	var _EditGroupPasswordButton = __webpack_require__(360);
-
-	var _EditGroupPasswordButton2 = _interopRequireDefault(_EditGroupPasswordButton);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Group = function (_Component) {
-	    _inherits(Group, _Component);
-
-	    function Group(props) {
-	        _classCallCheck(this, Group);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Group).call(this, props));
-	    }
-
-	    _createClass(Group, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var _props = this.props;
-	            var dispatch = _props.dispatch;
-	            var params = _props.params;
-	            var tournament = _props.tournament;
-
-
-	            if (params.hasOwnProperty('id')) {
-	                dispatch((0, _group.fetchGroup)(params.id, tournament));
-	            }
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _props2 = this.props;
-	            var params = _props2.params;
-	            var group = _props2.group;
-	            var user = _props2.user;
-	            var dispatch = _props2.dispatch;
-
-	            // TODO wont need this?
-
-	            if (!params.hasOwnProperty('id')) {
-	                return _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'Gruppen finns inte'
-	                );
-	            }
-
-	            if (group.isFetching || group.data.length === 0) {
-	                return _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'Ingen grupp'
-	                );
-	            }
-
-	            var isAdmin = user.id === group.data.admin.id;
-
-	            return _react2.default.createElement(
-	                _components.GroupMembers,
-	                { group: group.data },
-	                _react2.default.createElement(_components.BackButton, null),
-	                isAdmin ? _react2.default.createElement(_EditGroupPasswordButton2.default, { group: group.data }) : '',
-	                _react2.default.createElement(
-	                    'h2',
-	                    { className: 'group-title' },
-	                    group.data.name,
-	                    ' ',
-	                    isAdmin ? _react2.default.createElement(
-	                        'small',
-	                        null,
-	                        '(admin)'
-	                    ) : ''
-	                ),
-	                _react2.default.createElement(
-	                    'p',
-	                    { className: 'group-description' },
-	                    group.data.description,
-	                    isAdmin ? _react2.default.createElement(_EditGroupDescriptionButton2.default, { group: group.data }) : ''
-	                )
-	            );
-	        }
-	    }]);
-
-	    return Group;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        user: state.user,
-	        group: state.group,
-	        tournament: state.tournament
-	    };
-	})(Group);
-
-/***/ },
-/* 302 */,
-/* 303 */,
-/* 304 */,
-/* 305 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _groups = __webpack_require__(337);
-
-	var _components = __webpack_require__(273);
-
-	var _JoinGroupButton = __webpack_require__(357);
-
-	var _JoinGroupButton2 = _interopRequireDefault(_JoinGroupButton);
-
-	var _CreateGroupButton = __webpack_require__(356);
-
-	var _CreateGroupButton2 = _interopRequireDefault(_CreateGroupButton);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Groups = function (_Component) {
-	    _inherits(Groups, _Component);
-
-	    function Groups(props) {
-	        _classCallCheck(this, Groups);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Groups).call(this, props));
-	    }
-
-	    _createClass(Groups, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var _props = this.props;
-	            var dispatch = _props.dispatch;
-	            var user = _props.user;
-	            var tournament = _props.tournament;
-
-
-	            dispatch((0, _groups.fetchGroups)(user.id, tournament));
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var groups = this.props.groups;
-
-
-	            return _react2.default.createElement(
-	                'div',
-	                { className: 'groups-container' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'group-actions' },
-	                    _react2.default.createElement(_JoinGroupButton2.default, null),
-	                    _react2.default.createElement(
-	                        'span',
-	                        { className: 'div' },
-	                        '|'
-	                    ),
-	                    _react2.default.createElement(_CreateGroupButton2.default, null)
-	                ),
-	                _react2.default.createElement(_components.GroupList, { groups: groups })
-	            );
-	        }
-	    }]);
-
-	    return Groups;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        user: state.user,
-	        groups: state.groups,
-	        tournament: state.tournament
-	    };
-	})(Groups);
-
-/***/ },
-/* 306 */,
-/* 307 */,
-/* 308 */,
-/* 309 */,
-/* 310 */,
-/* 311 */,
-/* 312 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modals = __webpack_require__(342);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// Map action type to component
-	var MODALS = {
-	    'supertipset/modal/BET': _modals.PlaceBetModal,
-	    'supertipset/modal/SPECIAL_BET': _modals.PlaceSpecialBetModal,
-	    'supertipset/modal/JOIN_GROUP': _modals.JoinGroupModal,
-	    'supertipset/modal/CREATE_GROUP': _modals.CreateGroupModal,
-	    'supertipset/modal/LEAVE_GROUP': _modals.LeaveGroupModal,
-	    'supertipset/modal/EDIT_GROUP_DESCRIPTION': _modals.GroupDescriptionModal,
-	    'supertipset/modal/EDIT_GROUP_PASSWORD': _modals.GroupPasswordModal,
-	    'supertipset/modal/EDIT_USER_PASSWORD': _modals.UserPasswordModal,
-	    'supertipset/modal/CHANGE_TOURNAMENT': _modals.ChangeTournamentModal
-	};
-
-	var Modals = function Modals(_ref) {
-	    var modal = _ref.modal;
-	    var modalType = modal.modalType;
-	    var modalProps = modal.modalProps;
-
-
-	    if (typeof modalType === 'undefined') {
-	        return null;
-	    }
-
-	    var Modal = MODALS[modalType];
-
-	    return _react2.default.createElement(Modal, modalProps);
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { modal: state.modal };
-	})(Modals);
-
-/***/ },
-/* 313 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _components = __webpack_require__(273);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var NOTIFICATIONS = {
-	    'supertipset/notification/SUCCESS': _components.SuccessNotification,
-	    'supertipset/notification/ERROR': _components.ErrorNotification
-	};
-
-	var Notifications = function Notifications(_ref) {
-	    var notification = _ref.notification;
-	    var notificationType = notification.notificationType;
-	    var notificationProps = notification.notificationProps;
-
-
-	    if (typeof notificationType === 'undefined') {
-	        return null;
-	    }
-
-	    var Notification = NOTIFICATIONS[notificationType];
-
-	    return _react2.default.createElement(Notification, notificationProps);
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { notification: state.notification };
-	})(Notifications);
-
-/***/ },
-/* 314 */,
-/* 315 */,
-/* 316 */,
-/* 317 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(191);
-
-	var _containers = __webpack_require__(264);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var groupSummary = function groupSummary(user, isCurrentUser) {
-	    return function (g, i) {
-	        return _react2.default.createElement(
-	            'div',
-	            { key: i, className: 'group-summary-row' },
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'pos' },
-	                i + 1
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'name' },
-	                _react2.default.createElement(
-	                    _reactRouter.Link,
-	                    { to: '/s/groups/' + g.id },
-	                    g.name
-	                )
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'members' },
-	                g.users.length
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'admin' },
-	                user.data.id == g.admin.id ? g.admin.username : _react2.default.createElement(
-	                    _reactRouter.Link,
-	                    { to: '/s/profile/' + g.admin.id },
-	                    g.admin.username
-	                )
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'leave' },
-	                isCurrentUser ? _react2.default.createElement(_containers.LeaveGroupButton, { group: g }) : ''
-	            )
-	        );
-	    };
-	};
-
-	var GroupListSummary = function GroupListSummary(_ref) {
-	    var user = _ref.user;
-	    var groups = _ref.groups;
-	    var isCurrentUser = _ref.isCurrentUser;
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'groups-summary' },
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Ligor'
-	        ),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'group-headers' },
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'pos' },
-	                '#'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'name' },
-	                'Liga'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'members' },
-	                'Medlemmar'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'admin' },
-	                'Admin'
-	            ),
-	            _react2.default.createElement('h6', { className: 'leave' })
-	        ),
-	        groups.map(groupSummary(user, isCurrentUser))
-	    );
-	};
-
-	exports.default = GroupListSummary;
-
-/***/ },
-/* 318 */,
-/* 319 */,
-/* 320 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var showBet = function showBet(points) {
-	    return function (bet, i) {
-	        var p = points.filter(function (point) {
-	            return point.game === bet.game.id;
-	        });
-
-	        return _react2.default.createElement(
-	            'div',
-	            { key: i, className: 'profile-bet' },
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'game' },
-	                bet.game.team_1.name + ' - ' + bet.game.team_2.name
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'res' },
-	                bet.game.result.length ? bet.game.result[0].team_1_goals + ' - ' + bet.game.result[0].team_2_goals : '-'
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'bet' },
-	                bet.team_1_bet + ' - ' + bet.team_1_bet
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'points' },
-	                p.length ? p[0].points : '-'
-	            )
-	        );
-	    };
-	};
-
-	var ProfileBets = function ProfileBets(_ref) {
-	    var bets = _ref.bets;
-	    var points = _ref.points;
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'profile-bets-container' },
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Tips'
-	        ),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'profile-bets-headers' },
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'game' },
-	                'Match (grupp)'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'res' },
-	                'Resultat'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'bet' },
-	                'Tips'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'points' },
-	                'Poäng'
-	            )
-	        ),
-	        bets.map(showBet(points))
-	    );
-	};
-
-	exports.default = ProfileBets;
-
-/***/ },
-/* 321 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(191);
+	var _reactRouter = __webpack_require__(196);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29641,7 +30288,7 @@
 	exports.default = GroupAverageTopList;
 
 /***/ },
-/* 322 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29654,7 +30301,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(191);
+	var _reactRouter = __webpack_require__(196);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29692,7 +30339,7 @@
 	        return _react2.default.createElement(
 	            'p',
 	            null,
-	            'Laddar grupper'
+	            'Laddar ligor...'
 	        );
 	    }
 
@@ -29716,7 +30363,7 @@
 	exports.default = GroupTotalTopList;
 
 /***/ },
-/* 323 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29729,7 +30376,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(191);
+	var _reactRouter = __webpack_require__(196);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29854,7 +30501,7 @@
 	exports.default = GroupMembersTopList;
 
 /***/ },
-/* 324 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29867,7 +30514,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(191);
+	var _reactRouter = __webpack_require__(196);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29998,1888 +30645,7 @@
 	exports.default = UserTotalTopList;
 
 /***/ },
-/* 325 */,
-/* 326 */,
-/* 327 */,
-/* 328 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = tournaments;
-	exports.requestTournaments = requestTournaments;
-	exports.receiveTournaments = receiveTournaments;
-	exports.fetchTournaments = fetchTournaments;
-
-	var _isomorphicFetch = __webpack_require__(267);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _utils = __webpack_require__(329);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var REQUEST = 'supertipset/tournaments/REQUEST';
-	var RECEIVE = 'supertipset/tournaments/RECEIVE';
-
-	var initialState = {
-	    isFetching: false,
-	    data: []
-	};
-
-	function tournaments() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case REQUEST:
-	            return (0, _utils.assign)(state, {
-	                isFetching: true
-	            });
-	        case RECEIVE:
-	            return (0, _utils.assign)(state, {
-	                isFetching: false,
-	                data: action.tournaments
-	            });
-	        default:
-	            return state;
-	    }
-	}
-
-	function requestTournaments() {
-	    return { type: REQUEST };
-	}
-
-	function receiveTournaments(tournaments) {
-	    return { type: RECEIVE, tournaments: tournaments };
-	}
-
-	function shouldFetch(tournaments) {
-	    if (tournaments.isFetching) {
-	        return false;
-	    } else if (tournaments.data.length == 0) {
-	        return true;
-	    }
-	}
-
-	function fetchTournaments() {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var tournaments = _getState.tournaments;
-
-
-	        if (!shouldFetch(tournaments)) {
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestTournaments());
-
-	        var url = 'http://localhost:8001/api/tournaments/';
-
-	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receiveTournaments(json));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch tournaments');
-	            }
-	        });
-	    };
-	}
-
-/***/ },
-/* 329 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.assign = assign;
-	exports.prepare = prepare;
-	exports.preparePost = preparePost;
-	exports.preparePut = preparePut;
-	function assign(state, newState) {
-	    return Object.assign({}, state, newState);
-	}
-
-	function prepare(method, body) {
-	    return {
-	        method: method,
-	        headers: new Headers({ 'Content-type': 'application/json' }),
-	        body: JSON.stringify(body)
-	    };
-	}
-
-	function preparePost(body) {
-	    return prepare('POST', body);
-	}
-
-	function preparePut(body) {
-	    return prepare('PUT', body);
-	}
-
-/***/ },
-/* 330 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.invalidateUser = invalidateUser;
-	exports.requestUser = requestUser;
-	exports.receiveUser = receiveUser;
-	exports.fetchUser = fetchUser;
-	exports.requestEditUserPassword = requestEditUserPassword;
-	exports.receiveEditUserPassword = receiveEditUserPassword;
-	exports.editUserPassword = editUserPassword;
-	exports.requestBet = requestBet;
-	exports.receiveBet = receiveBet;
-	exports.placeBet = placeBet;
-	exports.requestSpecialBet = requestSpecialBet;
-	exports.receiveSpecialBet = receiveSpecialBet;
-	exports.placeSpecialBet = placeSpecialBet;
-
-	var _isomorphicFetch = __webpack_require__(267);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _notification = __webpack_require__(331);
-
-	var _utils = __webpack_require__(329);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var INVALIDATE = 'supertipset/user/INVALIDATE';
-	// User
-	var REQUEST = 'supertipset/user/REQUEST';
-	var RECEIVE = 'supertipset/user/RECEIVE';
-	// Place bet
-	var REQUEST_BET = 'supertipset/user/REQUEST_BET';
-	var RECEIVE_BET = 'supertipset/user/RECEIVE_BET';
-	// Place special bet
-	var REQUEST_SPECIAL_BET = 'supertipset/user/REQUEST_SPECIAL_BET';
-	var RECEIVE_SPECIAL_BET = 'supertipset/user/RECEIVE_SPECIAL_BET';
-	// Change user password
-	var REQUEST_EDIT_PASSWORD = 'supertipset/user/REQUEST_EDIT_PASSWORD';
-	var RECEIVE_EDIT_PASSWORD = 'supertipset/user/RECEIVE_EDIT_PASSWORD';
-
-	var initialState = {
-	    isFetching: false,
-	    didInvalidate: false,
-	    id: window.userID,
-	    data: {}
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case INVALIDATE:
-	            return (0, _utils.assign)(state, {
-	                didInvalidate: true
-	            });
-	        case REQUEST:
-	            return (0, _utils.assign)(state, {
-	                isFetching: true,
-	                didInvalidate: false
-	            });
-	        case RECEIVE:
-	            return (0, _utils.assign)(state, {
-	                isFetching: false,
-	                didInvalidate: false,
-	                data: action.user
-	            });
-	        case RECEIVE_BET:
-	            return (0, _utils.assign)(state, {
-	                data: (0, _utils.assign)(state.data, {
-	                    bets: state.data.bets.concat(action.bet)
-	                })
-	            });
-	        case RECEIVE_SPECIAL_BET:
-	            return (0, _utils.assign)(state, {
-	                data: (0, _utils.assign)(state.data, {
-	                    special_bets: state.data.special_bets.concat(action.specialBet)
-	                })
-	            });
-	        // TODO listen to all actions?
-	        default:
-	            return state;
-	    }
-	}
-
-	function invalidateUser() {
-	    return { type: INVALIDATE };
-	}
-
-	function requestUser() {
-	    return { type: REQUEST };
-	}
-
-	function receiveUser(user) {
-	    return { type: RECEIVE, user: user };
-	}
-
-	function shouldFetch(user) {
-	    if (user.isFetching) {
-	        return false;
-	    } else if (!user.data.hasOwnProperty('id')) {
-	        return true;
-	    } else {
-	        return user.didInvalidate;
-	    }
-	}
-
-	function fetchUser(id, tournament) {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var user = _getState.user;
-
-
-	        if (!shouldFetch(user)) {
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestUser());
-
-	        var url = 'http://localhost:8001/api/users/' + id + '/detail/?tournament=' + tournament;
-
-	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receiveUser(json));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch user');
-	            }
-	        });
-	    };
-	}
-
-	function requestEditUserPassword() {
-	    return { type: REQUEST_EDIT_PASSWORD };
-	}
-
-	function receiveEditUserPassword(user) {
-	    return { type: RECEIVE_EDIT_PASSWORD, user: user };
-	}
-
-	function editUserPassword(id, username, password) {
-	    return function (dispatch) {
-	        dispatch(requestEditUserPassword());
-
-	        var payload = (0, _utils.preparePut)({
-	            id: id,
-	            username: username,
-	            password: password
-	        });
-
-	        var url = 'http://127.0.0.1:8001/api/users/' + id + '/password/';
-
-	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    dispatch(receiveEditUserPassword(json));
-	                    // TODO better notification message?
-	                    dispatch((0, _notification.successNotification)('Du har redigerat ditt lösenord!'));
-	                });
-	            } else {
-	                // TODO Error handling
-	                console.log('unable to change user password');
-	            }
-	        });
-	    };
-	}
-
-	function requestBet() {
-	    return { type: REQUEST_BET };
-	}
-
-	function receiveBet(bet) {
-	    return { type: RECEIVE_BET, bet: bet };
-	}
-
-	function placeBet(user, game, betTeamOne, betTeamTwo) {
-	    return function (dispatch) {
-	        dispatch(requestBet());
-
-	        var payload = (0, _utils.preparePost)({
-	            user: user,
-	            game: game,
-	            team_1_bet: betTeamOne,
-	            team_2_bet: betTeamTwo
-	        });
-
-	        var url = 'http://localhost:8001/api/bets/';
-
-	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    dispatch(receiveBet(json));
-	                    // TODO better notification message?
-	                    dispatch((0, _notification.successNotification)('Tips sparat!'));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to place bet');
-	            }
-	        });
-	    };
-	}
-
-	function requestSpecialBet() {
-	    return { type: REQUEST_SPECIAL_BET };
-	}
-
-	function receiveSpecialBet(specialBet) {
-	    return { type: RECEIVE_SPECIAL_BET, specialBet: specialBet };
-	}
-
-	function placeSpecialBet(user, player, goals, team, tournament) {
-	    return function (dispatch) {
-	        dispatch(requestSpecialBet());
-
-	        var payload = (0, _utils.preparePost)({
-	            user: user,
-	            team: team,
-	            player: player,
-	            tournament: tournament,
-	            player_goals: goals
-	        });
-
-	        var url = 'http://localhost:8001/api/specialbets/';
-
-	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    dispatch(receiveSpecialBet(json));
-	                    // TODO better notification message?
-	                    dispatch((0, _notification.successNotification)('Specialtips sparat!'));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to place special bet');
-	            }
-	        });
-	    };
-	}
-
-/***/ },
-/* 331 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.hideNotification = hideNotification;
-	exports.showNotification = showNotification;
-	exports.publishNotification = publishNotification;
-	exports.successNotification = successNotification;
-
-	var _utils = __webpack_require__(329);
-
-	var HIDE = 'supertipset/notification/HIDE';
-	var SHOW = 'supertipset/notification/SHOW';
-
-	var SUCCESS = 'supertipset/notification/SUCCESS';
-
-	var initialState = {
-	    notificationType: undefined,
-	    notificationProps: {}
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case SHOW:
-	            return (0, _utils.assign)(state, {
-	                notificationType: action.notificationType,
-	                notificationProps: action.notificationProps
-	            });
-	        case HIDE:
-	            return (0, _utils.assign)(state, initialState);
-	        default:
-	            return state;
-	    }
-	}
-
-	function hideNotification() {
-	    return { type: HIDE };
-	}
-
-	function showNotification(notificationType, notificationProps) {
-	    return { type: SHOW, notificationType: notificationType, notificationProps: notificationProps };
-	}
-
-	function publishNotification(type, props) {
-	    return function (dispatch, getState) {
-	        setTimeout(function () {
-	            if (getState().notification.notificationType) {
-	                dispatch(hideNotification());
-	            }
-	        }, 3000);
-
-	        dispatch(showNotification(type, props));
-	    };
-	}
-
-	function successNotification(message) {
-	    return publishNotification(SUCCESS, { message: message });
-	}
-
-/***/ },
-/* 332 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.requestTeams = requestTeams;
-	exports.receiveTeams = receiveTeams;
-	exports.fetchTeams = fetchTeams;
-
-	var _isomorphicFetch = __webpack_require__(267);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _utils = __webpack_require__(329);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var REQUEST = 'supertipset/teams/REQUEST';
-	var RECEIVE = 'supertipset/teams/RECEIVE';
-
-	var initialState = {
-	    isFetching: false,
-	    data: []
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case REQUEST:
-	            return (0, _utils.assign)(state, {
-	                isFetching: true
-	            });
-	        case RECEIVE:
-	            return (0, _utils.assign)(state, {
-	                isFetching: false,
-	                data: action.teams
-	            });
-	        default:
-	            return state;
-	    }
-	}
-
-	function requestTeams() {
-	    return { type: REQUEST };
-	}
-
-	function receiveTeams(teams) {
-	    return { type: RECEIVE, teams: teams };
-	}
-
-	function shouldFetch(teams) {
-	    if (teams.isFetching) {
-	        return false;
-	    } else if (teams.data.length == 0) {
-	        return true;
-	    }
-	}
-
-	function fetchTeams() {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var teams = _getState.teams;
-
-
-	        if (!shouldFetch(teams)) {
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestTeams());
-
-	        var url = 'http://localhost:8001/api/teams/';
-
-	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receiveTeams(json));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch teams');
-	            }
-	        });
-	    };
-	}
-
-/***/ },
-/* 333 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.requestPlayers = requestPlayers;
-	exports.receivePlayers = receivePlayers;
-	exports.fetchPlayers = fetchPlayers;
-
-	var _isomorphicFetch = __webpack_require__(267);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _utils = __webpack_require__(329);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var REQUEST = 'supertipset/players/REQUEST';
-	var RECEIVE = 'supertipset/players/RECEIVE';
-
-	var initialState = {
-	    isFetching: false,
-	    data: []
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case REQUEST:
-	            return (0, _utils.assign)(state, {
-	                isFetching: true
-	            });
-	        case RECEIVE:
-	            return (0, _utils.assign)(state, {
-	                isFetching: false,
-	                data: action.players
-	            });
-	        default:
-	            return state;
-	    }
-	}
-
-	function requestPlayers() {
-	    return { type: REQUEST };
-	}
-
-	function receivePlayers(players) {
-	    return { type: RECEIVE, players: players };
-	}
-
-	function shouldFetch(players) {
-	    if (players.isFetching) {
-	        return false;
-	    } else if (players.data.length == 0) {
-	        return true;
-	    }
-	}
-
-	function fetchPlayers() {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var players = _getState.players;
-
-
-	        if (!shouldFetch(players)) {
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestPlayers());
-
-	        var url = 'http://localhost:8001/api/players/';
-
-	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receivePlayers(json));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch players');
-	            }
-	        });
-	    };
-	}
-
-/***/ },
-/* 334 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.invalidateRounds = invalidateRounds;
-	exports.requestRounds = requestRounds;
-	exports.receiveRounds = receiveRounds;
-	exports.fetchRounds = fetchRounds;
-
-	var _isomorphicFetch = __webpack_require__(267);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _utils = __webpack_require__(329);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var INVALIDATE = 'supertipset/rounds/INVALIDATE';
-	var REQUEST = 'supertipset/rounds/REQUEST';
-	var RECEIVE = 'supertipset/rounds/RECEIVE';
-
-	var initialState = {
-	    isFetching: false,
-	    didInvalidate: false,
-	    data: []
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case INVALIDATE:
-	            return (0, _utils.assign)(state, {
-	                didInvalidate: true
-	            });
-	        case REQUEST:
-	            return (0, _utils.assign)(state, {
-	                isFetching: true,
-	                didInvalidate: false
-	            });
-	        case RECEIVE:
-	            return (0, _utils.assign)(state, {
-	                isFetching: false,
-	                didInvalidate: false,
-	                data: action.rounds
-	            });
-	        default:
-	            return state;
-	    }
-	}
-
-	function invalidateRounds() {
-	    return { type: INVALIDATE };
-	}
-
-	function requestRounds() {
-	    return { type: REQUEST };
-	}
-
-	function receiveRounds(rounds) {
-	    return { type: RECEIVE, rounds: rounds };
-	}
-
-	function shouldFetch(rounds) {
-	    if (rounds.isFetching) {
-	        return false;
-	    } else if (rounds.data.length == 0) {
-	        return true;
-	    } else {
-	        return rounds.didInvalidate;
-	    }
-	}
-
-	function fetchRounds(tournament) {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var rounds = _getState.rounds;
-
-
-	        if (!shouldFetch(rounds)) {
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestRounds());
-
-	        var url = 'http://127.0.0.1:8001/api/rounds/?tournament=' + tournament;
-
-	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receiveRounds(json));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch rounds');
-	            }
-	        });
-	    };
-	}
-
-/***/ },
-/* 335 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.closeModal = closeModal;
-	exports.openBetModal = openBetModal;
-	exports.openSpecialBetModal = openSpecialBetModal;
-	exports.openJoinGroupModal = openJoinGroupModal;
-	exports.openCreateGroupModal = openCreateGroupModal;
-	exports.openLeaveGroupModal = openLeaveGroupModal;
-	exports.openEditGroupDescriptionModal = openEditGroupDescriptionModal;
-	exports.openEditGroupPasswordModal = openEditGroupPasswordModal;
-	exports.openEditUserPasswordModal = openEditUserPasswordModal;
-	exports.openChangeTournamentModal = openChangeTournamentModal;
-
-	var _utils = __webpack_require__(329);
-
-	// open / close
-	var OPEN = 'supertipset/modal/OPEN';
-	var CLOSE = 'supertipset/modal/CLOSE';
-	// different modal types
-	var BET = 'supertipset/modal/BET';
-	var SPECIAL_BET = 'supertipset/modal/SPECIAL_BET';
-	var JOIN_GROUP = 'supertipset/modal/JOIN_GROUP';
-	var CREATE_GROUP = 'supertipset/modal/CREATE_GROUP';
-	var LEAVE_GROUP = 'supertipset/modal/LEAVE_GROUP';
-	var EDIT_GROUP_DESCRIPTION = 'supertipset/modal/EDIT_GROUP_DESCRIPTION';
-	var EDIT_GROUP_PASSWORD = 'supertipset/modal/EDIT_GROUP_PASSWORD';
-	var EDIT_USER_PASSWORD = 'supertipset/modal/EDIT_USER_PASSWORD';
-	var CHANGE_TOURNAMENT = 'supertipset/modal/CHANGE_TOURNAMENT';
-
-	var initialState = {
-	    modalType: undefined,
-	    modalProps: {}
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case OPEN:
-	            return (0, _utils.assign)(state, {
-	                modalType: action.modalType,
-	                modalProps: action.modalProps
-	            });
-	        case CLOSE:
-	            return (0, _utils.assign)(state, initialState);
-	        default:
-	            return state;
-	    }
-	}
-
-	function closeModal() {
-	    return { type: CLOSE };
-	}
-
-	function openBetModal(game) {
-	    return {
-	        type: OPEN,
-	        modalType: BET,
-	        modalProps: { game: game }
-	    };
-	}
-
-	function openSpecialBetModal() {
-	    return {
-	        type: OPEN,
-	        modalType: SPECIAL_BET,
-	        modalProps: {}
-	    };
-	}
-
-	function openJoinGroupModal() {
-	    return {
-	        type: OPEN,
-	        modalType: JOIN_GROUP,
-	        modalProps: {}
-	    };
-	}
-
-	function openCreateGroupModal() {
-	    return {
-	        type: OPEN,
-	        modalType: CREATE_GROUP,
-	        modalProps: {}
-	    };
-	}
-
-	function openLeaveGroupModal(group) {
-	    return {
-	        type: OPEN,
-	        modalType: LEAVE_GROUP,
-	        modalProps: { group: group }
-	    };
-	}
-
-	function openEditGroupDescriptionModal(group) {
-	    return {
-	        type: OPEN,
-	        modalType: EDIT_GROUP_DESCRIPTION,
-	        modalProps: { group: group }
-	    };
-	}
-
-	function openEditGroupPasswordModal(group) {
-	    return {
-	        type: OPEN,
-	        modalType: EDIT_GROUP_PASSWORD,
-	        modalProps: { group: group }
-	    };
-	}
-
-	function openEditUserPasswordModal(user) {
-	    return {
-	        type: OPEN,
-	        modalType: EDIT_USER_PASSWORD,
-	        modalProps: { user: user }
-	    };
-	}
-
-	function openChangeTournamentModal() {
-	    return {
-	        type: OPEN,
-	        modalType: CHANGE_TOURNAMENT,
-	        modalProps: {}
-	    };
-	}
-
-/***/ },
-/* 336 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.invalidateGroup = invalidateGroup;
-	exports.requestGroup = requestGroup;
-	exports.receiveGroup = receiveGroup;
-	exports.fetchGroup = fetchGroup;
-	exports.requestEditGroupDescription = requestEditGroupDescription;
-	exports.receiveEditGroupDescription = receiveEditGroupDescription;
-	exports.editGroupDescription = editGroupDescription;
-	exports.requestEditGroupPassword = requestEditGroupPassword;
-	exports.receiveEditGroupPassword = receiveEditGroupPassword;
-	exports.editGroupPassword = editGroupPassword;
-
-	var _isomorphicFetch = __webpack_require__(267);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _notification = __webpack_require__(331);
-
-	var _utils = __webpack_require__(329);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var INVALIDATE = 'supertipset/group/INVALIDATE';
-	// Group
-	var REQUEST = 'supertipset/group/REQUEST';
-	var RECEIVE = 'supertipset/group/RECEIVE';
-	// Group description
-	var REQUEST_EDIT_DESCRIPTION = 'supertipset/group/REQUEST_EDIT_DESCRIPTION';
-	var RECEIVE_EDIT_DESCRIPTION = 'supertipset/group/RECEIVE_EDIT_DESCRIPTION';
-	// Group password
-	var REQUEST_EDIT_PASSWORD = 'supertipset/group/REQUEST_EDIT_PASSWORD';
-	var RECEIVE_EDIT_PASSWORD = 'supertipset/group/RECEIVE_EDIT_PASSWORD';
-
-	var initialState = {
-	    isFetching: false,
-	    didInvalidate: false,
-	    data: []
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case INVALIDATE:
-	            return (0, _utils.assign)(state, {
-	                didInvalidate: true
-	            });
-	        case REQUEST:
-	            return (0, _utils.assign)(state, {
-	                isFetching: true,
-	                didInvalidate: false
-	            });
-	        case RECEIVE:
-	            return (0, _utils.assign)(state, {
-	                isFetching: false,
-	                didInvalidate: false,
-	                data: action.group
-	            });
-	        case RECEIVE_EDIT_DESCRIPTION:
-	            return (0, _utils.assign)(state, {
-	                data: (0, _utils.assign)(state.data, {
-	                    description: action.group.description
-	                })
-	            });
-	        // TODO listen to other actions?
-	        default:
-	            return state;
-	    }
-	}
-
-	function invalidateGroup() {
-	    return { type: INVALIDATE };
-	}
-
-	function requestGroup() {
-	    return { type: REQUEST };
-	}
-
-	function receiveGroup(group) {
-	    return { type: RECEIVE, group: group };
-	}
-
-	function shouldFetch(group, id) {
-	    if (group.isFetching) {
-	        return false;
-	    } else if (!group.data.hasOwnProperty('id')) {
-	        return true;
-	    } else if (group.data.hasOwnProperty('id') && group.data.id !== id) {
-	        return true;
-	    } else {
-	        return group.didInvalidate;
-	    }
-	}
-
-	function fetchGroup(id, tournament) {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var group = _getState.group;
-
-
-	        if (!shouldFetch(group, id)) {
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestGroup());
-
-	        return (0, _isomorphicFetch2.default)('http://127.0.0.1:8001/api/groups/' + id + '/detail/?tournament=' + tournament).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receiveGroup(json));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('could not fetch group');
-	            }
-	        });
-	    };
-	}
-
-	function requestEditGroupDescription() {
-	    return { type: REQUEST_EDIT_DESCRIPTION };
-	}
-
-	function receiveEditGroupDescription(group) {
-	    return { type: RECEIVE_EDIT_DESCRIPTION, group: group };
-	}
-
-	function editGroupDescription(user, group, name, description) {
-	    return function (dispatch) {
-	        dispatch(requestEditGroupDescription());
-
-	        var payload = (0, _utils.preparePut)({
-	            user: user,
-	            name: name,
-	            description: description
-	        });
-
-	        var url = 'http://127.0.0.1:8001/api/groups/' + group + '/';
-
-	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    dispatch(receiveEditGroupDescription(json));
-	                    // TODO change notification message?
-	                    dispatch((0, _notification.successNotification)('Gruppen har redigerats!'));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('request edit group description not ok');
-	            }
-	        });
-	    };
-	}
-
-	function requestEditGroupPassword() {
-	    return { type: REQUEST_EDIT_PASSWORD };
-	}
-
-	function receiveEditGroupPassword(group) {
-	    return { type: RECEIVE_EDIT_PASSWORD, group: group };
-	}
-
-	function editGroupPassword(user, group, name, password) {
-	    return function (dispatch) {
-	        dispatch(requestEditGroupDescription());
-
-	        var payload = (0, _utils.preparePut)({
-	            user: user,
-	            name: name,
-	            password: password
-	        });
-
-	        var url = 'http://127.0.0.1:8001/api/groups/' + group + '/password/';
-
-	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    dispatch(receiveEditGroupPassword(json));
-	                    // TODO change notification message?
-	                    dispatch((0, _notification.successNotification)('Gruppen har redigerats!'));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('request edit group password not ok');
-	            }
-	        });
-	    };
-	}
-
-/***/ },
-/* 337 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.RECEIVE_LEAVE = undefined;
-	exports.default = reducer;
-	exports.invalidateGroups = invalidateGroups;
-	exports.requestGroups = requestGroups;
-	exports.receiveGroups = receiveGroups;
-	exports.fetchGroups = fetchGroups;
-	exports.requestCreateGroup = requestCreateGroup;
-	exports.receiveCreateGroup = receiveCreateGroup;
-	exports.createGroup = createGroup;
-	exports.requestJoinGroup = requestJoinGroup;
-	exports.receiveJoinGroup = receiveJoinGroup;
-	exports.joinGroup = joinGroup;
-	exports.requestLeaveGroup = requestLeaveGroup;
-	exports.receiveLeaveGroup = receiveLeaveGroup;
-	exports.leaveGroup = leaveGroup;
-	exports.requestRemoveGroup = requestRemoveGroup;
-	exports.receiveRemoveGroup = receiveRemoveGroup;
-	exports.removeGroup = removeGroup;
-
-	var _isomorphicFetch = __webpack_require__(267);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _reactRouter = __webpack_require__(191);
-
-	var _notification = __webpack_require__(331);
-
-	var _utils = __webpack_require__(329);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var INVALIDATE = 'supertipset/groups/INVALIDATE';
-	// Group
-	var REQUEST = 'supertipset/groups/REQUEST';
-	var RECEIVE = 'supertipset/groups/RECEIVE';
-	// Create group
-	var REQUEST_CREATE = 'supertipset/groups/REQUEST_CREATE';
-	var RECEIVE_CREATE = 'supertipset/groups/RECEIVE_CREATE';
-	// Join group
-	var REQUEST_JOIN = 'supertipset/groups/REQUEST_JOIN';
-	var RECEIVE_JOIN = 'supertipset/groups/RECEIVE_JOIN';
-	// Leave group
-	var REQUEST_LEAVE = 'supertipset/groups/REQUEST_LEAVE';
-	var RECEIVE_LEAVE = exports.RECEIVE_LEAVE = 'supertipset/groups/RECEIVE_LEAVE';
-	// Remove group
-	var REQUEST_REMOVE = 'supertipset/groups/REQUEST_REMOVE';
-	var RECEIVE_REMOVE = 'supertipset/groups/RECEIVE_REMOVE';
-
-	var initialState = {
-	    isFetching: false,
-	    didInvalidate: false,
-	    data: []
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case INVALIDATE:
-	            return (0, _utils.assign)(state, {
-	                didInvalidate: true
-	            });
-	        case REQUEST:
-	            return (0, _utils.assign)(state, {
-	                isFetching: true,
-	                didInvalidate: false
-	            });
-	        case RECEIVE:
-	            return (0, _utils.assign)(state, {
-	                isFetching: false,
-	                didInvalidate: false,
-	                data: action.groups
-	            });
-	        case RECEIVE_LEAVE:
-	            return (0, _utils.assign)(state, {
-	                data: state.data.filter(function (group) {
-	                    return group.id !== action.group.id;
-	                })
-	            });
-	        // TODO listen to other actions?
-	        default:
-	            return state;
-	    }
-	}
-
-	function invalidateGroups() {
-	    return { type: INVALIDATE };
-	}
-
-	function requestGroups() {
-	    return { type: REQUEST };
-	}
-
-	function receiveGroups(groups) {
-	    return { type: RECEIVE, groups: groups };
-	}
-
-	function shouldFetch(groups) {
-	    if (groups.isFetching) {
-	        return false;
-	    } else if (groups.data.length == 0) {
-	        return true;
-	    } else {
-	        return groups.didInvalidate;
-	    }
-	}
-
-	function fetchGroups(user, tournament) {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var groups = _getState.groups;
-
-
-	        if (!shouldFetch(groups)) {
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestGroups());
-
-	        var url = 'http://127.0.0.1:8001/api/groups/deep/?users=' + user + '&tournament=' + tournament;
-
-	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receiveGroups(json));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch groups');
-	            }
-	        });
-	    };
-	}
-
-	function requestCreateGroup() {
-	    return { type: REQUEST_CREATE };
-	}
-
-	function receiveCreateGroup(group) {
-	    return { type: RECEIVE_CREATE, group: group };
-	}
-
-	function createGroup(user, name, password, tournament) {
-	    return function (dispatch, getState) {
-	        dispatch(requestCreateGroup());
-
-	        var payload = (0, _utils.preparePost)({
-	            user: user,
-	            name: name,
-	            password: password,
-	            tournament: tournament
-	        });
-
-	        var url = 'http://127.0.0.1:8001/api/groups/';
-
-	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    dispatch(receiveCreateGroup(json));
-	                    dispatch(invalidateGroups());
-	                    _reactRouter.browserHistory.push('/s/groups/' + json.id);
-	                    // TODO better success message?
-	                    dispatch((0, _notification.successNotification)('Ny liga skapad!'));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to create group');
-	            }
-	        });
-	    };
-	}
-
-	function requestJoinGroup() {
-	    return { type: REQUEST_JOIN };
-	}
-
-	function receiveJoinGroup(group) {
-	    return { type: RECEIVE_JOIN, group: group };
-	}
-
-	function joinGroup(user, name, password) {
-	    return function (dispatch) {
-	        dispatch(requestJoinGroup());
-
-	        var payload = (0, _utils.preparePost)({
-	            user: user,
-	            name: name,
-	            password: password
-	        });
-
-	        var url = 'http://127.0.0.1:8001/api/users/' + user + '/group/';
-
-	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    dispatch(receiveJoinGroup(json));
-	                    dispatch(invalidateGroups());
-	                    _reactRouter.browserHistory.push('/s/groups/' + json.id);
-	                    // TODO better notification message?
-	                    dispatch((0, _notification.successNotification)('Du har gått med i liga'));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to join group');
-	            }
-	        });
-	    };
-	}
-
-	function requestLeaveGroup() {
-	    return { type: REQUEST_LEAVE };
-	}
-
-	function receiveLeaveGroup(group) {
-	    return { type: RECEIVE_LEAVE, group: group };
-	}
-
-	function leaveGroup(user, group, admin) {
-	    return function (dispatch) {
-	        dispatch(requestLeaveGroup());
-
-	        var payload = (0, _utils.preparePut)({
-	            user: user,
-	            group: group,
-	            admin: admin
-	        });
-
-	        var url = 'http://127.0.0.1:8001/api/groups/' + group + '/leave/';
-
-	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    dispatch(receiveLeaveGroup(json));
-	                    // TODO better notification message?
-	                    dispatch((0, _notification.successNotification)('Du har lämnat ligan!'));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to leave group');
-	            }
-	        });
-	    };
-	}
-
-	function requestRemoveGroup() {
-	    return { type: REQUEST_REMOVE };
-	}
-
-	function receiveRemoveGroup(group) {
-	    return { type: RECEIVE_REMOVE, group: group };
-	}
-
-	function removeGroup(user, group) {
-	    return function (dispatch) {
-	        dispatch(requestRemoveGroup());
-
-	        var payload = { method: 'DELETE' };
-	        var url = 'http://127.0.0.1:8001/api/groups/' + group + '/';
-
-	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
-	            if (res.ok) {
-	                dispatch(receiveRemoveGroup(group));
-	                // NOTE
-	                dispatch(receiveLeaveGroup({ id: group }));
-	            } else {
-	                // TODO error handling
-	                console.log('unable to remove group');
-	            }
-	        });
-	    };
-	}
-
-/***/ },
-/* 338 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.invalidateProfile = invalidateProfile;
-	exports.requestProfile = requestProfile;
-	exports.receiveProfile = receiveProfile;
-	exports.fetchProfile = fetchProfile;
-
-	var _isomorphicFetch = __webpack_require__(267);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _utils = __webpack_require__(329);
-
-	var _groups = __webpack_require__(337);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var INVALIDATE = 'supertipset/profile/INVALIDATE';
-	var REQUEST = 'supertipset/profile/REQUEST';
-	var RECEIVE = 'supertipset/profile/RECEIVE';
-
-	var initialState = {
-	    isFetching: false,
-	    didInvalidate: false,
-	    data: {}
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case INVALIDATE:
-	            return (0, _utils.assign)(state, {
-	                didInvalidate: true
-	            });
-	        case REQUEST:
-	            return (0, _utils.assign)(state, {
-	                isFetching: true,
-	                didInvalidate: false
-	            });
-	        case RECEIVE:
-	            return (0, _utils.assign)(state, {
-	                isFetching: false,
-	                didInvalidate: false,
-	                data: action.profile
-	            });
-	        // If user leaves a group from the profile page
-	        case _groups.RECEIVE_LEAVE:
-	            if (!state.data.hasOwnProperty('id')) {
-	                return state;
-	            }
-
-	            return (0, _utils.assign)(state, {
-	                data: (0, _utils.assign)(state.data, {
-	                    groups: state.data.groups.filter(function (group) {
-	                        return group.id !== action.group.id;
-	                    })
-	                })
-	            });
-	        default:
-	            return state;
-	    }
-	}
-
-	function invalidateProfile() {
-	    return { type: INVALIDATE };
-	}
-
-	function requestProfile() {
-	    return { type: REQUEST };
-	}
-
-	function receiveProfile(profile) {
-	    return { type: RECEIVE, profile: profile };
-	}
-
-	function shouldFetch(profile, id) {
-	    if (profile.isFetching) {
-	        return false;
-	    } else if (!profile.data.hasOwnProperty('id')) {
-	        return true;
-	    } else if (profile.data.hasOwnProperty('id') && profile.data.id !== id) {
-	        return true;
-	    } else {
-	        return profile.didInvalidate;
-	    }
-	}
-
-	function fetchProfile(id, tournament) {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var profile = _getState.profile;
-	        var user = _getState.user;
-
-
-	        if (!shouldFetch(profile, id)) {
-	            return Promise.resolve();
-	        }
-
-	        if (user.data.hasOwnProperty('id') && user.id == id) {
-	            dispatch(receiveProfile(user.data));
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestProfile());
-
-	        var url = 'http://localhost:8001/api/users/' + id + '/detail/?tournament=' + tournament;
-
-	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receiveProfile(json));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch profile');
-	            }
-	        });
-	    };
-	}
-
-/***/ },
-/* 339 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.invalidateTopLists = invalidateTopLists;
-	exports.requestUsersForTopLists = requestUsersForTopLists;
-	exports.receiveUsersForTopLists = receiveUsersForTopLists;
-	exports.fetchUsersForTopLists = fetchUsersForTopLists;
-	exports.requestGroupsForTopLists = requestGroupsForTopLists;
-	exports.receiveGroupsForTopLists = receiveGroupsForTopLists;
-	exports.fetchGroupsForTopLists = fetchGroupsForTopLists;
-
-	var _isomorphicFetch = __webpack_require__(267);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _utils = __webpack_require__(329);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var INVALIDATE = 'supsertipset/toplists/INVALIDATE';
-	var REQUEST_USERS = 'supsertipset/toplists/REQUEST_USERS';
-	var RECEIVE_USERS = 'supsertipset/toplists/RECEIVE_USERS';
-	var REQUEST_GROUPS = 'supsertipset/toplists/REQUEST_GROUPS';
-	var RECEIVE_GROUPS = 'supsertipset/toplists/RECEIVE_GROUPS';
-
-	var initialState = {
-	    users: {
-	        isFetching: false,
-	        didInvalidate: false,
-	        data: []
-	    },
-	    groups: {
-	        isFetching: false,
-	        didInvalidate: false,
-	        data: []
-	    }
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case INVALIDATE:
-	            return (0, _utils.assign)(state, {
-	                users: (0, _utils.assign)(state.users, { didInvalidate: true }),
-	                groups: (0, _utils.assign)(state.groups, { didInvalidate: true })
-	            });
-	        case REQUEST_USERS:
-	            return (0, _utils.assign)(state, {
-	                users: (0, _utils.assign)(state.users, {
-	                    isFetching: true,
-	                    didInvalidate: false
-	                })
-	            });
-	        case RECEIVE_USERS:
-	            return (0, _utils.assign)(state, {
-	                users: (0, _utils.assign)(state.users, {
-	                    isFetching: false,
-	                    didInvalidate: false,
-	                    data: action.users
-	                })
-	            });
-	        case REQUEST_GROUPS:
-	            return (0, _utils.assign)(state, {
-	                groups: (0, _utils.assign)(state.groups, {
-	                    isFetching: true,
-	                    didInvalidate: false
-	                })
-	            });
-	        case RECEIVE_GROUPS:
-	            return (0, _utils.assign)(state, {
-	                groups: (0, _utils.assign)(state.grous, {
-	                    isFetching: false,
-	                    didInvalidate: false,
-	                    data: action.groups
-	                })
-	            });
-	        default:
-	            return state;
-	    }
-	}
-
-	function invalidateTopLists() {
-	    return { type: INVALIDATE };
-	}
-
-	function requestUsersForTopLists() {
-	    return { type: REQUEST_USERS };
-	}
-
-	function receiveUsersForTopLists(users) {
-	    return { type: RECEIVE_USERS, users: users };
-	}
-
-	function shouldFetchUsers(toplists) {
-	    if (toplists.users.isFetching) {
-	        return false;
-	    } else if (toplists.users.data.length == 0) {
-	        return true;
-	    } else {
-	        return toplists.users.didInvalidate;
-	    }
-	}
-
-	function fetchUsersForTopLists(tournament) {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var toplists = _getState.toplists;
-
-
-	        if (!shouldFetchUsers(toplists)) {
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestUsersForTopLists());
-
-	        var url = 'http://127.0.0.1:8001/api/users/deep/?tournament=' + tournament;
-
-	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receiveUsersForTopLists(json));
-	                });
-	            } else {
-	                console.log('unable to fetch users for top lists');
-	            }
-	        });
-	    };
-	}
-
-	function requestGroupsForTopLists() {
-	    return { type: REQUEST_GROUPS };
-	}
-
-	function receiveGroupsForTopLists(groups) {
-	    return { type: RECEIVE_GROUPS, groups: groups };
-	}
-
-	function shouldFetchGroups(toplists) {
-	    if (toplists.groups.isFetching) {
-	        return false;
-	    } else if (toplists.groups.data.length == 0) {
-	        return true;
-	    } else {
-	        return toplists.groups.didInvalidate;
-	    }
-	}
-
-	function fetchGroupsForTopLists(tournament) {
-	    return function (dispatch, getState) {
-	        var _getState2 = getState();
-
-	        var toplists = _getState2.toplists;
-
-
-	        if (!shouldFetchGroups(toplists)) {
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestGroupsForTopLists());
-
-	        var url = 'http://127.0.0.1:8001/api/groups/deep/?tournament=' + tournament;
-
-	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receiveGroupsForTopLists(json));
-	                });
-	            } else {
-	                console.log('unable to fetch groups for top lists');
-	            }
-	        });
-	    };
-	}
-
-/***/ },
-/* 340 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.change = change;
-	exports.changeTournament = changeTournament;
-
-	var _reactRouter = __webpack_require__(191);
-
-	var _group = __webpack_require__(336);
-
-	var _groups = __webpack_require__(337);
-
-	var _profile = __webpack_require__(338);
-
-	var _toplists = __webpack_require__(339);
-
-	var _user = __webpack_require__(330);
-
-	var _rounds = __webpack_require__(334);
-
-	var CHANGE = 'supertipset/tournament/CHANGE';
-
-	var initialState = window.tournamentID;
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case CHANGE:
-	            return action.id;
-	        default:
-	            return state;
-	    }
-	}
-
-	function change(id) {
-	    return { type: CHANGE, id: id };
-	}
-
-	function changeTournament(id) {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var user = _getState.user;
-
-
-	        dispatch(change(id));
-
-	        dispatch((0, _user.invalidateUser)());
-	        dispatch((0, _rounds.invalidateRounds)());
-	        dispatch((0, _profile.invalidateProfile)());
-	        dispatch((0, _group.invalidateGroup)());
-	        dispatch((0, _groups.invalidateGroups)());
-	        dispatch((0, _toplists.invalidateTopLists)());
-	        dispatch((0, _rounds.fetchRounds)(id));
-	        dispatch((0, _user.fetchUser)(user.id, id));
-	        _reactRouter.browserHistory.push('/s/bets');
-	    };
-	}
-
-/***/ },
-/* 341 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.toplists = exports.notification = exports.modal = exports.players = exports.teams = exports.tournaments = exports.tournament = exports.rounds = exports.profile = exports.user = exports.groups = exports.group = undefined;
-
-	var _group2 = __webpack_require__(336);
-
-	var _group3 = _interopRequireDefault(_group2);
-
-	var _groups2 = __webpack_require__(337);
-
-	var _groups3 = _interopRequireDefault(_groups2);
-
-	var _user2 = __webpack_require__(330);
-
-	var _user3 = _interopRequireDefault(_user2);
-
-	var _profile2 = __webpack_require__(338);
-
-	var _profile3 = _interopRequireDefault(_profile2);
-
-	var _rounds2 = __webpack_require__(334);
-
-	var _rounds3 = _interopRequireDefault(_rounds2);
-
-	var _tournament2 = __webpack_require__(340);
-
-	var _tournament3 = _interopRequireDefault(_tournament2);
-
-	var _tournaments2 = __webpack_require__(328);
-
-	var _tournaments3 = _interopRequireDefault(_tournaments2);
-
-	var _teams2 = __webpack_require__(332);
-
-	var _teams3 = _interopRequireDefault(_teams2);
-
-	var _players2 = __webpack_require__(333);
-
-	var _players3 = _interopRequireDefault(_players2);
-
-	var _modal2 = __webpack_require__(335);
-
-	var _modal3 = _interopRequireDefault(_modal2);
-
-	var _notification2 = __webpack_require__(331);
-
-	var _notification3 = _interopRequireDefault(_notification2);
-
-	var _toplists2 = __webpack_require__(339);
-
-	var _toplists3 = _interopRequireDefault(_toplists2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.group = _group3.default;
-	exports.groups = _groups3.default;
-	exports.user = _user3.default;
-	exports.profile = _profile3.default;
-	exports.rounds = _rounds3.default;
-	exports.tournament = _tournament3.default;
-	exports.tournaments = _tournaments3.default;
-	exports.teams = _teams3.default;
-	exports.players = _players3.default;
-	exports.modal = _modal3.default;
-	exports.notification = _notification3.default;
-	exports.toplists = _toplists3.default;
-
-/***/ },
-/* 342 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.PlaceSpecialBetModal = exports.PlaceBetModal = exports.UserPasswordModal = exports.GroupPasswordModal = exports.GroupDescriptionModal = exports.LeaveGroupModal = exports.JoinGroupModal = exports.CreateGroupModal = exports.ChangeTournamentModal = exports.Modal = undefined;
-
-	var _Modal2 = __webpack_require__(343);
-
-	var _Modal3 = _interopRequireDefault(_Modal2);
-
-	var _ChangeTournamentModal2 = __webpack_require__(344);
-
-	var _ChangeTournamentModal3 = _interopRequireDefault(_ChangeTournamentModal2);
-
-	var _CreateGroupModal2 = __webpack_require__(345);
-
-	var _CreateGroupModal3 = _interopRequireDefault(_CreateGroupModal2);
-
-	var _JoinGroupModal2 = __webpack_require__(346);
-
-	var _JoinGroupModal3 = _interopRequireDefault(_JoinGroupModal2);
-
-	var _LeaveGroupModal2 = __webpack_require__(347);
-
-	var _LeaveGroupModal3 = _interopRequireDefault(_LeaveGroupModal2);
-
-	var _GroupDescriptionModal2 = __webpack_require__(348);
-
-	var _GroupDescriptionModal3 = _interopRequireDefault(_GroupDescriptionModal2);
-
-	var _GroupPasswordModal2 = __webpack_require__(349);
-
-	var _GroupPasswordModal3 = _interopRequireDefault(_GroupPasswordModal2);
-
-	var _UserPasswordModal2 = __webpack_require__(350);
-
-	var _UserPasswordModal3 = _interopRequireDefault(_UserPasswordModal2);
-
-	var _PlaceBetModal2 = __webpack_require__(351);
-
-	var _PlaceBetModal3 = _interopRequireDefault(_PlaceBetModal2);
-
-	var _PlaceSpecialBetModal2 = __webpack_require__(352);
-
-	var _PlaceSpecialBetModal3 = _interopRequireDefault(_PlaceSpecialBetModal2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.Modal = _Modal3.default;
-	exports.ChangeTournamentModal = _ChangeTournamentModal3.default;
-	exports.CreateGroupModal = _CreateGroupModal3.default;
-	exports.JoinGroupModal = _JoinGroupModal3.default;
-	exports.LeaveGroupModal = _LeaveGroupModal3.default;
-	exports.GroupDescriptionModal = _GroupDescriptionModal3.default;
-	exports.GroupPasswordModal = _GroupPasswordModal3.default;
-	exports.UserPasswordModal = _UserPasswordModal3.default;
-	exports.PlaceBetModal = _PlaceBetModal3.default;
-	exports.PlaceSpecialBetModal = _PlaceSpecialBetModal3.default;
-
-/***/ },
-/* 343 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31892,1825 +30658,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Modal = function Modal(_ref) {
-	    var dispatch = _ref.dispatch;
-	    var submit = _ref.submit;
-	    var children = _ref.children;
-
-
-	    var close = function close() {
-	        return dispatch((0, _modal.closeModal)());
-	    };
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'modal-container' },
-	        _react2.default.createElement('div', { onClick: close, className: 'modal-overlay' }),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'modal-content' },
-	            _react2.default.createElement(
-	                'form',
-	                { onSubmit: submit },
-	                children,
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'modal-actions' },
-	                    _react2.default.createElement(
-	                        'button',
-	                        { onClick: close, className: 'modal-cancel', type: 'button' },
-	                        'Avbryt'
-	                    ),
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 'modal-ok' },
-	                        'OK'
-	                    )
-	                )
-	            ),
-	            _react2.default.createElement('div', { onClick: close, className: 'modal-close' })
-	        )
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { modal: state.modal };
-	})(Modal);
-
-/***/ },
-/* 344 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	var _tournament = __webpack_require__(340);
-
-	var _Modal = __webpack_require__(343);
-
-	var _Modal2 = _interopRequireDefault(_Modal);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// <option> for a tournament
-	var tournamentOpt = function tournamentOpt(t, i) {
-	    return _react2.default.createElement(
-	        'option',
-	        { key: i, value: t.id },
-	        t.name
-	    );
-	};
-
-	var ChangeTournamentModal = function ChangeTournamentModal(_ref) {
-	    var dispatch = _ref.dispatch;
-	    var tournaments = _ref.tournaments;
-	    var tournament = _ref.tournament;
-
-	    // Mutable form-data
-	    var data = { tournament: tournament };
-
-	    var submit = function submit(e) {
-	        e.preventDefault();
-	        dispatch((0, _tournament.changeTournament)(data.tournament));
-	        dispatch((0, _modal.closeModal)());
-	    };
-
-	    var setData = function setData(e) {
-	        return data[e.target.name] = Number(e.target.value);
-	    };
-	    var focus = function focus(r) {
-	        return r ? r.focus() : false;
-	    };
-
-	    return _react2.default.createElement(
-	        _Modal2.default,
-	        { submit: submit },
-	        _react2.default.createElement(
-	            'h2',
-	            { className: 'modal-title' },
-	            'Ändra turnering'
-	        ),
-	        _react2.default.createElement(
-	            'p',
-	            { className: 'modal-description' },
-	            'Välj turnering'
-	        ),
-	        _react2.default.createElement(
-	            'select',
-	            {
-	                onChange: setData,
-	                defaultValue: tournament,
-	                name: 'tournament' },
-	            tournaments.data.map(tournamentOpt)
-	        )
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// state to props
-	function (state) {
-	    return {
-	        tournament: state.tournament,
-	        tournaments: state.tournaments
-	    };
-	})(ChangeTournamentModal);
-
-/***/ },
-/* 345 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	var _groups = __webpack_require__(337);
-
-	var _Modal = __webpack_require__(343);
-
-	var _Modal2 = _interopRequireDefault(_Modal);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var CreateGroupModal = function CreateGroupModal(_ref) {
-	    var user = _ref.user;
-	    var tournament = _ref.tournament;
-	    var dispatch = _ref.dispatch;
-
-	    // Mutable form-data
-	    var data = {
-	        name: '',
-	        passwordOne: '',
-	        passwordTwo: ''
-	    };
-
-	    var submit = function submit(e) {
-	        e.preventDefault();
-
-	        if (data.name == '' || data.passwordOne == '' || data.passwordOne !== data.passwordTwo) {
-	            // TODO error notification
-
-	            dispatch((0, _modal.closeModal)());
-	            return false;
-	        }
-
-	        dispatch((0, _groups.createGroup)(user.id, data.name, data.passwordOne, tournament));
-	        dispatch((0, _modal.closeModal)());
-	    };
-
-	    var setData = function setData(e) {
-	        return data[e.target.name] = e.target.value;
-	    };
-	    var focus = function focus(r) {
-	        return r ? r.focus() : false;
-	    };
-
-	    return _react2.default.createElement(
-	        _Modal2.default,
-	        { submit: submit },
-	        _react2.default.createElement(
-	            'h2',
-	            { className: 'modal-title' },
-	            'Skapa liga'
-	        ),
-	        _react2.default.createElement(
-	            'p',
-	            { className: 'modal-description' },
-	            'Fyll i ligans namn och lösenord'
-	        ),
-	        _react2.default.createElement('input', {
-	            onChange: setData,
-	            ref: focus,
-	            type: 'text',
-	            name: 'name',
-	            placeholder: 'Namn' }),
-	        _react2.default.createElement('input', {
-	            onChange: setData,
-	            type: 'password',
-	            name: 'passwordOne',
-	            placeholder: 'Lösenord' }),
-	        _react2.default.createElement('input', {
-	            onChange: setData,
-	            type: 'password',
-	            name: 'passwordTwo',
-	            placeholder: 'Upprepa lösenord' })
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        user: state.user,
-	        tournament: state.tournament
-	    };
-	})(CreateGroupModal);
-
-/***/ },
-/* 346 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	var _group = __webpack_require__(336);
-
-	var _Modal = __webpack_require__(343);
-
-	var _Modal2 = _interopRequireDefault(_Modal);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var JoinGroupModal = function JoinGroupModal(_ref) {
-	    var user = _ref.user;
-	    var groups = _ref.groups;
-	    var dispatch = _ref.dispatch;
-
-	    // Mutable form-data
-	    var data = {
-	        name: '',
-	        password: ''
-	    };
-
-	    var submit = function submit(e) {
-	        e.preventDefault();
-
-	        if (data.name === '' || data.password === '') {
-	            // TODO error notification
-	            dispatch((0, _modal.closeModal)());
-	            return false;
-	        }
-
-	        // Check group names from groups of the current user
-	        var groupExists = groups.data.filter(function (g) {
-	            return g.name === data.name;
-	        }).length;
-
-	        if (groupExists) {
-	            // TODO error notification
-	            dispatch((0, _modal.closeModal)());
-	            return false;
-	        }
-
-	        dispatch((0, _group.joinGroup)(user.id, data.name, data.password));
-	        dispatch((0, _modal.closeModal)());
-	    };
-
-	    var setData = function setData(e) {
-	        return data[e.target.name] = e.target.value;
-	    };
-	    var focus = function focus(r) {
-	        return r ? r.focus() : false;
-	    };
-
-	    return _react2.default.createElement(
-	        _Modal2.default,
-	        { submit: submit },
-	        _react2.default.createElement(
-	            'h2',
-	            { className: 'modal-title' },
-	            'Gå med i liga'
-	        ),
-	        _react2.default.createElement(
-	            'p',
-	            { className: 'modal-description' },
-	            'Fyll i ligans namn samt lösenord'
-	        ),
-	        _react2.default.createElement('input', {
-	            onChange: setData,
-	            ref: focus,
-	            type: 'text',
-	            name: 'name',
-	            placeholder: 'Liga' }),
-	        _react2.default.createElement('input', {
-	            onChange: setData,
-	            type: 'password',
-	            name: 'password',
-	            placeholder: 'Lösenord' })
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        user: state.user,
-	        groups: state.groups
-	    };
-	})(JoinGroupModal);
-
-/***/ },
-/* 347 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	var _groups = __webpack_require__(337);
-
-	var _Modal = __webpack_require__(343);
-
-	var _Modal2 = _interopRequireDefault(_Modal);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// <option> for a user
-	var userOpt = function userOpt(u, i) {
-	    return _react2.default.createElement(
-	        'option',
-	        { key: i, value: u.id },
-	        u.username
-	    );
-	};
-
-	var LeaveGroupModal = function LeaveGroupModal(_ref) {
-	    var user = _ref.user;
-	    var group = _ref.group;
-	    var dispatch = _ref.dispatch;
-
-	    // Mutable form-data
-	    var data = { admin: 0 };
-
-	    var isAdmin = user.id === group.admin.id;
-
-	    var submit = function submit(e) {
-	        e.preventDefault();
-
-	        // If there is only one user left - remove the group
-	        if (isAdmin && group.users.length === 1) {
-	            dispatch((0, _groups.removeGroup)(user.id, group.id));
-	            dispatch((0, _modal.closeModal)());
-	            return false;
-	        }
-
-	        dispatch((0, _groups.leaveGroup)(user.id, group.id, data.admin));
-	        dispatch((0, _modal.closeModal)());
-	    };
-
-	    // If a user isnt admin - just leave the group
-	    if (!isAdmin) {
-	        return _react2.default.createElement(
-	            _Modal2.default,
-	            { submit: submit },
-	            _react2.default.createElement(
-	                'h2',
-	                { className: 'modal-title' },
-	                'Lämna'
-	            ),
-	            _react2.default.createElement(
-	                'p',
-	                { className: 'modal-description' },
-	                'Är du säker?'
-	            )
-	        );
-	    }
-
-	    // If a user is admin and there is no members left,
-	    // leave and then remove the group
-	    if (isAdmin && group.users.length === 1) {
-	        return _react2.default.createElement(
-	            _Modal2.default,
-	            { submit: submit },
-	            _react2.default.createElement(
-	                'h2',
-	                { className: 'modal-title' },
-	                'Lämna'
-	            ),
-	            _react2.default.createElement(
-	                'p',
-	                { className: 'modal-description' },
-	                'Ligan kommer att raderas'
-	            )
-	        );
-	    }
-
-	    var setData = function setData(e) {
-	        return data[e.target.name] = Number(e.target.value);
-	    };
-
-	    // Default new admin
-	    data.admin = group.users.filter(function (u) {
-	        return u.id !== user.id;
-	    })[0].id;
-
-	    // If a user is admin and there are more users left,
-	    // choose a new admin and then leave the group
-	    return _react2.default.createElement(
-	        _Modal2.default,
-	        { submit: submit },
-	        _react2.default.createElement(
-	            'h2',
-	            { className: 'modal-title' },
-	            'Lämna'
-	        ),
-	        _react2.default.createElement(
-	            'p',
-	            { className: 'modal-description' },
-	            'Välj en ny medlem som admin'
-	        ),
-	        _react2.default.createElement(
-	            'select',
-	            { onChange: setData, name: 'admin' },
-	            group.users.filter(function (u) {
-	                return u.id !== user.id;
-	            }).map(userOpt)
-	        )
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	})(LeaveGroupModal);
-
-/***/ },
-/* 348 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	var _group = __webpack_require__(336);
-
-	var _Modal = __webpack_require__(343);
-
-	var _Modal2 = _interopRequireDefault(_Modal);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var GroupDescriptionModal = function GroupDescriptionModal(_ref) {
-	    var group = _ref.group;
-	    var user = _ref.user;
-	    var dispatch = _ref.dispatch;
-
-	    // Mutable form-data
-	    var data = { description: '' };
-
-	    var submit = function submit(e) {
-	        e.preventDefault();
-	        dispatch((0, _group.editGroupDescription)(user.id, group.id, group.name, data.description));
-	        dispatch((0, _modal.closeModal)());
-	    };
-
-	    var setData = function setData(e) {
-	        return data[e.target.name] = e.target.value;
-	    };
-	    var focus = function focus(r) {
-	        return r ? r.focus() : false;
-	    };
-
-	    return _react2.default.createElement(
-	        _Modal2.default,
-	        { submit: submit },
-	        _react2.default.createElement(
-	            'h2',
-	            { className: 'modal-title' },
-	            'Redigera liga'
-	        ),
-	        _react2.default.createElement(
-	            'p',
-	            { className: 'modal-description' },
-	            'Fyll i en beskrivning'
-	        ),
-	        _react2.default.createElement('textarea', {
-	            onChange: setData,
-	            defaultValue: group.description,
-	            ref: focus,
-	            name: 'description' })
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	})(GroupDescriptionModal);
-
-/***/ },
-/* 349 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	var _group = __webpack_require__(336);
-
-	var _Modal = __webpack_require__(343);
-
-	var _Modal2 = _interopRequireDefault(_Modal);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var GroupPasswordModal = function GroupPasswordModal(_ref) {
-	    var group = _ref.group;
-	    var user = _ref.user;
-	    var dispatch = _ref.dispatch;
-
-	    // Mutable form-data
-	    var data = {
-	        passwordOne: '',
-	        passwordTwo: ''
-	    };
-
-	    var submit = function submit(e) {
-	        e.preventDefault();
-
-	        if (data.passwordOne == '' || data.passwordOne !== data.passwordTwo) {
-	            // TODO error notification
-	            dispatch((0, _modal.closeModal)());
-	            return false;
-	        }
-
-	        dispatch((0, _group.editGroupPassword)(user.id, group.id, group.name, data.passwordOne));
-	        dispatch((0, _modal.closeModal)());
-	    };
-
-	    var setData = function setData(e) {
-	        return data[e.target.name] = e.target.value;
-	    };
-	    var focus = function focus(r) {
-	        return r ? r.focus() : false;
-	    };
-
-	    return _react2.default.createElement(
-	        _Modal2.default,
-	        { submit: submit },
-	        _react2.default.createElement(
-	            'h2',
-	            { className: 'modal-title' },
-	            'Redigera liga'
-	        ),
-	        _react2.default.createElement(
-	            'p',
-	            { className: 'modal-description' },
-	            'Fyll i ett nytt lösenord'
-	        ),
-	        _react2.default.createElement('input', {
-	            onChange: setData,
-	            ref: focus,
-	            type: 'password',
-	            name: 'passwordOne',
-	            placeholder: 'Lösenord' }),
-	        _react2.default.createElement('input', {
-	            onChange: setData,
-	            type: 'password',
-	            name: 'passwordTwo',
-	            placeholder: 'Upprepa lösenord' })
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	})(GroupPasswordModal);
-
-/***/ },
-/* 350 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	var _user = __webpack_require__(330);
-
-	var _Modal = __webpack_require__(343);
-
-	var _Modal2 = _interopRequireDefault(_Modal);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var UserPasswordModal = function UserPasswordModal(_ref) {
-	    var user = _ref.user;
-	    var dispatch = _ref.dispatch;
-
-	    // Mutable form-data
-	    var data = {
-	        passwordOne: '',
-	        passwordTwo: ''
-	    };
-
-	    var submit = function submit(e) {
-	        e.preventDefault();
-
-	        if (data.passwordOne == '' || data.passwordOne !== data.passwordTwo) {
-	            // TODO error notification
-	            dispatch((0, _modal.closeModal)());
-	            return false;
-	        }
-
-	        dispatch((0, _user.editUserPassword)(user.id, user.username, data.passwordOne));
-	        dispatch((0, _modal.closeModal)());
-	    };
-
-	    var setData = function setData(e) {
-	        return data[e.target.name] = e.target.value;
-	    };
-	    var focus = function focus(r) {
-	        return r ? r.focus() : false;
-	    };
-
-	    return _react2.default.createElement(
-	        _Modal2.default,
-	        { submit: submit },
-	        _react2.default.createElement(
-	            'h2',
-	            { className: 'modal-title' },
-	            'Redigera användare'
-	        ),
-	        _react2.default.createElement(
-	            'p',
-	            { className: 'modal-description' },
-	            'Fyll i ett nytt lösenord'
-	        ),
-	        _react2.default.createElement('input', {
-	            onChange: setData,
-	            ref: focus,
-	            type: 'password',
-	            name: 'passwordOne',
-	            placeholder: 'Lösenord' }),
-	        _react2.default.createElement('input', {
-	            onChange: setData,
-	            type: 'password',
-	            name: 'passwordTwo',
-	            placeholder: 'Upprepa lösenord' })
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	})(UserPasswordModal);
-
-/***/ },
-/* 351 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	var _user = __webpack_require__(330);
-
-	var _Modal = __webpack_require__(343);
-
-	var _Modal2 = _interopRequireDefault(_Modal);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var PlaceBetModal = function PlaceBetModal(_ref) {
-	    var user = _ref.user;
-	    var game = _ref.game;
-	    var dispatch = _ref.dispatch;
-
-	    // Mutable form-data
-	    var data = {};
-
-	    var close = function close() {
-	        return dispatch((0, _modal.closeModal)());
-	    };
-
-	    // TODO check if game has started etc
-	    var submit = function submit(e) {
-	        e.preventDefault();
-	        dispatch((0, _user.placeBet)(user.id, game.id, data.teamOne, data.teamTwo));
-	        dispatch((0, _modal.closeModal)());
-	    };
-
-	    var setData = function setData(e) {
-	        return data[e.target.name] = Number(e.target.value);
-	    };
-	    var focus = function focus(r) {
-	        return r ? r.focus() : false;
-	    };
-
-	    return _react2.default.createElement(
-	        _Modal2.default,
-	        { submit: submit },
-	        _react2.default.createElement(
-	            'h2',
-	            { className: 'modal-title' },
-	            'Tipsa'
-	        ),
-	        _react2.default.createElement(
-	            'p',
-	            { className: 'modal-description' },
-	            game.team_1.name,
-	            ' -  ',
-	            game.team_2.name
-	        ),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'game-bets' },
-	            _react2.default.createElement('input', {
-	                onChange: setData,
-	                ref: focus,
-	                type: 'number',
-	                name: 'teamOne' }),
-	            _react2.default.createElement('input', {
-	                onChange: setData,
-	                type: 'number',
-	                name: 'teamTwo' })
-	        )
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	})(PlaceBetModal);
-
-/***/ },
-/* 352 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	var _user = __webpack_require__(330);
-
-	var _Modal = __webpack_require__(343);
-
-	var _Modal2 = _interopRequireDefault(_Modal);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// <option> for a team
-	var teamOpt = function teamOpt(t, i) {
-	    return _react2.default.createElement(
-	        'option',
-	        { key: i, value: t.id },
-	        t.name
-	    );
-	};
-
-	// <option> for a player
-	var playerOpt = function playerOpt(p, i) {
-	    return _react2.default.createElement(
-	        'option',
-	        { key: i, value: p.id },
-	        p.firstname,
-	        ' ',
-	        p.lastname
-	    );
-	};
-
-	var PlaceSpecialBetModal = function PlaceSpecialBetModal(_ref) {
-	    var user = _ref.user;
-	    var teams = _ref.teams;
-	    var players = _ref.players;
-	    var tournament = _ref.tournament;
-	    var dispatch = _ref.dispatch;
-
-	    // Mutable form-data
-	    var data = {};
-
-	    var close = function close() {
-	        return dispatch((0, _modal.closeModal)());
-	    };
-
-	    var submit = function submit(e) {
-	        e.preventDefault();
-	        dispatch((0, _user.placeSpecialBet)(user.id, data.player, data.goals, data.team, tournament));
-	        dispatch((0, _modal.closeModal)());
-	    };
-
-	    // TODO check if data for teams/players is available? i.e not fetching
-
-	    var setData = function setData(e) {
-	        return data[e.target.name] = Number(e.target.value);
-	    };
-
-	    return _react2.default.createElement(
-	        _Modal2.default,
-	        { submit: submit },
-	        _react2.default.createElement(
-	            'h2',
-	            { className: 'modal-title' },
-	            'Tippa specialtips'
-	        ),
-	        _react2.default.createElement(
-	            'h3',
-	            null,
-	            'Vinnare'
-	        ),
-	        _react2.default.createElement(
-	            'select',
-	            { onChange: setData, name: 'team' },
-	            teams.data.map(teamOpt)
-	        ),
-	        _react2.default.createElement(
-	            'h3',
-	            null,
-	            'Skyttekung'
-	        ),
-	        _react2.default.createElement(
-	            'select',
-	            { onChange: setData, name: 'player' },
-	            players.data.map(playerOpt)
-	        ),
-	        _react2.default.createElement(
-	            'h3',
-	            null,
-	            'Mål'
-	        ),
-	        _react2.default.createElement('input', {
-	            onChange: setData,
-	            className: 'special-bet-goals',
-	            type: 'number',
-	            name: 'goals' })
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        user: state.user,
-	        teams: state.teams,
-	        players: state.players,
-	        tournament: state.tournament
-	    };
-	})(PlaceSpecialBetModal);
-
-/***/ },
-/* 353 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var PlaceBetButton = function PlaceBetButton(_ref) {
-	    var user = _ref.user;
-	    var game = _ref.game;
-	    var openModal = _ref.openModal;
-
-	    var open = function open(game) {
-	        return function () {
-	            return openModal(game);
-	        };
-	    };
-
-	    return _react2.default.createElement(
-	        'button',
-	        {
-	            onClick: open(game),
-	            className: 'place-bet-button',
-	            type: 'button' },
-	        'Tippa'
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	},
-	// Dispatch to props
-	function (dispatch) {
-	    return {
-	        openModal: function openModal(game) {
-	            return dispatch((0, _modal.openBetModal)(game));
-	        }
-	    };
-	})(PlaceBetButton);
-
-/***/ },
-/* 354 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _components = __webpack_require__(273);
-
-	var _modal = __webpack_require__(335);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var PlaceSpecialBetButton = function PlaceSpecialBetButton(_ref) {
-	    var openModal = _ref.openModal;
-	    return _react2.default.createElement(
-	        'button',
-	        {
-	            onClick: openModal,
-	            className: 'place-special-bet-button',
-	            type: 'button' },
-	        'Tippa'
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	},
-	// Dispatch to props
-	function (dispatch) {
-	    return {
-	        openModal: function openModal() {
-	            return dispatch((0, _modal.openSpecialBetModal)());
-	        }
-	    };
-	})(PlaceSpecialBetButton);
-
-/***/ },
-/* 355 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ChangeTournamentButton = function ChangeTournamentButton(_ref) {
-	    var tournament = _ref.tournament;
-	    var tournaments = _ref.tournaments;
-	    var openModal = _ref.openModal;
-
-	    var name = tournaments.data.filter(function (t) {
-	        return t.id == tournament;
-	    })[0].name;
-
-	    // TODO what should be the display text?
-	    return _react2.default.createElement(
-	        'button',
-	        { onClick: openModal, className: 'change-tournament', type: 'button' },
-	        name
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        tournament: state.tournament,
-	        tournaments: state.tournaments
-	    };
-	},
-	// Dispatch to props
-	function (dispatch) {
-	    return {
-	        openModal: function openModal() {
-	            return dispatch((0, _modal.openChangeTournamentModal)());
-	        }
-	    };
-	})(ChangeTournamentButton);
-
-/***/ },
-/* 356 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var CreateGroup = function CreateGroup(_ref) {
-	    var openModal = _ref.openModal;
-
-	    return _react2.default.createElement(
-	        'button',
-	        {
-	            onClick: openModal,
-	            className: 'create-group',
-	            type: 'button' },
-	        'Skapa liga'
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	},
-	// Dispatch to props
-	function (dispatch) {
-	    return {
-	        openModal: function openModal() {
-	            return dispatch((0, _modal.openCreateGroupModal)());
-	        }
-	    };
-	})(CreateGroup);
-
-/***/ },
-/* 357 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var JoinGroupButton = function JoinGroupButton(_ref) {
-	    var openModal = _ref.openModal;
-	    return _react2.default.createElement(
-	        'button',
-	        {
-	            onClick: openModal,
-	            className: 'join-group',
-	            type: 'button' },
-	        'Gå med i liga'
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	},
-	// Dispatch to props
-	function (dispatch) {
-	    return {
-	        openModal: function openModal() {
-	            return dispatch((0, _modal.openJoinGroupModal)());
-	        }
-	    };
-	})(JoinGroupButton);
-
-/***/ },
-/* 358 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var LeaveGroupButton = function LeaveGroupButton(_ref) {
-	    var user = _ref.user;
-	    var group = _ref.group;
-	    var openModal = _ref.openModal;
-
-	    var leave = function leave(group) {
-	        return function () {
-	            return openModal(group);
-	        };
-	    };
-
-	    return _react2.default.createElement(
-	        'button',
-	        {
-	            onClick: leave(group),
-	            className: 'leave-group',
-	            type: 'button' },
-	        'Lämna'
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	},
-	// Dispatch to props
-	function (dispatch) {
-	    return {
-	        openModal: function openModal(group) {
-	            return dispatch((0, _modal.openLeaveGroupModal)(group));
-	        }
-	    };
-	})(LeaveGroupButton);
-
-/***/ },
-/* 359 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var EditGroupDescriptionButton = function EditGroupDescriptionButton(_ref) {
-	    var user = _ref.user;
-	    var group = _ref.group;
-	    var openModal = _ref.openModal;
-
-	    var open = function open(group) {
-	        return function () {
-	            return openModal(group);
-	        };
-	    };
-
-	    return _react2.default.createElement(
-	        'button',
-	        {
-	            onClick: open(group),
-	            className: 'edit-group-description',
-	            type: 'button' },
-	        'Redigera'
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	},
-	// Dispatch to props
-	function (dispatch) {
-	    return {
-	        openModal: function openModal(g) {
-	            return dispatch((0, _modal.openEditGroupDescriptionModal)(g));
-	        }
-	    };
-	})(EditGroupDescriptionButton);
-
-/***/ },
-/* 360 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var EditGroupPasswordButton = function EditGroupPasswordButton(_ref) {
-	    var user = _ref.user;
-	    var group = _ref.group;
-	    var openModal = _ref.openModal;
-
-	    var open = function open(group) {
-	        return function () {
-	            return openModal(group);
-	        };
-	    };
-
-	    return _react2.default.createElement(
-	        'button',
-	        {
-	            onClick: open(group),
-	            className: 'edit-group-password',
-	            type: 'button' },
-	        'Ändra lösenord'
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	},
-	// Dispatch to props
-	function (dispatch) {
-	    return {
-	        openModal: function openModal(g) {
-	            return dispatch((0, _modal.openEditGroupPasswordModal)(g));
-	        }
-	    };
-	})(EditGroupPasswordButton);
-
-/***/ },
-/* 361 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(335);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var EditUserPasswordButton = function EditUserPasswordButton(_ref) {
-	    var openModal = _ref.openModal;
-	    return _react2.default.createElement(
-	        'button',
-	        {
-	            onClick: openModal,
-	            className: 'edit-user-password',
-	            type: 'button' },
-	        'Ändra lösenord'
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	},
-	// Dispatch to props
-	function (dispatch) {
-	    return {
-	        openModal: function openModal() {
-	            return dispatch((0, _modal.openEditUserPasswordModal)());
-	        }
-	    };
-	})(EditUserPasswordButton);
-
-/***/ },
-/* 362 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _toplists = __webpack_require__(339);
-
-	var _components = __webpack_require__(273);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var TopList = function (_Component) {
-	    _inherits(TopList, _Component);
-
-	    function TopList(props) {
-	        _classCallCheck(this, TopList);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(TopList).call(this, props));
-	    }
-
-	    _createClass(TopList, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var _props = this.props;
-	            var dispatch = _props.dispatch;
-	            var user = _props.user;
-	            var tournament = _props.tournament;
-
-
-	            dispatch((0, _toplists.fetchUsersForTopLists)(tournament));
-	            dispatch((0, _toplists.fetchGroupsForTopLists)(tournament));
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var toplists = this.props.toplists;
-
-
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'toplists-container' },
-	                    _react2.default.createElement(_components.UserTotalTopList, { users: toplists.users }),
-	                    _react2.default.createElement(_components.UserTopBets, { users: toplists.users })
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'toplists-container' },
-	                    _react2.default.createElement(_components.GroupAverageTopList, { groups: toplists.groups }),
-	                    _react2.default.createElement(_components.GroupMembersTopList, { groups: toplists.groups })
-	                )
-	            );
-	        }
-	    }]);
-
-	    return TopList;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        user: state.user,
-	        tournament: state.tournament,
-	        toplists: state.toplists
-	    };
-	})(TopList);
-
-/***/ },
-/* 363 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _profile = __webpack_require__(338);
-
-	var _components = __webpack_require__(273);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var UserProfile = function (_Component) {
-	    _inherits(UserProfile, _Component);
-
-	    function UserProfile(props) {
-	        _classCallCheck(this, UserProfile);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(UserProfile).call(this, props));
-	    }
-
-	    _createClass(UserProfile, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var _props = this.props;
-	            var dispatch = _props.dispatch;
-	            var user = _props.user;
-	            var tournament = _props.tournament;
-
-
-	            dispatch((0, _profile.fetchProfile)(user.id, tournament));
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _props2 = this.props;
-	            var user = _props2.user;
-	            var profile = _props2.profile;
-
-
-	            if (profile.isFetching || !profile.data.hasOwnProperty('id')) {
-	                return _react2.default.createElement(
-	                    'div',
-	                    { className: 'profile-container' },
-	                    'Laddar'
-	                );
-	            }
-
-	            var isCurrentUser = user.id === profile.data.id;
-
-	            return _react2.default.createElement(_components.Profile, { profile: profile, isCurrentUser: isCurrentUser });
-	        }
-	    }]);
-
-	    return UserProfile;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        user: state.user,
-	        profile: state.profile,
-	        tournament: state.tournament
-	    };
-	})(UserProfile);
-
-/***/ },
-/* 364 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _profile = __webpack_require__(338);
-
-	var _components = __webpack_require__(273);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var VisitorProfile = function (_Component) {
-	    _inherits(VisitorProfile, _Component);
-
-	    function VisitorProfile(props) {
-	        _classCallCheck(this, VisitorProfile);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(VisitorProfile).call(this, props));
-	    }
-
-	    _createClass(VisitorProfile, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var _props = this.props;
-	            var profile = _props.profile;
-	            var dispatch = _props.dispatch;
-	            var params = _props.params;
-	            var tournament = _props.tournament;
-
-
-	            dispatch((0, _profile.fetchProfile)(params.id, tournament));
-	        }
-	    }, {
-	        key: 'componentDidUpdate',
-	        value: function componentDidUpdate(prevProps) {
-	            var _props2 = this.props;
-	            var profile = _props2.profile;
-	            var dispatch = _props2.dispatch;
-	            var params = _props2.params;
-	            var tournament = _props2.tournament;
-
-	            // On route change to same endpoint (but new id) - refetch the profile
-
-	            if (prevProps.params.id != params.id) {
-	                dispatch((0, _profile.fetchProfile)(params.id, tournament));
-	            }
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _props3 = this.props;
-	            var user = _props3.user;
-	            var profile = _props3.profile;
-	            var params = _props3.params;
-	            var dispatch = _props3.dispatch;
-
-
-	            if (profile.isFetching || !profile.data.hasOwnProperty('id')) {
-	                return _react2.default.createElement(
-	                    'div',
-	                    { className: 'profile-container' },
-	                    'Laddar'
-	                );
-	            }
-
-	            var isCurrentUser = user.id === profile.data.id;
-
-	            return _react2.default.createElement(_components.Profile, { profile: profile, isCurrentUser: isCurrentUser });
-	        }
-	    }]);
-
-	    return VisitorProfile;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        user: state.user,
-	        profile: state.profile,
-	        tournament: state.tournament
-	    };
-	})(VisitorProfile);
-
-/***/ },
-/* 365 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _Points = __webpack_require__(275);
-
-	var _Points2 = _interopRequireDefault(_Points);
-
-	var _SpecialBets = __webpack_require__(276);
-
-	var _SpecialBets2 = _interopRequireDefault(_SpecialBets);
-
-	var _GroupListSummary = __webpack_require__(317);
-
-	var _GroupListSummary2 = _interopRequireDefault(_GroupListSummary);
-
-	var _ProfileBets = __webpack_require__(320);
-
-	var _ProfileBets2 = _interopRequireDefault(_ProfileBets);
-
-	var _containers = __webpack_require__(264);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Profile = function Profile(_ref) {
-	    var profile = _ref.profile;
-	    var isCurrentUser = _ref.isCurrentUser;
-
-
-	    var fullname = profile.data.firstname + ' ' + profile.data.lastname;
-	    var username = _react2.default.createElement(
-	        'small',
-	        null,
-	        '(',
-	        profile.data.username,
-	        ')'
-	    );
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'profile' },
-	        isCurrentUser ? _react2.default.createElement(_containers.EditUserPasswordButton, null) : '',
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            fullname,
-	            ' ',
-	            username
-	        ),
-	        _react2.default.createElement(_Points2.default, { user: profile }),
-	        _react2.default.createElement(_SpecialBets2.default, {
-	            user: profile,
-	            bettable: isCurrentUser }),
-	        _react2.default.createElement(_GroupListSummary2.default, {
-	            user: profile,
-	            groups: profile.data.groups,
-	            isCurrentUser: isCurrentUser }),
-	        !isCurrentUser ? _react2.default.createElement(_ProfileBets2.default, {
-	            bets: profile.data.bets,
-	            points: profile.data.points }) : ''
-	    );
-	};
-
-	exports.default = Profile;
-
-/***/ },
-/* 366 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _notification = __webpack_require__(331);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ErrorNotification = function ErrorNotification(_ref) {
-	    var dispatch = _ref.dispatch;
-	    var message = _ref.message;
-
-	    var hide = function hide() {
-	        return dispatch((0, _notification.hideNotification)());
-	    };
-
-	    return _react2.default.createElement(
-	        'div',
-	        { onClick: hide, className: 'notification error' },
-	        _react2.default.createElement(
-	            'p',
-	            null,
-	            message
-	        )
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(function (state) {
-	    return { notification: state.notification };
-	})(ErrorNotification);
-
-/***/ },
-/* 367 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(191);
+	var _reactRouter = __webpack_require__(196);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33835,6 +30783,3144 @@
 	};
 
 	exports.default = UserTopBets;
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _notification = __webpack_require__(260);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SuccessNotification = function SuccessNotification(_ref) {
+	    var dispatch = _ref.dispatch;
+	    var message = _ref.message;
+
+	    var hide = function hide() {
+	        return dispatch((0, _notification.hideNotification)());
+	    };
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'notification success', onClick: hide },
+	        _react2.default.createElement(
+	            'p',
+	            null,
+	            message
+	        )
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(function (state) {
+	    return { notification: state.notification };
+	})(SuccessNotification);
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _notification = __webpack_require__(260);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ErrorNotification = function ErrorNotification(_ref) {
+	    var dispatch = _ref.dispatch;
+	    var message = _ref.message;
+
+	    var hide = function hide() {
+	        return dispatch((0, _notification.hideNotification)());
+	    };
+
+	    return _react2.default.createElement(
+	        'div',
+	        { onClick: hide, className: 'notification error' },
+	        _react2.default.createElement(
+	            'p',
+	            null,
+	            message
+	        )
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(function (state) {
+	    return { notification: state.notification };
+	})(ErrorNotification);
+
+/***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _components = __webpack_require__(267);
+
+	var _modal = __webpack_require__(264);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var PlaceSpecialBetButton = function PlaceSpecialBetButton(_ref) {
+	    var openModal = _ref.openModal;
+	    return _react2.default.createElement(
+	        'button',
+	        {
+	            onClick: openModal,
+	            className: 'place-special-bet-button',
+	            type: 'button' },
+	        'Tippa'
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	},
+	// Dispatch to props
+	function (dispatch) {
+	    return {
+	        openModal: function openModal() {
+	            return dispatch((0, _modal.openSpecialBetModal)());
+	        }
+	    };
+	})(PlaceSpecialBetButton);
+
+/***/ },
+/* 288 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _group = __webpack_require__(289);
+
+	var _components = __webpack_require__(267);
+
+	var _EditGroupDescriptionButton = __webpack_require__(290);
+
+	var _EditGroupDescriptionButton2 = _interopRequireDefault(_EditGroupDescriptionButton);
+
+	var _EditGroupPasswordButton = __webpack_require__(291);
+
+	var _EditGroupPasswordButton2 = _interopRequireDefault(_EditGroupPasswordButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Group = function (_Component) {
+	    _inherits(Group, _Component);
+
+	    function Group(props) {
+	        _classCallCheck(this, Group);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Group).call(this, props));
+	    }
+
+	    _createClass(Group, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _props = this.props;
+	            var dispatch = _props.dispatch;
+	            var params = _props.params;
+	            var tournament = _props.tournament;
+
+
+	            if (params.hasOwnProperty('id')) {
+	                dispatch((0, _group.fetchGroup)(params.id, tournament));
+	            }
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _props2 = this.props;
+	            var params = _props2.params;
+	            var group = _props2.group;
+	            var user = _props2.user;
+	            var dispatch = _props2.dispatch;
+
+	            // TODO wont need this?
+
+	            if (!params.hasOwnProperty('id')) {
+	                return _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Det finns ingen liga med detta ID.'
+	                );
+	            }
+
+	            if (group.isFetching || group.data.length === 0) {
+	                return _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Ligan laddas.'
+	                );
+	            }
+
+	            var isAdmin = user.id === group.data.admin.id;
+
+	            return _react2.default.createElement(
+	                _components.GroupMembers,
+	                { group: group.data },
+	                _react2.default.createElement(_components.BackButton, null),
+	                isAdmin ? _react2.default.createElement(_EditGroupPasswordButton2.default, { group: group.data }) : '',
+	                _react2.default.createElement(
+	                    'h2',
+	                    { className: 'group-title' },
+	                    group.data.name,
+	                    ' ',
+	                    isAdmin ? _react2.default.createElement(
+	                        'small',
+	                        null,
+	                        '(admin)'
+	                    ) : ''
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    { className: 'group-description' },
+	                    group.data.description,
+	                    isAdmin ? _react2.default.createElement(_EditGroupDescriptionButton2.default, { group: group.data }) : ''
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Group;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        user: state.user,
+	        group: state.group,
+	        tournament: state.tournament
+	    };
+	})(Group);
+
+/***/ },
+/* 289 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.invalidateGroup = invalidateGroup;
+	exports.requestGroup = requestGroup;
+	exports.receiveGroup = receiveGroup;
+	exports.fetchGroup = fetchGroup;
+	exports.requestEditGroupDescription = requestEditGroupDescription;
+	exports.receiveEditGroupDescription = receiveEditGroupDescription;
+	exports.editGroupDescription = editGroupDescription;
+	exports.requestEditGroupPassword = requestEditGroupPassword;
+	exports.receiveEditGroupPassword = receiveEditGroupPassword;
+	exports.editGroupPassword = editGroupPassword;
+
+	var _isomorphicFetch = __webpack_require__(256);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _notification = __webpack_require__(260);
+
+	var _utils = __webpack_require__(258);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var INVALIDATE = 'supertipset/group/INVALIDATE';
+	// Group
+	var REQUEST = 'supertipset/group/REQUEST';
+	var RECEIVE = 'supertipset/group/RECEIVE';
+	// Group description
+	var REQUEST_EDIT_DESCRIPTION = 'supertipset/group/REQUEST_EDIT_DESCRIPTION';
+	var RECEIVE_EDIT_DESCRIPTION = 'supertipset/group/RECEIVE_EDIT_DESCRIPTION';
+	// Group password
+	var REQUEST_EDIT_PASSWORD = 'supertipset/group/REQUEST_EDIT_PASSWORD';
+	var RECEIVE_EDIT_PASSWORD = 'supertipset/group/RECEIVE_EDIT_PASSWORD';
+
+	var initialState = {
+	    isFetching: false,
+	    didInvalidate: false,
+	    data: []
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case INVALIDATE:
+	            return (0, _utils.assign)(state, {
+	                didInvalidate: true
+	            });
+	        case REQUEST:
+	            return (0, _utils.assign)(state, {
+	                isFetching: true,
+	                didInvalidate: false
+	            });
+	        case RECEIVE:
+	            return (0, _utils.assign)(state, {
+	                isFetching: false,
+	                didInvalidate: false,
+	                data: action.group
+	            });
+	        case RECEIVE_EDIT_DESCRIPTION:
+	            return (0, _utils.assign)(state, {
+	                data: (0, _utils.assign)(state.data, {
+	                    description: action.group.description
+	                })
+	            });
+	        // TODO listen to other actions?
+	        default:
+	            return state;
+	    }
+	}
+
+	function invalidateGroup() {
+	    return { type: INVALIDATE };
+	}
+
+	function requestGroup() {
+	    return { type: REQUEST };
+	}
+
+	function receiveGroup(group) {
+	    return { type: RECEIVE, group: group };
+	}
+
+	function shouldFetch(group, id) {
+	    if (group.isFetching) {
+	        return false;
+	    } else if (!group.data.hasOwnProperty('id')) {
+	        return true;
+	    } else if (group.data.hasOwnProperty('id') && group.data.id !== id) {
+	        return true;
+	    } else {
+	        return group.didInvalidate;
+	    }
+	}
+
+	function fetchGroup(id, tournament) {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var group = _getState.group;
+
+
+	        if (!shouldFetch(group, id)) {
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestGroup());
+
+	        return (0, _isomorphicFetch2.default)(_utils.baseURL + '/api/groups/' + id + '/detail/?tournament=' + tournament).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receiveGroup(json));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('could not fetch group');
+	            }
+	        });
+	    };
+	}
+
+	function requestEditGroupDescription() {
+	    return { type: REQUEST_EDIT_DESCRIPTION };
+	}
+
+	function receiveEditGroupDescription(group) {
+	    return { type: RECEIVE_EDIT_DESCRIPTION, group: group };
+	}
+
+	function editGroupDescription(user, group, name, description) {
+	    return function (dispatch) {
+	        dispatch(requestEditGroupDescription());
+
+	        var payload = (0, _utils.preparePut)({
+	            user: user,
+	            name: name,
+	            description: description
+	        });
+
+	        var url = _utils.baseURL + '/api/groups/' + group + '/';
+
+	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    dispatch(receiveEditGroupDescription(json));
+	                    // TODO change notification message?
+	                    dispatch((0, _notification.successNotification)('Gruppen har redigerats!'));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('request edit group description not ok');
+	            }
+	        });
+	    };
+	}
+
+	function requestEditGroupPassword() {
+	    return { type: REQUEST_EDIT_PASSWORD };
+	}
+
+	function receiveEditGroupPassword(group) {
+	    return { type: RECEIVE_EDIT_PASSWORD, group: group };
+	}
+
+	function editGroupPassword(user, group, name, password) {
+	    return function (dispatch) {
+	        dispatch(requestEditGroupDescription());
+
+	        var payload = (0, _utils.preparePut)({
+	            user: user,
+	            name: name,
+	            password: password
+	        });
+
+	        var url = _utils.baseURL + '/api/groups/' + group + '/password/';
+
+	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    dispatch(receiveEditGroupPassword(json));
+	                    // TODO change notification message?
+	                    dispatch((0, _notification.successNotification)('Gruppen har redigerats!'));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('request edit group password not ok');
+	            }
+	        });
+	    };
+	}
+
+/***/ },
+/* 290 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EditGroupDescriptionButton = function EditGroupDescriptionButton(_ref) {
+	    var user = _ref.user;
+	    var group = _ref.group;
+	    var openModal = _ref.openModal;
+
+	    var open = function open(group) {
+	        return function () {
+	            return openModal(group);
+	        };
+	    };
+
+	    return _react2.default.createElement(
+	        'button',
+	        {
+	            onClick: open(group),
+	            className: 'edit-group-description',
+	            type: 'button' },
+	        'Redigera'
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	},
+	// Dispatch to props
+	function (dispatch) {
+	    return {
+	        openModal: function openModal(g) {
+	            return dispatch((0, _modal.openEditGroupDescriptionModal)(g));
+	        }
+	    };
+	})(EditGroupDescriptionButton);
+
+/***/ },
+/* 291 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EditGroupPasswordButton = function EditGroupPasswordButton(_ref) {
+	    var user = _ref.user;
+	    var group = _ref.group;
+	    var openModal = _ref.openModal;
+
+	    var open = function open(group) {
+	        return function () {
+	            return openModal(group);
+	        };
+	    };
+
+	    return _react2.default.createElement(
+	        'button',
+	        {
+	            onClick: open(group),
+	            className: 'edit-group-password',
+	            type: 'button' },
+	        'Ändra lösenord'
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	},
+	// Dispatch to props
+	function (dispatch) {
+	    return {
+	        openModal: function openModal(g) {
+	            return dispatch((0, _modal.openEditGroupPasswordModal)(g));
+	        }
+	    };
+	})(EditGroupPasswordButton);
+
+/***/ },
+/* 292 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _groups = __webpack_require__(293);
+
+	var _components = __webpack_require__(267);
+
+	var _JoinGroupButton = __webpack_require__(294);
+
+	var _JoinGroupButton2 = _interopRequireDefault(_JoinGroupButton);
+
+	var _CreateGroupButton = __webpack_require__(295);
+
+	var _CreateGroupButton2 = _interopRequireDefault(_CreateGroupButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Groups = function (_Component) {
+	    _inherits(Groups, _Component);
+
+	    function Groups(props) {
+	        _classCallCheck(this, Groups);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Groups).call(this, props));
+	    }
+
+	    _createClass(Groups, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _props = this.props;
+	            var dispatch = _props.dispatch;
+	            var user = _props.user;
+	            var tournament = _props.tournament;
+
+
+	            dispatch((0, _groups.fetchGroups)(user.id, tournament));
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var groups = this.props.groups;
+
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'groups-container' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'group-actions' },
+	                    _react2.default.createElement(_JoinGroupButton2.default, null),
+	                    _react2.default.createElement(
+	                        'span',
+	                        { className: 'div' },
+	                        '|'
+	                    ),
+	                    _react2.default.createElement(_CreateGroupButton2.default, null)
+	                ),
+	                _react2.default.createElement(_components.GroupList, { groups: groups })
+	            );
+	        }
+	    }]);
+
+	    return Groups;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        user: state.user,
+	        groups: state.groups,
+	        tournament: state.tournament
+	    };
+	})(Groups);
+
+/***/ },
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.RECEIVE_LEAVE = exports.RECEIVE_JOIN = exports.RECEIVE_CREATE = undefined;
+	exports.default = reducer;
+	exports.invalidateGroups = invalidateGroups;
+	exports.requestGroups = requestGroups;
+	exports.receiveGroups = receiveGroups;
+	exports.fetchGroups = fetchGroups;
+	exports.requestCreateGroup = requestCreateGroup;
+	exports.receiveCreateGroup = receiveCreateGroup;
+	exports.createGroup = createGroup;
+	exports.requestJoinGroup = requestJoinGroup;
+	exports.receiveJoinGroup = receiveJoinGroup;
+	exports.joinGroup = joinGroup;
+	exports.requestLeaveGroup = requestLeaveGroup;
+	exports.receiveLeaveGroup = receiveLeaveGroup;
+	exports.leaveGroup = leaveGroup;
+	exports.requestRemoveGroup = requestRemoveGroup;
+	exports.receiveRemoveGroup = receiveRemoveGroup;
+	exports.removeGroup = removeGroup;
+
+	var _isomorphicFetch = __webpack_require__(256);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _reactRouter = __webpack_require__(196);
+
+	var _notification = __webpack_require__(260);
+
+	var _utils = __webpack_require__(258);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var INVALIDATE = 'supertipset/groups/INVALIDATE';
+	// Group
+	var REQUEST = 'supertipset/groups/REQUEST';
+	var RECEIVE = 'supertipset/groups/RECEIVE';
+	// Create group
+	var REQUEST_CREATE = 'supertipset/groups/REQUEST_CREATE';
+	var RECEIVE_CREATE = exports.RECEIVE_CREATE = 'supertipset/groups/RECEIVE_CREATE';
+	// Join group
+	var REQUEST_JOIN = 'supertipset/groups/REQUEST_JOIN';
+	var RECEIVE_JOIN = exports.RECEIVE_JOIN = 'supertipset/groups/RECEIVE_JOIN';
+	// Leave group
+	var REQUEST_LEAVE = 'supertipset/groups/REQUEST_LEAVE';
+	var RECEIVE_LEAVE = exports.RECEIVE_LEAVE = 'supertipset/groups/RECEIVE_LEAVE';
+	// Remove group
+	var REQUEST_REMOVE = 'supertipset/groups/REQUEST_REMOVE';
+	var RECEIVE_REMOVE = 'supertipset/groups/RECEIVE_REMOVE';
+
+	var initialState = {
+	    isFetching: false,
+	    didInvalidate: false,
+	    data: []
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case INVALIDATE:
+	            return (0, _utils.assign)(state, {
+	                didInvalidate: true
+	            });
+	        case REQUEST:
+	            return (0, _utils.assign)(state, {
+	                isFetching: true,
+	                didInvalidate: false
+	            });
+	        case RECEIVE:
+	            return (0, _utils.assign)(state, {
+	                isFetching: false,
+	                didInvalidate: false,
+	                data: action.groups
+	            });
+	        case RECEIVE_LEAVE:
+	            return (0, _utils.assign)(state, {
+	                data: state.data.filter(function (group) {
+	                    return group.id !== action.group.id;
+	                })
+	            });
+	        // TODO listen to other actions?
+	        default:
+	            return state;
+	    }
+	}
+
+	function invalidateGroups() {
+	    return { type: INVALIDATE };
+	}
+
+	function requestGroups() {
+	    return { type: REQUEST };
+	}
+
+	function receiveGroups(groups) {
+	    return { type: RECEIVE, groups: groups };
+	}
+
+	function shouldFetch(groups) {
+	    if (groups.isFetching) {
+	        return false;
+	    } else if (groups.data.length == 0) {
+	        return true;
+	    } else {
+	        return groups.didInvalidate;
+	    }
+	}
+
+	function fetchGroups(user, tournament) {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var groups = _getState.groups;
+
+
+	        if (!shouldFetch(groups)) {
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestGroups());
+
+	        var url = _utils.baseURL + '/api/groups/deep/?users=' + user + '&tournament=' + tournament;
+
+	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receiveGroups(json));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to fetch groups');
+	            }
+	        });
+	    };
+	}
+
+	function requestCreateGroup() {
+	    return { type: REQUEST_CREATE };
+	}
+
+	function receiveCreateGroup(group) {
+	    return { type: RECEIVE_CREATE, group: group };
+	}
+
+	function createGroup(user, name, password, tournament) {
+	    return function (dispatch, getState) {
+	        dispatch(requestCreateGroup());
+
+	        var payload = (0, _utils.preparePost)({
+	            user: user,
+	            name: name,
+	            password: password,
+	            tournament: tournament
+	        });
+
+	        var url = _utils.baseURL + '/api/groups/';
+
+	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    dispatch(receiveCreateGroup(json));
+	                    dispatch(invalidateGroups());
+	                    _reactRouter.browserHistory.push('/s/groups/' + json.id);
+	                    // TODO better success message?
+	                    dispatch((0, _notification.successNotification)('Ny liga skapad!'));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to create group');
+	            }
+	        });
+	    };
+	}
+
+	function requestJoinGroup() {
+	    return { type: REQUEST_JOIN };
+	}
+
+	function receiveJoinGroup(group) {
+	    return { type: RECEIVE_JOIN, group: group };
+	}
+
+	function joinGroup(user, name, password) {
+	    return function (dispatch) {
+	        dispatch(requestJoinGroup());
+
+	        var payload = (0, _utils.preparePost)({
+	            user: user,
+	            name: name,
+	            password: password
+	        });
+
+	        var url = _utils.baseURL + '/api/users/' + user + '/group/';
+
+	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    dispatch(receiveJoinGroup(json));
+	                    dispatch(invalidateGroups());
+	                    _reactRouter.browserHistory.push('/s/groups/' + json.id);
+	                    // TODO better notification message?
+	                    dispatch((0, _notification.successNotification)('Du har gått med i liga'));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to join group');
+	            }
+	        });
+	    };
+	}
+
+	function requestLeaveGroup() {
+	    return { type: REQUEST_LEAVE };
+	}
+
+	function receiveLeaveGroup(group) {
+	    return { type: RECEIVE_LEAVE, group: group };
+	}
+
+	function leaveGroup(user, group, admin) {
+	    return function (dispatch) {
+	        dispatch(requestLeaveGroup());
+
+	        var payload = (0, _utils.preparePut)({
+	            user: user,
+	            group: group,
+	            admin: admin
+	        });
+
+	        var url = _utils.baseURL + '/api/groups/' + group + '/leave/';
+
+	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    dispatch(receiveLeaveGroup(json));
+	                    // TODO better notification message?
+	                    dispatch((0, _notification.successNotification)('Du har lämnat ligan!'));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to leave group');
+	            }
+	        });
+	    };
+	}
+
+	function requestRemoveGroup() {
+	    return { type: REQUEST_REMOVE };
+	}
+
+	function receiveRemoveGroup(group) {
+	    return { type: RECEIVE_REMOVE, group: group };
+	}
+
+	function removeGroup(user, group) {
+	    return function (dispatch) {
+	        dispatch(requestRemoveGroup());
+
+	        var payload = { method: 'DELETE' };
+	        var url = _utils.baseURL + '/api/groups/' + group + '/';
+
+	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
+	            if (res.ok) {
+	                dispatch(receiveRemoveGroup(group));
+	                // NOTE
+	                dispatch(receiveLeaveGroup({ id: group }));
+	            } else {
+	                // TODO error handling
+	                console.log('unable to remove group');
+	            }
+	        });
+	    };
+	}
+
+/***/ },
+/* 294 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var JoinGroupButton = function JoinGroupButton(_ref) {
+	    var openModal = _ref.openModal;
+	    return _react2.default.createElement(
+	        'button',
+	        {
+	            onClick: openModal,
+	            className: 'join-group',
+	            type: 'button' },
+	        'Gå med i liga'
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	},
+	// Dispatch to props
+	function (dispatch) {
+	    return {
+	        openModal: function openModal() {
+	            return dispatch((0, _modal.openJoinGroupModal)());
+	        }
+	    };
+	})(JoinGroupButton);
+
+/***/ },
+/* 295 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var CreateGroup = function CreateGroup(_ref) {
+	    var openModal = _ref.openModal;
+
+	    return _react2.default.createElement(
+	        'button',
+	        {
+	            onClick: openModal,
+	            className: 'create-group',
+	            type: 'button' },
+	        'Skapa liga'
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	},
+	// Dispatch to props
+	function (dispatch) {
+	    return {
+	        openModal: function openModal() {
+	            return dispatch((0, _modal.openCreateGroupModal)());
+	        }
+	    };
+	})(CreateGroup);
+
+/***/ },
+/* 296 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _toplists = __webpack_require__(297);
+
+	var _components = __webpack_require__(267);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TopList = function (_Component) {
+	    _inherits(TopList, _Component);
+
+	    function TopList(props) {
+	        _classCallCheck(this, TopList);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(TopList).call(this, props));
+	    }
+
+	    _createClass(TopList, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _props = this.props;
+	            var dispatch = _props.dispatch;
+	            var user = _props.user;
+	            var tournament = _props.tournament;
+
+
+	            dispatch((0, _toplists.fetchUsersForTopLists)(tournament));
+	            dispatch((0, _toplists.fetchGroupsForTopLists)(tournament));
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var toplists = this.props.toplists;
+
+
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'toplists-container' },
+	                    _react2.default.createElement(_components.UserTotalTopList, { users: toplists.users }),
+	                    _react2.default.createElement(_components.UserTopBets, { users: toplists.users })
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'toplists-container' },
+	                    _react2.default.createElement(_components.GroupAverageTopList, { groups: toplists.groups }),
+	                    _react2.default.createElement(_components.GroupMembersTopList, { groups: toplists.groups })
+	                )
+	            );
+	        }
+	    }]);
+
+	    return TopList;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        user: state.user,
+	        tournament: state.tournament,
+	        toplists: state.toplists
+	    };
+	})(TopList);
+
+/***/ },
+/* 297 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.invalidateTopLists = invalidateTopLists;
+	exports.requestUsersForTopLists = requestUsersForTopLists;
+	exports.receiveUsersForTopLists = receiveUsersForTopLists;
+	exports.fetchUsersForTopLists = fetchUsersForTopLists;
+	exports.requestGroupsForTopLists = requestGroupsForTopLists;
+	exports.receiveGroupsForTopLists = receiveGroupsForTopLists;
+	exports.fetchGroupsForTopLists = fetchGroupsForTopLists;
+
+	var _isomorphicFetch = __webpack_require__(256);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _utils = __webpack_require__(258);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var INVALIDATE = 'supsertipset/toplists/INVALIDATE';
+	var REQUEST_USERS = 'supsertipset/toplists/REQUEST_USERS';
+	var RECEIVE_USERS = 'supsertipset/toplists/RECEIVE_USERS';
+	var REQUEST_GROUPS = 'supsertipset/toplists/REQUEST_GROUPS';
+	var RECEIVE_GROUPS = 'supsertipset/toplists/RECEIVE_GROUPS';
+
+	var initialState = {
+	    users: {
+	        isFetching: false,
+	        didInvalidate: false,
+	        data: []
+	    },
+	    groups: {
+	        isFetching: false,
+	        didInvalidate: false,
+	        data: []
+	    }
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case INVALIDATE:
+	            return (0, _utils.assign)(state, {
+	                users: (0, _utils.assign)(state.users, { didInvalidate: true }),
+	                groups: (0, _utils.assign)(state.groups, { didInvalidate: true })
+	            });
+	        case REQUEST_USERS:
+	            return (0, _utils.assign)(state, {
+	                users: (0, _utils.assign)(state.users, {
+	                    isFetching: true,
+	                    didInvalidate: false
+	                })
+	            });
+	        case RECEIVE_USERS:
+	            return (0, _utils.assign)(state, {
+	                users: (0, _utils.assign)(state.users, {
+	                    isFetching: false,
+	                    didInvalidate: false,
+	                    data: action.users
+	                })
+	            });
+	        case REQUEST_GROUPS:
+	            return (0, _utils.assign)(state, {
+	                groups: (0, _utils.assign)(state.groups, {
+	                    isFetching: true,
+	                    didInvalidate: false
+	                })
+	            });
+	        case RECEIVE_GROUPS:
+	            return (0, _utils.assign)(state, {
+	                groups: (0, _utils.assign)(state.grous, {
+	                    isFetching: false,
+	                    didInvalidate: false,
+	                    data: action.groups
+	                })
+	            });
+	        default:
+	            return state;
+	    }
+	}
+
+	function invalidateTopLists() {
+	    return { type: INVALIDATE };
+	}
+
+	function requestUsersForTopLists() {
+	    return { type: REQUEST_USERS };
+	}
+
+	function receiveUsersForTopLists(users) {
+	    return { type: RECEIVE_USERS, users: users };
+	}
+
+	function shouldFetchUsers(toplists) {
+	    if (toplists.users.isFetching) {
+	        return false;
+	    } else if (toplists.users.data.length == 0) {
+	        return true;
+	    } else {
+	        return toplists.users.didInvalidate;
+	    }
+	}
+
+	function fetchUsersForTopLists(tournament) {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var toplists = _getState.toplists;
+
+
+	        if (!shouldFetchUsers(toplists)) {
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestUsersForTopLists());
+
+	        var url = _utils.baseURL + '/api/users/deep/?tournament=' + tournament;
+
+	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receiveUsersForTopLists(json));
+	                });
+	            } else {
+	                console.log('unable to fetch users for top lists');
+	            }
+	        });
+	    };
+	}
+
+	function requestGroupsForTopLists() {
+	    return { type: REQUEST_GROUPS };
+	}
+
+	function receiveGroupsForTopLists(groups) {
+	    return { type: RECEIVE_GROUPS, groups: groups };
+	}
+
+	function shouldFetchGroups(toplists) {
+	    if (toplists.groups.isFetching) {
+	        return false;
+	    } else if (toplists.groups.data.length == 0) {
+	        return true;
+	    } else {
+	        return toplists.groups.didInvalidate;
+	    }
+	}
+
+	function fetchGroupsForTopLists(tournament) {
+	    return function (dispatch, getState) {
+	        var _getState2 = getState();
+
+	        var toplists = _getState2.toplists;
+
+
+	        if (!shouldFetchGroups(toplists)) {
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestGroupsForTopLists());
+
+	        var url = _utils.baseURL + '/api/groups/deep/?tournament=' + tournament;
+
+	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receiveGroupsForTopLists(json));
+	                });
+	            } else {
+	                console.log('unable to fetch groups for top lists');
+	            }
+	        });
+	    };
+	}
+
+/***/ },
+/* 298 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _profile = __webpack_require__(299);
+
+	var _components = __webpack_require__(267);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var UserProfile = function (_Component) {
+	    _inherits(UserProfile, _Component);
+
+	    function UserProfile(props) {
+	        _classCallCheck(this, UserProfile);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(UserProfile).call(this, props));
+	    }
+
+	    _createClass(UserProfile, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _props = this.props;
+	            var dispatch = _props.dispatch;
+	            var user = _props.user;
+	            var tournament = _props.tournament;
+
+
+	            dispatch((0, _profile.fetchProfile)(user.id, tournament));
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _props2 = this.props;
+	            var user = _props2.user;
+	            var profile = _props2.profile;
+	            var tournament = _props2.tournament;
+	            var tournaments = _props2.tournaments;
+
+
+	            if (profile.isFetching || !profile.data.hasOwnProperty('id')) {
+	                return _react2.default.createElement(
+	                    'div',
+	                    { className: 'profile-container' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        'Laddar...'
+	                    )
+	                );
+	            }
+
+	            var isCurrentUser = user.id === profile.data.id;
+
+	            // If we should continue to show the special bets button
+	            var now = new Date();
+	            var currTournament = tournaments.data.filter(function (t) {
+	                return t.id == tournament;
+	            })[0];
+	            var currTournamentDate = currTournament ? new Date(currTournament.start_date) : false;
+	            var tournamentHasStarted = now > currTournamentDate;
+
+	            return _react2.default.createElement(_components.Profile, {
+	                profile: profile,
+	                tournamentHasStarted: tournamentHasStarted,
+	                isCurrentUser: isCurrentUser });
+	        }
+	    }]);
+
+	    return UserProfile;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        user: state.user,
+	        profile: state.profile,
+	        tournament: state.tournament,
+	        tournaments: state.tournaments
+	    };
+	})(UserProfile);
+
+/***/ },
+/* 299 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.invalidateProfile = invalidateProfile;
+	exports.requestProfile = requestProfile;
+	exports.receiveProfile = receiveProfile;
+	exports.fetchProfile = fetchProfile;
+
+	var _isomorphicFetch = __webpack_require__(256);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _utils = __webpack_require__(258);
+
+	var _groups = __webpack_require__(293);
+
+	var _user = __webpack_require__(259);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var INVALIDATE = 'supertipset/profile/INVALIDATE';
+	var REQUEST = 'supertipset/profile/REQUEST';
+	var RECEIVE = 'supertipset/profile/RECEIVE';
+
+	var initialState = {
+	    isFetching: false,
+	    didInvalidate: false,
+	    data: {}
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case INVALIDATE:
+	            return (0, _utils.assign)(state, {
+	                didInvalidate: true
+	            });
+	        case REQUEST:
+	            return (0, _utils.assign)(state, {
+	                isFetching: true,
+	                didInvalidate: false
+	            });
+	        case RECEIVE:
+	            return (0, _utils.assign)(state, {
+	                isFetching: false,
+	                didInvalidate: false,
+	                data: action.profile
+	            });
+	        // If user leaves a group from the profile page
+	        case _groups.RECEIVE_LEAVE:
+	            if (!state.data.hasOwnProperty('id')) {
+	                return state;
+	            }
+
+	            return (0, _utils.assign)(state, {
+	                data: (0, _utils.assign)(state.data, {
+	                    groups: state.data.groups.filter(function (group) {
+	                        return group.id !== action.group.id;
+	                    })
+	                })
+	            });
+	        // If a user joins/creates a group it should also show on the profile page
+	        case _groups.RECEIVE_CREATE:
+	        case _groups.RECEIVE_JOIN:
+	            if (!state.data.hasOwnProperty('id')) {
+	                return state;
+	            }
+
+	            return (0, _utils.assign)(state, {
+	                data: (0, _utils.assign)(state.data, {
+	                    groups: state.data.groups.concat(action.group)
+	                })
+	            });
+	        // If user sets special bets it has to show on the profile page
+	        case _user.RECEIVE_SPECIAL_BET:
+	            if (!state.data.hasOwnProperty('id')) {
+	                return state;
+	            }
+
+	            return (0, _utils.assign)(state, {
+	                data: (0, _utils.assign)(state.data, {
+	                    special_bets: state.data.special_bets.concat(action.specialBet)
+	                })
+	            });
+	        default:
+	            return state;
+	    }
+	}
+
+	function invalidateProfile() {
+	    return { type: INVALIDATE };
+	}
+
+	function requestProfile() {
+	    return { type: REQUEST };
+	}
+
+	function receiveProfile(profile) {
+	    return { type: RECEIVE, profile: profile };
+	}
+
+	function shouldFetch(profile, id) {
+	    if (profile.isFetching) {
+	        return false;
+	    } else if (!profile.data.hasOwnProperty('id')) {
+	        return true;
+	    } else if (profile.data.hasOwnProperty('id') && profile.data.id !== id) {
+	        return true;
+	    } else {
+	        return profile.didInvalidate;
+	    }
+	}
+
+	function fetchProfile(id, tournament) {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var profile = _getState.profile;
+	        var user = _getState.user;
+
+
+	        if (!shouldFetch(profile, id)) {
+	            return Promise.resolve();
+	        }
+
+	        if (user.data.hasOwnProperty('id') && user.id == id) {
+	            dispatch(receiveProfile(user.data));
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestProfile());
+
+	        var url = _utils.baseURL + '/api/users/' + id + '/detail/?tournament=' + tournament;
+
+	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receiveProfile(json));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to fetch profile');
+	            }
+	        });
+	    };
+	}
+
+/***/ },
+/* 300 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _profile = __webpack_require__(299);
+
+	var _components = __webpack_require__(267);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var VisitorProfile = function (_Component) {
+	    _inherits(VisitorProfile, _Component);
+
+	    function VisitorProfile(props) {
+	        _classCallCheck(this, VisitorProfile);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(VisitorProfile).call(this, props));
+	    }
+
+	    _createClass(VisitorProfile, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _props = this.props;
+	            var profile = _props.profile;
+	            var dispatch = _props.dispatch;
+	            var params = _props.params;
+	            var tournament = _props.tournament;
+
+
+	            dispatch((0, _profile.fetchProfile)(params.id, tournament));
+	        }
+	    }, {
+	        key: 'componentDidUpdate',
+	        value: function componentDidUpdate(prevProps) {
+	            var _props2 = this.props;
+	            var profile = _props2.profile;
+	            var dispatch = _props2.dispatch;
+	            var params = _props2.params;
+	            var tournament = _props2.tournament;
+
+	            // On route change to same endpoint (but new id) - refetch the profile
+
+	            if (prevProps.params.id != params.id) {
+	                dispatch((0, _profile.fetchProfile)(params.id, tournament));
+	            }
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _props3 = this.props;
+	            var user = _props3.user;
+	            var profile = _props3.profile;
+	            var params = _props3.params;
+	            var dispatch = _props3.dispatch;
+
+
+	            if (profile.isFetching || !profile.data.hasOwnProperty('id')) {
+	                return _react2.default.createElement(
+	                    'div',
+	                    { className: 'profile-container' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        'Laddar...'
+	                    )
+	                );
+	            }
+
+	            var isCurrentUser = user.id === profile.data.id;
+
+	            return _react2.default.createElement(_components.Profile, { profile: profile, isCurrentUser: isCurrentUser });
+	        }
+	    }]);
+
+	    return VisitorProfile;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        user: state.user,
+	        profile: state.profile,
+	        tournament: state.tournament
+	    };
+	})(VisitorProfile);
+
+/***/ },
+/* 301 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modals = __webpack_require__(302);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// Map action type to component
+	var MODALS = {
+	    'supertipset/modal/BET': _modals.PlaceBetModal,
+	    'supertipset/modal/SPECIAL_BET': _modals.PlaceSpecialBetModal,
+	    'supertipset/modal/JOIN_GROUP': _modals.JoinGroupModal,
+	    'supertipset/modal/CREATE_GROUP': _modals.CreateGroupModal,
+	    'supertipset/modal/LEAVE_GROUP': _modals.LeaveGroupModal,
+	    'supertipset/modal/EDIT_GROUP_DESCRIPTION': _modals.GroupDescriptionModal,
+	    'supertipset/modal/EDIT_GROUP_PASSWORD': _modals.GroupPasswordModal,
+	    'supertipset/modal/EDIT_USER_PASSWORD': _modals.UserPasswordModal,
+	    'supertipset/modal/CHANGE_TOURNAMENT': _modals.ChangeTournamentModal
+	};
+
+	var Modals = function Modals(_ref) {
+	    var modal = _ref.modal;
+	    var modalType = modal.modalType;
+	    var modalProps = modal.modalProps;
+
+
+	    if (typeof modalType === 'undefined') {
+	        return null;
+	    }
+
+	    var Modal = MODALS[modalType];
+
+	    return _react2.default.createElement(Modal, modalProps);
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { modal: state.modal };
+	})(Modals);
+
+/***/ },
+/* 302 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.PlaceSpecialBetModal = exports.PlaceBetModal = exports.UserPasswordModal = exports.GroupPasswordModal = exports.GroupDescriptionModal = exports.LeaveGroupModal = exports.JoinGroupModal = exports.CreateGroupModal = exports.ChangeTournamentModal = exports.Modal = undefined;
+
+	var _Modal2 = __webpack_require__(303);
+
+	var _Modal3 = _interopRequireDefault(_Modal2);
+
+	var _ChangeTournamentModal2 = __webpack_require__(304);
+
+	var _ChangeTournamentModal3 = _interopRequireDefault(_ChangeTournamentModal2);
+
+	var _CreateGroupModal2 = __webpack_require__(306);
+
+	var _CreateGroupModal3 = _interopRequireDefault(_CreateGroupModal2);
+
+	var _JoinGroupModal2 = __webpack_require__(307);
+
+	var _JoinGroupModal3 = _interopRequireDefault(_JoinGroupModal2);
+
+	var _LeaveGroupModal2 = __webpack_require__(308);
+
+	var _LeaveGroupModal3 = _interopRequireDefault(_LeaveGroupModal2);
+
+	var _GroupDescriptionModal2 = __webpack_require__(309);
+
+	var _GroupDescriptionModal3 = _interopRequireDefault(_GroupDescriptionModal2);
+
+	var _GroupPasswordModal2 = __webpack_require__(310);
+
+	var _GroupPasswordModal3 = _interopRequireDefault(_GroupPasswordModal2);
+
+	var _UserPasswordModal2 = __webpack_require__(311);
+
+	var _UserPasswordModal3 = _interopRequireDefault(_UserPasswordModal2);
+
+	var _PlaceBetModal2 = __webpack_require__(312);
+
+	var _PlaceBetModal3 = _interopRequireDefault(_PlaceBetModal2);
+
+	var _PlaceSpecialBetModal2 = __webpack_require__(313);
+
+	var _PlaceSpecialBetModal3 = _interopRequireDefault(_PlaceSpecialBetModal2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.Modal = _Modal3.default;
+	exports.ChangeTournamentModal = _ChangeTournamentModal3.default;
+	exports.CreateGroupModal = _CreateGroupModal3.default;
+	exports.JoinGroupModal = _JoinGroupModal3.default;
+	exports.LeaveGroupModal = _LeaveGroupModal3.default;
+	exports.GroupDescriptionModal = _GroupDescriptionModal3.default;
+	exports.GroupPasswordModal = _GroupPasswordModal3.default;
+	exports.UserPasswordModal = _UserPasswordModal3.default;
+	exports.PlaceBetModal = _PlaceBetModal3.default;
+	exports.PlaceSpecialBetModal = _PlaceSpecialBetModal3.default;
+
+/***/ },
+/* 303 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Modal = function Modal(_ref) {
+	    var dispatch = _ref.dispatch;
+	    var submit = _ref.submit;
+	    var children = _ref.children;
+
+
+	    var close = function close() {
+	        return dispatch((0, _modal.closeModal)());
+	    };
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'modal-container' },
+	        _react2.default.createElement('div', { onClick: close, className: 'modal-overlay' }),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'modal-content' },
+	            _react2.default.createElement(
+	                'form',
+	                { onSubmit: submit },
+	                children,
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'modal-actions' },
+	                    _react2.default.createElement(
+	                        'button',
+	                        { onClick: close, className: 'modal-cancel', type: 'button' },
+	                        'Avbryt'
+	                    ),
+	                    _react2.default.createElement(
+	                        'button',
+	                        { className: 'modal-ok' },
+	                        'OK'
+	                    )
+	                )
+	            ),
+	            _react2.default.createElement('div', { onClick: close, className: 'modal-close' })
+	        )
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { modal: state.modal };
+	})(Modal);
+
+/***/ },
+/* 304 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	var _tournament = __webpack_require__(305);
+
+	var _Modal = __webpack_require__(303);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// <option> for a tournament
+	var tournamentOpt = function tournamentOpt(t, i) {
+	    return _react2.default.createElement(
+	        'option',
+	        { key: i, value: t.id },
+	        t.name
+	    );
+	};
+
+	var ChangeTournamentModal = function ChangeTournamentModal(_ref) {
+	    var dispatch = _ref.dispatch;
+	    var tournaments = _ref.tournaments;
+	    var tournament = _ref.tournament;
+
+	    // Mutable form-data
+	    var data = { tournament: tournament };
+
+	    var submit = function submit(e) {
+	        e.preventDefault();
+	        dispatch((0, _tournament.changeTournament)(data.tournament));
+	        dispatch((0, _modal.closeModal)());
+	    };
+
+	    var setData = function setData(e) {
+	        return data[e.target.name] = Number(e.target.value);
+	    };
+	    var focus = function focus(r) {
+	        return r ? r.focus() : false;
+	    };
+
+	    return _react2.default.createElement(
+	        _Modal2.default,
+	        { submit: submit },
+	        _react2.default.createElement(
+	            'h2',
+	            { className: 'modal-title' },
+	            'Ändra turnering'
+	        ),
+	        _react2.default.createElement(
+	            'p',
+	            { className: 'modal-description' },
+	            'Välj turnering'
+	        ),
+	        _react2.default.createElement(
+	            'select',
+	            {
+	                onChange: setData,
+	                defaultValue: tournament,
+	                name: 'tournament' },
+	            tournaments.data.map(tournamentOpt)
+	        )
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// state to props
+	function (state) {
+	    return {
+	        tournament: state.tournament,
+	        tournaments: state.tournaments
+	    };
+	})(ChangeTournamentModal);
+
+/***/ },
+/* 305 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.change = change;
+	exports.changeTournament = changeTournament;
+
+	var _reactRouter = __webpack_require__(196);
+
+	var _group = __webpack_require__(289);
+
+	var _groups = __webpack_require__(293);
+
+	var _profile = __webpack_require__(299);
+
+	var _toplists = __webpack_require__(297);
+
+	var _user = __webpack_require__(259);
+
+	var _rounds = __webpack_require__(266);
+
+	var CHANGE = 'supertipset/tournament/CHANGE';
+
+	var initialState = window.tournamentID;
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case CHANGE:
+	            return action.id;
+	        default:
+	            return state;
+	    }
+	}
+
+	function change(id) {
+	    return { type: CHANGE, id: id };
+	}
+
+	function changeTournament(id) {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var user = _getState.user;
+
+
+	        dispatch(change(id));
+
+	        dispatch((0, _user.invalidateUser)());
+	        dispatch((0, _rounds.invalidateRounds)());
+	        dispatch((0, _profile.invalidateProfile)());
+	        dispatch((0, _group.invalidateGroup)());
+	        dispatch((0, _groups.invalidateGroups)());
+	        dispatch((0, _toplists.invalidateTopLists)());
+	        dispatch((0, _rounds.fetchRounds)(id));
+	        dispatch((0, _user.fetchUser)(user.id, id));
+	        _reactRouter.browserHistory.push('/s/bets');
+	    };
+	}
+
+/***/ },
+/* 306 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	var _groups = __webpack_require__(293);
+
+	var _Modal = __webpack_require__(303);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var CreateGroupModal = function CreateGroupModal(_ref) {
+	    var user = _ref.user;
+	    var tournament = _ref.tournament;
+	    var dispatch = _ref.dispatch;
+
+	    // Mutable form-data
+	    var data = {
+	        name: '',
+	        passwordOne: '',
+	        passwordTwo: ''
+	    };
+
+	    var submit = function submit(e) {
+	        e.preventDefault();
+
+	        if (data.name == '' || data.passwordOne == '' || data.passwordOne !== data.passwordTwo) {
+	            // TODO error notification
+
+	            dispatch((0, _modal.closeModal)());
+	            return false;
+	        }
+
+	        dispatch((0, _groups.createGroup)(user.id, data.name, data.passwordOne, tournament));
+	        dispatch((0, _modal.closeModal)());
+	    };
+
+	    var setData = function setData(e) {
+	        return data[e.target.name] = e.target.value;
+	    };
+	    var focus = function focus(r) {
+	        return r ? r.focus() : false;
+	    };
+
+	    return _react2.default.createElement(
+	        _Modal2.default,
+	        { submit: submit },
+	        _react2.default.createElement(
+	            'h2',
+	            { className: 'modal-title' },
+	            'Skapa liga'
+	        ),
+	        _react2.default.createElement(
+	            'p',
+	            { className: 'modal-description' },
+	            'Fyll i ligans namn och lösenord'
+	        ),
+	        _react2.default.createElement('input', {
+	            onChange: setData,
+	            ref: focus,
+	            type: 'text',
+	            name: 'name',
+	            placeholder: 'Namn' }),
+	        _react2.default.createElement('input', {
+	            onChange: setData,
+	            type: 'password',
+	            name: 'passwordOne',
+	            placeholder: 'Lösenord' }),
+	        _react2.default.createElement('input', {
+	            onChange: setData,
+	            type: 'password',
+	            name: 'passwordTwo',
+	            placeholder: 'Upprepa lösenord' })
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        user: state.user,
+	        tournament: state.tournament
+	    };
+	})(CreateGroupModal);
+
+/***/ },
+/* 307 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	var _groups = __webpack_require__(293);
+
+	var _Modal = __webpack_require__(303);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var JoinGroupModal = function JoinGroupModal(_ref) {
+	    var user = _ref.user;
+	    var groups = _ref.groups;
+	    var dispatch = _ref.dispatch;
+
+	    // Mutable form-data
+	    var data = {
+	        name: '',
+	        password: ''
+	    };
+
+	    var submit = function submit(e) {
+	        e.preventDefault();
+
+	        if (data.name === '' || data.password === '') {
+	            // TODO error notification
+	            dispatch((0, _modal.closeModal)());
+	            return false;
+	        }
+
+	        // Check group names from groups of the current user
+	        var groupExists = groups.data.filter(function (g) {
+	            return g.name === data.name;
+	        }).length;
+
+	        if (groupExists) {
+	            // TODO error notification
+	            dispatch((0, _modal.closeModal)());
+	            return false;
+	        }
+
+	        dispatch((0, _groups.joinGroup)(user.id, data.name, data.password));
+	        dispatch((0, _modal.closeModal)());
+	    };
+
+	    var setData = function setData(e) {
+	        return data[e.target.name] = e.target.value;
+	    };
+	    var focus = function focus(r) {
+	        return r ? r.focus() : false;
+	    };
+
+	    return _react2.default.createElement(
+	        _Modal2.default,
+	        { submit: submit },
+	        _react2.default.createElement(
+	            'h2',
+	            { className: 'modal-title' },
+	            'Gå med i liga'
+	        ),
+	        _react2.default.createElement(
+	            'p',
+	            { className: 'modal-description' },
+	            'Fyll i ligans namn samt lösenord'
+	        ),
+	        _react2.default.createElement('input', {
+	            onChange: setData,
+	            ref: focus,
+	            type: 'text',
+	            name: 'name',
+	            placeholder: 'Liga' }),
+	        _react2.default.createElement('input', {
+	            onChange: setData,
+	            type: 'password',
+	            name: 'password',
+	            placeholder: 'Lösenord' })
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        user: state.user,
+	        groups: state.groups
+	    };
+	})(JoinGroupModal);
+
+/***/ },
+/* 308 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	var _groups = __webpack_require__(293);
+
+	var _Modal = __webpack_require__(303);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// <option> for a user
+	var userOpt = function userOpt(u, i) {
+	    return _react2.default.createElement(
+	        'option',
+	        { key: i, value: u.id },
+	        u.username
+	    );
+	};
+
+	var LeaveGroupModal = function LeaveGroupModal(_ref) {
+	    var user = _ref.user;
+	    var group = _ref.group;
+	    var dispatch = _ref.dispatch;
+
+	    // Mutable form-data
+	    var data = { admin: 0 };
+
+	    var isAdmin = user.id === group.admin.id;
+
+	    var submit = function submit(e) {
+	        e.preventDefault();
+
+	        // If there is only one user left - remove the group
+	        if (isAdmin && group.users.length === 1) {
+	            dispatch((0, _groups.removeGroup)(user.id, group.id));
+	            dispatch((0, _modal.closeModal)());
+	            return false;
+	        }
+
+	        dispatch((0, _groups.leaveGroup)(user.id, group.id, data.admin));
+	        dispatch((0, _modal.closeModal)());
+	    };
+
+	    // If a user isnt admin - just leave the group
+	    if (!isAdmin) {
+	        return _react2.default.createElement(
+	            _Modal2.default,
+	            { submit: submit },
+	            _react2.default.createElement(
+	                'h2',
+	                { className: 'modal-title' },
+	                'Lämna'
+	            ),
+	            _react2.default.createElement(
+	                'p',
+	                { className: 'modal-description' },
+	                'Är du säker?'
+	            )
+	        );
+	    }
+
+	    // If a user is admin and there is no members left,
+	    // leave and then remove the group
+	    if (isAdmin && group.users.length === 1) {
+	        return _react2.default.createElement(
+	            _Modal2.default,
+	            { submit: submit },
+	            _react2.default.createElement(
+	                'h2',
+	                { className: 'modal-title' },
+	                'Lämna'
+	            ),
+	            _react2.default.createElement(
+	                'p',
+	                { className: 'modal-description' },
+	                'Ligan kommer att raderas'
+	            )
+	        );
+	    }
+
+	    var setData = function setData(e) {
+	        return data[e.target.name] = Number(e.target.value);
+	    };
+
+	    // Default new admin
+	    data.admin = group.users.filter(function (u) {
+	        return u.id !== user.id;
+	    })[0].id;
+
+	    // If a user is admin and there are more users left,
+	    // choose a new admin and then leave the group
+	    return _react2.default.createElement(
+	        _Modal2.default,
+	        { submit: submit },
+	        _react2.default.createElement(
+	            'h2',
+	            { className: 'modal-title' },
+	            'Lämna'
+	        ),
+	        _react2.default.createElement(
+	            'p',
+	            { className: 'modal-description' },
+	            'Välj en ny medlem som admin'
+	        ),
+	        _react2.default.createElement(
+	            'select',
+	            { onChange: setData, name: 'admin' },
+	            group.users.filter(function (u) {
+	                return u.id !== user.id;
+	            }).map(userOpt)
+	        )
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	})(LeaveGroupModal);
+
+/***/ },
+/* 309 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	var _group = __webpack_require__(289);
+
+	var _Modal = __webpack_require__(303);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var GroupDescriptionModal = function GroupDescriptionModal(_ref) {
+	    var group = _ref.group;
+	    var user = _ref.user;
+	    var dispatch = _ref.dispatch;
+
+	    // Mutable form-data
+	    var data = { description: '' };
+
+	    var submit = function submit(e) {
+	        e.preventDefault();
+	        dispatch((0, _group.editGroupDescription)(user.id, group.id, group.name, data.description));
+	        dispatch((0, _modal.closeModal)());
+	    };
+
+	    var setData = function setData(e) {
+	        return data[e.target.name] = e.target.value;
+	    };
+	    var focus = function focus(r) {
+	        return r ? r.focus() : false;
+	    };
+
+	    return _react2.default.createElement(
+	        _Modal2.default,
+	        { submit: submit },
+	        _react2.default.createElement(
+	            'h2',
+	            { className: 'modal-title' },
+	            'Redigera liga'
+	        ),
+	        _react2.default.createElement(
+	            'p',
+	            { className: 'modal-description' },
+	            'Fyll i en beskrivning'
+	        ),
+	        _react2.default.createElement('textarea', {
+	            onChange: setData,
+	            defaultValue: group.description,
+	            ref: focus,
+	            name: 'description' })
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	})(GroupDescriptionModal);
+
+/***/ },
+/* 310 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	var _group = __webpack_require__(289);
+
+	var _Modal = __webpack_require__(303);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var GroupPasswordModal = function GroupPasswordModal(_ref) {
+	    var group = _ref.group;
+	    var user = _ref.user;
+	    var dispatch = _ref.dispatch;
+
+	    // Mutable form-data
+	    var data = {
+	        passwordOne: '',
+	        passwordTwo: ''
+	    };
+
+	    var submit = function submit(e) {
+	        e.preventDefault();
+
+	        if (data.passwordOne == '' || data.passwordOne !== data.passwordTwo) {
+	            // TODO error notification
+	            dispatch((0, _modal.closeModal)());
+	            return false;
+	        }
+
+	        dispatch((0, _group.editGroupPassword)(user.id, group.id, group.name, data.passwordOne));
+	        dispatch((0, _modal.closeModal)());
+	    };
+
+	    var setData = function setData(e) {
+	        return data[e.target.name] = e.target.value;
+	    };
+	    var focus = function focus(r) {
+	        return r ? r.focus() : false;
+	    };
+
+	    return _react2.default.createElement(
+	        _Modal2.default,
+	        { submit: submit },
+	        _react2.default.createElement(
+	            'h2',
+	            { className: 'modal-title' },
+	            'Redigera liga'
+	        ),
+	        _react2.default.createElement(
+	            'p',
+	            { className: 'modal-description' },
+	            'Fyll i ett nytt lösenord'
+	        ),
+	        _react2.default.createElement('input', {
+	            onChange: setData,
+	            ref: focus,
+	            type: 'password',
+	            name: 'passwordOne',
+	            placeholder: 'Lösenord' }),
+	        _react2.default.createElement('input', {
+	            onChange: setData,
+	            type: 'password',
+	            name: 'passwordTwo',
+	            placeholder: 'Upprepa lösenord' })
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	})(GroupPasswordModal);
+
+/***/ },
+/* 311 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	var _user = __webpack_require__(259);
+
+	var _Modal = __webpack_require__(303);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var UserPasswordModal = function UserPasswordModal(_ref) {
+	    var user = _ref.user;
+	    var dispatch = _ref.dispatch;
+
+	    // Mutable form-data
+	    var data = {
+	        passwordOne: '',
+	        passwordTwo: ''
+	    };
+
+	    var submit = function submit(e) {
+	        e.preventDefault();
+
+	        if (data.passwordOne == '' || data.passwordOne !== data.passwordTwo) {
+	            // TODO error notification
+	            dispatch((0, _modal.closeModal)());
+	            return false;
+	        }
+
+	        dispatch((0, _user.editUserPassword)(user.id, user.username, data.passwordOne));
+	        dispatch((0, _modal.closeModal)());
+	    };
+
+	    var setData = function setData(e) {
+	        return data[e.target.name] = e.target.value;
+	    };
+	    var focus = function focus(r) {
+	        return r ? r.focus() : false;
+	    };
+
+	    return _react2.default.createElement(
+	        _Modal2.default,
+	        { submit: submit },
+	        _react2.default.createElement(
+	            'h2',
+	            { className: 'modal-title' },
+	            'Redigera användare'
+	        ),
+	        _react2.default.createElement(
+	            'p',
+	            { className: 'modal-description' },
+	            'Fyll i ett nytt lösenord'
+	        ),
+	        _react2.default.createElement('input', {
+	            onChange: setData,
+	            ref: focus,
+	            type: 'password',
+	            name: 'passwordOne',
+	            placeholder: 'Lösenord' }),
+	        _react2.default.createElement('input', {
+	            onChange: setData,
+	            type: 'password',
+	            name: 'passwordTwo',
+	            placeholder: 'Upprepa lösenord' })
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	})(UserPasswordModal);
+
+/***/ },
+/* 312 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	var _user = __webpack_require__(259);
+
+	var _Modal = __webpack_require__(303);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var PlaceBetModal = function PlaceBetModal(_ref) {
+	    var user = _ref.user;
+	    var game = _ref.game;
+	    var dispatch = _ref.dispatch;
+
+	    // Mutable form-data + defaults
+	    var data = {
+	        teamOne: 0,
+	        teamTwo: 0
+	    };
+
+	    var close = function close() {
+	        return dispatch((0, _modal.closeModal)());
+	    };
+
+	    // TODO check if game has started etc
+	    var submit = function submit(e) {
+	        e.preventDefault();
+
+	        if (user.data.bets.filter(function (b) {
+	            return b.game.id == game.id;
+	        }).length) {
+	            console.log('has bet - should send PUT request');
+	        }
+
+	        dispatch((0, _user.placeBet)(user.id, game.id, data.teamOne, data.teamTwo));
+
+	        dispatch((0, _modal.closeModal)());
+	    };
+
+	    var setData = function setData(e) {
+	        return data[e.target.name] = Number(e.target.value);
+	    };
+	    var focus = function focus(r) {
+	        return r ? r.focus() : false;
+	    };
+
+	    return _react2.default.createElement(
+	        _Modal2.default,
+	        { submit: submit },
+	        _react2.default.createElement(
+	            'h2',
+	            { className: 'modal-title' },
+	            'Tippa'
+	        ),
+	        _react2.default.createElement(
+	            'p',
+	            { className: 'modal-description' },
+	            game.team_1.name,
+	            ' -  ',
+	            game.team_2.name
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'game-bets' },
+	            _react2.default.createElement('input', {
+	                onChange: setData,
+	                ref: focus,
+	                defaultValue: 0,
+	                min: '0',
+	                type: 'number',
+	                name: 'teamOne' }),
+	            _react2.default.createElement('input', {
+	                onChange: setData,
+	                defaultValue: 0,
+	                min: '0',
+	                type: 'number',
+	                name: 'teamTwo' })
+	        )
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	})(PlaceBetModal);
+
+/***/ },
+/* 313 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	var _user = __webpack_require__(259);
+
+	var _Modal = __webpack_require__(303);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// <option> for a team
+	var teamOpt = function teamOpt(t, i) {
+	    return _react2.default.createElement(
+	        'option',
+	        { key: i, value: t.id },
+	        t.name
+	    );
+	};
+
+	// <option> for a player
+	var playerOpt = function playerOpt(p, i) {
+	    return _react2.default.createElement(
+	        'option',
+	        { key: i, value: p.id },
+	        p.firstname,
+	        ' ',
+	        p.lastname
+	    );
+	};
+
+	var PlaceSpecialBetModal = function PlaceSpecialBetModal(_ref) {
+	    var user = _ref.user;
+	    var teams = _ref.teams;
+	    var players = _ref.players;
+	    var tournament = _ref.tournament;
+	    var dispatch = _ref.dispatch;
+
+	    // Mutable form-data + defaults
+	    var data = {
+	        team: teams.data[0].id,
+	        player: teams.data[0].id,
+	        goals: 0
+	    };
+
+	    var close = function close() {
+	        return dispatch((0, _modal.closeModal)());
+	    };
+
+	    var submit = function submit(e) {
+	        e.preventDefault();
+
+	        if (user.data.special_bets.length) {
+	            console.log('has special bets - should send PUT request');
+	        }
+
+	        dispatch((0, _user.placeSpecialBet)(user.id, data.player, data.goals, data.team, tournament));
+
+	        dispatch((0, _modal.closeModal)());
+	    };
+
+	    // TODO check if data for teams/players is available? i.e not fetching
+
+	    var setData = function setData(e) {
+	        return data[e.target.name] = Number(e.target.value);
+	    };
+
+	    return _react2.default.createElement(
+	        _Modal2.default,
+	        { submit: submit },
+	        _react2.default.createElement(
+	            'h2',
+	            { className: 'modal-title' },
+	            'Tippa specialtips'
+	        ),
+	        _react2.default.createElement(
+	            'h3',
+	            null,
+	            'Vinnare'
+	        ),
+	        _react2.default.createElement(
+	            'select',
+	            {
+	                onChange: setData,
+	                name: 'team' },
+	            teams.data.map(teamOpt)
+	        ),
+	        _react2.default.createElement(
+	            'h3',
+	            null,
+	            'Skyttekung'
+	        ),
+	        _react2.default.createElement(
+	            'select',
+	            {
+	                onChange: setData,
+	                name: 'player' },
+	            players.data.map(playerOpt)
+	        ),
+	        _react2.default.createElement(
+	            'h3',
+	            null,
+	            'Mål'
+	        ),
+	        _react2.default.createElement('input', {
+	            onChange: setData,
+	            defaultValue: 0,
+	            min: '0',
+	            className: 'special-bet-goals',
+	            type: 'number',
+	            name: 'goals' })
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        user: state.user,
+	        teams: state.teams,
+	        players: state.players,
+	        tournament: state.tournament
+	    };
+	})(PlaceSpecialBetModal);
+
+/***/ },
+/* 314 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _components = __webpack_require__(267);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var NOTIFICATIONS = {
+	    'supertipset/notification/SUCCESS': _components.SuccessNotification,
+	    'supertipset/notification/ERROR': _components.ErrorNotification
+	};
+
+	var Notifications = function Notifications(_ref) {
+	    var notification = _ref.notification;
+	    var notificationType = notification.notificationType;
+	    var notificationProps = notification.notificationProps;
+
+
+	    if (typeof notificationType === 'undefined') {
+	        return null;
+	    }
+
+	    var Notification = NOTIFICATIONS[notificationType];
+
+	    return _react2.default.createElement(Notification, notificationProps);
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { notification: state.notification };
+	})(Notifications);
+
+/***/ },
+/* 315 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var PlaceBetButton = function PlaceBetButton(_ref) {
+	    var user = _ref.user;
+	    var game = _ref.game;
+	    var openModal = _ref.openModal;
+
+	    var open = function open(game) {
+	        return function () {
+	            return openModal(game);
+	        };
+	    };
+
+	    return _react2.default.createElement(
+	        'button',
+	        {
+	            onClick: open(game),
+	            className: 'place-bet-button',
+	            type: 'button' },
+	        'Tippa'
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	},
+	// Dispatch to props
+	function (dispatch) {
+	    return {
+	        openModal: function openModal(game) {
+	            return dispatch((0, _modal.openBetModal)(game));
+	        }
+	    };
+	})(PlaceBetButton);
+
+/***/ },
+/* 316 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var LeaveGroupButton = function LeaveGroupButton(_ref) {
+	    var user = _ref.user;
+	    var group = _ref.group;
+	    var openModal = _ref.openModal;
+
+	    var leave = function leave(group) {
+	        return function () {
+	            return openModal(group);
+	        };
+	    };
+
+	    return _react2.default.createElement(
+	        'button',
+	        {
+	            onClick: leave(group),
+	            className: 'leave-group',
+	            type: 'button' },
+	        'Lämna'
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	},
+	// Dispatch to props
+	function (dispatch) {
+	    return {
+	        openModal: function openModal(group) {
+	            return dispatch((0, _modal.openLeaveGroupModal)(group));
+	        }
+	    };
+	})(LeaveGroupButton);
+
+/***/ },
+/* 317 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(264);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EditUserPasswordButton = function EditUserPasswordButton(_ref) {
+	    var openModal = _ref.openModal;
+	    return _react2.default.createElement(
+	        'button',
+	        {
+	            onClick: openModal,
+	            className: 'edit-user-password',
+	            type: 'button' },
+	        'Ändra lösenord'
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	},
+	// Dispatch to props
+	function (dispatch) {
+	    return {
+	        openModal: function openModal() {
+	            return dispatch((0, _modal.openEditUserPasswordModal)());
+	        }
+	    };
+	})(EditUserPasswordButton);
+
+/***/ },
+/* 318 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.toplists = exports.notification = exports.modal = exports.players = exports.teams = exports.tournaments = exports.tournament = exports.rounds = exports.profile = exports.user = exports.groups = exports.group = undefined;
+
+	var _group2 = __webpack_require__(289);
+
+	var _group3 = _interopRequireDefault(_group2);
+
+	var _groups2 = __webpack_require__(293);
+
+	var _groups3 = _interopRequireDefault(_groups2);
+
+	var _user2 = __webpack_require__(259);
+
+	var _user3 = _interopRequireDefault(_user2);
+
+	var _profile2 = __webpack_require__(299);
+
+	var _profile3 = _interopRequireDefault(_profile2);
+
+	var _rounds2 = __webpack_require__(266);
+
+	var _rounds3 = _interopRequireDefault(_rounds2);
+
+	var _tournament2 = __webpack_require__(305);
+
+	var _tournament3 = _interopRequireDefault(_tournament2);
+
+	var _tournaments2 = __webpack_require__(255);
+
+	var _tournaments3 = _interopRequireDefault(_tournaments2);
+
+	var _teams2 = __webpack_require__(261);
+
+	var _teams3 = _interopRequireDefault(_teams2);
+
+	var _players2 = __webpack_require__(262);
+
+	var _players3 = _interopRequireDefault(_players2);
+
+	var _modal2 = __webpack_require__(264);
+
+	var _modal3 = _interopRequireDefault(_modal2);
+
+	var _notification2 = __webpack_require__(260);
+
+	var _notification3 = _interopRequireDefault(_notification2);
+
+	var _toplists2 = __webpack_require__(297);
+
+	var _toplists3 = _interopRequireDefault(_toplists2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.group = _group3.default;
+	exports.groups = _groups3.default;
+	exports.user = _user3.default;
+	exports.profile = _profile3.default;
+	exports.rounds = _rounds3.default;
+	exports.tournament = _tournament3.default;
+	exports.tournaments = _tournaments3.default;
+	exports.teams = _teams3.default;
+	exports.players = _players3.default;
+	exports.modal = _modal3.default;
+	exports.notification = _notification3.default;
+	exports.toplists = _toplists3.default;
 
 /***/ }
 /******/ ]);

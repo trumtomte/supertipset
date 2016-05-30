@@ -5,7 +5,7 @@ import GroupListSummary from './GroupListSummary'
 import ProfileBets from './ProfileBets'
 import { EditUserPasswordButton } from '../containers'
 
-const Profile = ({ profile, isCurrentUser }) => {
+const Profile = ({ profile, tournamentHasStarted, isCurrentUser }) => {
 
     const fullname = `${profile.data.firstname} ${profile.data.lastname}`
     const username = <small>({profile.data.username})</small>
@@ -19,12 +19,13 @@ const Profile = ({ profile, isCurrentUser }) => {
                 <Points user={profile} />
                 <SpecialBets
                     user={profile}
+                    tournamentHasStarted={tournamentHasStarted}
                     bettable={isCurrentUser} />
                 <GroupListSummary
                     user={profile}
                     groups={profile.data.groups}
                     isCurrentUser={isCurrentUser} />
-                {!isCurrentUser
+                {!isCurrentUser && profile.data.bets.length
                     ? <ProfileBets
                         bets={profile.data.bets}
                         points={profile.data.points} />

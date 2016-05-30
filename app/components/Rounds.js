@@ -8,7 +8,7 @@ const round = (r, i) => (
 const Rounds = ({ rounds }) => {
 
     if (rounds.isFetching || rounds.data.length === 0) {
-        return <div className='rounds'>Loading...</div>
+        return <div className='rounds'>Laddar...</div>
     }
 
     return (

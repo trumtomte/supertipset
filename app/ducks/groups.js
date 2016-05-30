@@ -9,10 +9,10 @@ const REQUEST = 'supertipset/groups/REQUEST'
 const RECEIVE = 'supertipset/groups/RECEIVE'
 // Create group
 const REQUEST_CREATE = 'supertipset/groups/REQUEST_CREATE'
-const RECEIVE_CREATE = 'supertipset/groups/RECEIVE_CREATE'
+export const RECEIVE_CREATE = 'supertipset/groups/RECEIVE_CREATE'
 // Join group
 const REQUEST_JOIN = 'supertipset/groups/REQUEST_JOIN'
-const RECEIVE_JOIN = 'supertipset/groups/RECEIVE_JOIN'
+export const RECEIVE_JOIN = 'supertipset/groups/RECEIVE_JOIN'
 // Leave group
 const REQUEST_LEAVE = 'supertipset/groups/REQUEST_LEAVE'
 export const RECEIVE_LEAVE = 'supertipset/groups/RECEIVE_LEAVE'

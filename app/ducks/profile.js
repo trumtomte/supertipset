@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import { baseURL, assign } from './utils'
-import { RECEIVE_LEAVE } from './groups'
+import { RECEIVE_LEAVE, RECEIVE_JOIN, RECEIVE_CREATE } from './groups'
+import { RECEIVE_SPECIAL_BET } from './user'
 
 const INVALIDATE = 'supertipset/profile/INVALIDATE'
 const REQUEST = 'supertipset/profile/REQUEST'
@@ -38,6 +39,29 @@ export default function reducer(state = initialState, action) {
             return assign(state, {
                 data: assign(state.data, {
                     groups: state.data.groups.filter(group => group.id !== action.group.id)
+                })
+            })
+        // If a user joins/creates a group it should also show on the profile page
+        case RECEIVE_CREATE:
+        case RECEIVE_JOIN:
+            if (!state.data.hasOwnProperty('id')) {
+                return state
+            }
+
+            return assign(state, {
+                data: assign(state.data, {
+                    groups: state.data.groups.concat(action.group)
+                })
+            })
+        // If user sets special bets it has to show on the profile page
+        case RECEIVE_SPECIAL_BET:
+            if (!state.data.hasOwnProperty('id')) {
+                return state
+            }
+
+            return assign(state, {
+                data: assign(state.data, {
+                    special_bets: state.data.special_bets.concat(action.specialBet)
                 })
             })
         default:

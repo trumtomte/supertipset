@@ -61,7 +61,7 @@ const Game = ({ game, user }) => {
                     {bet ? `${bet.team_1_bet} - ${bet.team_2_bet}` : 'x - x'}
                 </span>
                 <span className='pts'>
-                    {bet ? 0 : <PlaceBetButton game={game} />}
+                    <PlaceBetButton game={game} />
                 </span>
             </div>
         )
