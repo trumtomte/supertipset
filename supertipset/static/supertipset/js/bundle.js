@@ -30170,11 +30170,11 @@
 	                    g.admin.username
 	                )
 	            ),
-	            _react2.default.createElement(
+	            isCurrentUser ? _react2.default.createElement(
 	                'span',
 	                { className: 'leave' },
-	                isCurrentUser ? _react2.default.createElement(_containers.LeaveGroupButton, { group: g }) : ''
-	            )
+	                _react2.default.createElement(_containers.LeaveGroupButton, { group: g })
+	            ) : ''
 	        );
 	    };
 	};
@@ -30215,7 +30215,7 @@
 	                { className: 'admin' },
 	                'Admin'
 	            ),
-	            _react2.default.createElement('h6', { className: 'leave' })
+	            isCurrentUser ? _react2.default.createElement('h6', { className: 'leave' }) : ''
 	        ),
 	        groups.map(groupSummary(user, isCurrentUser))
 	    );

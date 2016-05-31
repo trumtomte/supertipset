@@ -15,9 +15,9 @@ const groupSummary = (user, isCurrentUser) => (g, i) => {
                     ? g.admin.username
                     : <Link to={`/s/profile/${g.admin.id}`}>{g.admin.username}</Link>}
             </span>
-            <span className='leave'>
-                {isCurrentUser ? <LeaveGroupButton group={g} /> : ''}
-            </span>
+            {isCurrentUser
+                ? <span className='leave'><LeaveGroupButton group={g} /></span>
+                : ''}
         </div>
     )
 }
@@ -31,7 +31,7 @@ const GroupListSummary = ({ user, groups, isCurrentUser }) => {
                 <h6 className='name'>Liga</h6>
                 <h6 className='members'>Medlemmar</h6>
                 <h6 className='admin'>Admin</h6>
-                <h6 className='leave'></h6>
+                {isCurrentUser ? <h6 className='leave'></h6> : ''}
             </div>
             {groups.map(groupSummary(user, isCurrentUser))}
         </div>
