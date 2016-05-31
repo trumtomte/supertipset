@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { closeModal } from '../ducks/modal'
-import { placeSpecialBet } from '../ducks/user'
+import { placeSpecialBet, replaceSpecialBet } from '../ducks/user'
 import Modal from './Modal'
 
 // <option> for a team
@@ -31,17 +31,28 @@ const PlaceSpecialBetModal = ({ user, teams, players, tournament, dispatch }) =>
     const submit = (e) => {
         e.preventDefault()
 
-        if (user.data.special_bets.length) {
-            console.log('has special bets - should send PUT request')
-        }
+        const bet = user.data.special_bets
+            .filter(b => b.tournament == tournament)
+            .reduce((a, b) => b, {})
 
-        dispatch(placeSpecialBet(
-            user.id,
-            data.player,
-            data.goals,
-            data.team,
-            tournament
-        ))
+        if (bet.hasOwnProperty('id')) {
+            // Update a current special bet
+            dispatch(replaceSpecialBet(
+                bet.id,
+                data.player,
+                data.goals,
+                data.team
+            ))
+        } else {
+            // Place a new special bet
+            dispatch(placeSpecialBet(
+                user.id,
+                data.player,
+                data.goals,
+                data.team,
+                tournament
+            ))
+        }
 
         dispatch(closeModal())
     }

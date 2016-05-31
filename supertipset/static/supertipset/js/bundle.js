@@ -27233,15 +27233,15 @@
 
 	var _App3 = _interopRequireDefault(_App2);
 
-	var _Bets2 = __webpack_require__(265);
+	var _Bets2 = __webpack_require__(266);
 
 	var _Bets3 = _interopRequireDefault(_Bets2);
 
-	var _Group2 = __webpack_require__(288);
+	var _Group2 = __webpack_require__(289);
 
 	var _Group3 = _interopRequireDefault(_Group2);
 
-	var _Groups2 = __webpack_require__(292);
+	var _Groups2 = __webpack_require__(293);
 
 	var _Groups3 = _interopRequireDefault(_Groups2);
 
@@ -27269,11 +27269,11 @@
 
 	var _PlaceBetButton3 = _interopRequireDefault(_PlaceBetButton2);
 
-	var _PlaceSpecialBetButton2 = __webpack_require__(287);
+	var _PlaceSpecialBetButton2 = __webpack_require__(288);
 
 	var _PlaceSpecialBetButton3 = _interopRequireDefault(_PlaceSpecialBetButton2);
 
-	var _ChangeTournamentButton2 = __webpack_require__(263);
+	var _ChangeTournamentButton2 = __webpack_require__(264);
 
 	var _ChangeTournamentButton3 = _interopRequireDefault(_ChangeTournamentButton2);
 
@@ -27289,11 +27289,11 @@
 
 	var _LeaveGroupButton3 = _interopRequireDefault(_LeaveGroupButton2);
 
-	var _EditGroupDescriptionButton2 = __webpack_require__(290);
+	var _EditGroupDescriptionButton2 = __webpack_require__(291);
 
 	var _EditGroupDescriptionButton3 = _interopRequireDefault(_EditGroupDescriptionButton2);
 
-	var _EditGroupPasswordButton2 = __webpack_require__(291);
+	var _EditGroupPasswordButton2 = __webpack_require__(292);
 
 	var _EditGroupPasswordButton3 = _interopRequireDefault(_EditGroupPasswordButton2);
 
@@ -27346,11 +27346,11 @@
 
 	var _user = __webpack_require__(259);
 
-	var _teams = __webpack_require__(261);
+	var _teams = __webpack_require__(262);
 
-	var _players = __webpack_require__(262);
+	var _players = __webpack_require__(263);
 
-	var _ChangeTournamentButton = __webpack_require__(263);
+	var _ChangeTournamentButton = __webpack_require__(264);
 
 	var _ChangeTournamentButton2 = _interopRequireDefault(_ChangeTournamentButton);
 
@@ -28019,7 +28019,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.RECEIVE_SPECIAL_BET = undefined;
+	exports.UPDATE_SPECIAL_BET = exports.RECEIVE_SPECIAL_BET = undefined;
 	exports.default = reducer;
 	exports.invalidateUser = invalidateUser;
 	exports.requestUser = requestUser;
@@ -28030,10 +28030,14 @@
 	exports.editUserPassword = editUserPassword;
 	exports.requestBet = requestBet;
 	exports.receiveBet = receiveBet;
+	exports.updateBet = updateBet;
 	exports.placeBet = placeBet;
+	exports.replaceBet = replaceBet;
 	exports.requestSpecialBet = requestSpecialBet;
 	exports.receiveSpecialBet = receiveSpecialBet;
+	exports.updateSpecialBet = updateSpecialBet;
 	exports.placeSpecialBet = placeSpecialBet;
+	exports.replaceSpecialBet = replaceSpecialBet;
 
 	var _isomorphicFetch = __webpack_require__(256);
 
@@ -28043,7 +28047,7 @@
 
 	var _utils = __webpack_require__(258);
 
-	var _groups = __webpack_require__(293);
+	var _groups = __webpack_require__(261);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28054,9 +28058,11 @@
 	// Place bet
 	var REQUEST_BET = 'supertipset/user/REQUEST_BET';
 	var RECEIVE_BET = 'supertipset/user/RECEIVE_BET';
+	var UPDATE_BET = 'supertipset/user/UPDATE_BET';
 	// Place special bet
 	var REQUEST_SPECIAL_BET = 'supertipset/user/REQUEST_SPECIAL_BET';
 	var RECEIVE_SPECIAL_BET = exports.RECEIVE_SPECIAL_BET = 'supertipset/user/RECEIVE_SPECIAL_BET';
+	var UPDATE_SPECIAL_BET = exports.UPDATE_SPECIAL_BET = 'supertipset/user/UPDATE_SPECIAL_BET';
 	// Change user password
 	var REQUEST_EDIT_PASSWORD = 'supertipset/user/REQUEST_EDIT_PASSWORD';
 	var RECEIVE_EDIT_PASSWORD = 'supertipset/user/RECEIVE_EDIT_PASSWORD';
@@ -28094,10 +28100,26 @@
 	                    bets: state.data.bets.concat(action.bet)
 	                })
 	            });
+	        case UPDATE_BET:
+	            return (0, _utils.assign)(state, {
+	                data: (0, _utils.assign)(state.data, {
+	                    bets: state.data.bets.map(function (b) {
+	                        return b.id == action.bet.id ? action.bet : b;
+	                    })
+	                })
+	            });
 	        case RECEIVE_SPECIAL_BET:
 	            return (0, _utils.assign)(state, {
 	                data: (0, _utils.assign)(state.data, {
 	                    special_bets: state.data.special_bets.concat(action.specialBet)
+	                })
+	            });
+	        case UPDATE_SPECIAL_BET:
+	            return (0, _utils.assign)(state, {
+	                data: (0, _utils.assign)(state.data, {
+	                    special_bets: state.data.special_bets.map(function (b) {
+	                        return b.id == action.specialBet.id ? action.specialBet : b;
+	                    })
 	                })
 	            });
 	        case _groups.RECEIVE_CREATE:
@@ -28214,6 +28236,10 @@
 	    return { type: RECEIVE_BET, bet: bet };
 	}
 
+	function updateBet(bet) {
+	    return { type: UPDATE_BET, bet: bet };
+	}
+
 	function placeBet(user, game, betTeamOne, betTeamTwo) {
 	    return function (dispatch) {
 	        dispatch(requestBet());
@@ -28242,12 +28268,42 @@
 	    };
 	}
 
+	function replaceBet(bet, betTeamOne, betTeamTwo) {
+	    return function (dispatch) {
+	        dispatch(requestBet());
+
+	        var payload = (0, _utils.preparePut)({
+	            team_1_bet: betTeamOne,
+	            team_2_bet: betTeamTwo
+	        });
+
+	        var url = _utils.baseURL + '/api/bets/' + bet + '/';
+
+	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    dispatch(updateBet(json));
+	                    // TODO better notification message?
+	                    dispatch((0, _notification.successNotification)('Tips sparat!'));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to update bet');
+	            }
+	        });
+	    };
+	}
+
 	function requestSpecialBet() {
 	    return { type: REQUEST_SPECIAL_BET };
 	}
 
 	function receiveSpecialBet(specialBet) {
 	    return { type: RECEIVE_SPECIAL_BET, specialBet: specialBet };
+	}
+
+	function updateSpecialBet(specialBet) {
+	    return { type: UPDATE_SPECIAL_BET, specialBet: specialBet };
 	}
 
 	function placeSpecialBet(user, player, goals, team, tournament) {
@@ -28274,6 +28330,33 @@
 	            } else {
 	                // TODO error handling
 	                console.log('unable to place special bet');
+	            }
+	        });
+	    };
+	}
+
+	function replaceSpecialBet(bet, player, goals, team) {
+	    return function (dispatch) {
+	        dispatch(requestSpecialBet());
+
+	        var payload = (0, _utils.preparePut)({
+	            team: team,
+	            player: player,
+	            player_goals: goals
+	        });
+
+	        var url = _utils.baseURL + '/api/specialbets/' + bet + '/';
+
+	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    dispatch(updateSpecialBet(json));
+	                    // TODO better notification message?
+	                    dispatch((0, _notification.successNotification)('Specialtips sparat!'));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to update special bet');
 	            }
 	        });
 	    };
@@ -28349,3111 +28432,6 @@
 
 /***/ },
 /* 261 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.requestTeams = requestTeams;
-	exports.receiveTeams = receiveTeams;
-	exports.fetchTeams = fetchTeams;
-
-	var _isomorphicFetch = __webpack_require__(256);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _utils = __webpack_require__(258);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var REQUEST = 'supertipset/teams/REQUEST';
-	var RECEIVE = 'supertipset/teams/RECEIVE';
-
-	var initialState = {
-	    isFetching: false,
-	    data: []
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case REQUEST:
-	            return (0, _utils.assign)(state, {
-	                isFetching: true
-	            });
-	        case RECEIVE:
-	            return (0, _utils.assign)(state, {
-	                isFetching: false,
-	                data: action.teams
-	            });
-	        default:
-	            return state;
-	    }
-	}
-
-	function requestTeams() {
-	    return { type: REQUEST };
-	}
-
-	function receiveTeams(teams) {
-	    return { type: RECEIVE, teams: teams };
-	}
-
-	function shouldFetch(teams) {
-	    if (teams.isFetching) {
-	        return false;
-	    } else if (teams.data.length == 0) {
-	        return true;
-	    }
-	}
-
-	function fetchTeams() {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var teams = _getState.teams;
-
-
-	        if (!shouldFetch(teams)) {
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestTeams());
-
-	        var url = _utils.baseURL + '/api/teams/';
-
-	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receiveTeams(json));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch teams');
-	            }
-	        });
-	    };
-	}
-
-/***/ },
-/* 262 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.requestPlayers = requestPlayers;
-	exports.receivePlayers = receivePlayers;
-	exports.fetchPlayers = fetchPlayers;
-
-	var _isomorphicFetch = __webpack_require__(256);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _utils = __webpack_require__(258);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var REQUEST = 'supertipset/players/REQUEST';
-	var RECEIVE = 'supertipset/players/RECEIVE';
-
-	var initialState = {
-	    isFetching: false,
-	    data: []
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case REQUEST:
-	            return (0, _utils.assign)(state, {
-	                isFetching: true
-	            });
-	        case RECEIVE:
-	            return (0, _utils.assign)(state, {
-	                isFetching: false,
-	                data: action.players
-	            });
-	        default:
-	            return state;
-	    }
-	}
-
-	function requestPlayers() {
-	    return { type: REQUEST };
-	}
-
-	function receivePlayers(players) {
-	    return { type: RECEIVE, players: players };
-	}
-
-	function shouldFetch(players) {
-	    if (players.isFetching) {
-	        return false;
-	    } else if (players.data.length == 0) {
-	        return true;
-	    }
-	}
-
-	function fetchPlayers() {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var players = _getState.players;
-
-
-	        if (!shouldFetch(players)) {
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestPlayers());
-
-	        var url = _utils.baseURL + '/api/players/';
-
-	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receivePlayers(json));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch players');
-	            }
-	        });
-	    };
-	}
-
-/***/ },
-/* 263 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(264);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ChangeTournamentButton = function ChangeTournamentButton(_ref) {
-	    var tournament = _ref.tournament;
-	    var tournaments = _ref.tournaments;
-	    var openModal = _ref.openModal;
-
-	    var name = tournaments.data.filter(function (t) {
-	        return t.id == tournament;
-	    })[0].name;
-
-	    // TODO what should be the display text?
-	    return _react2.default.createElement(
-	        'button',
-	        { onClick: openModal, className: 'change-tournament', type: 'button' },
-	        name
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        tournament: state.tournament,
-	        tournaments: state.tournaments
-	    };
-	},
-	// Dispatch to props
-	function (dispatch) {
-	    return {
-	        openModal: function openModal() {
-	            return dispatch((0, _modal.openChangeTournamentModal)());
-	        }
-	    };
-	})(ChangeTournamentButton);
-
-/***/ },
-/* 264 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.closeModal = closeModal;
-	exports.openBetModal = openBetModal;
-	exports.openSpecialBetModal = openSpecialBetModal;
-	exports.openJoinGroupModal = openJoinGroupModal;
-	exports.openCreateGroupModal = openCreateGroupModal;
-	exports.openLeaveGroupModal = openLeaveGroupModal;
-	exports.openEditGroupDescriptionModal = openEditGroupDescriptionModal;
-	exports.openEditGroupPasswordModal = openEditGroupPasswordModal;
-	exports.openEditUserPasswordModal = openEditUserPasswordModal;
-	exports.openChangeTournamentModal = openChangeTournamentModal;
-
-	var _utils = __webpack_require__(258);
-
-	// open / close
-	var OPEN = 'supertipset/modal/OPEN';
-	var CLOSE = 'supertipset/modal/CLOSE';
-	// different modal types
-	var BET = 'supertipset/modal/BET';
-	var SPECIAL_BET = 'supertipset/modal/SPECIAL_BET';
-	var JOIN_GROUP = 'supertipset/modal/JOIN_GROUP';
-	var CREATE_GROUP = 'supertipset/modal/CREATE_GROUP';
-	var LEAVE_GROUP = 'supertipset/modal/LEAVE_GROUP';
-	var EDIT_GROUP_DESCRIPTION = 'supertipset/modal/EDIT_GROUP_DESCRIPTION';
-	var EDIT_GROUP_PASSWORD = 'supertipset/modal/EDIT_GROUP_PASSWORD';
-	var EDIT_USER_PASSWORD = 'supertipset/modal/EDIT_USER_PASSWORD';
-	var CHANGE_TOURNAMENT = 'supertipset/modal/CHANGE_TOURNAMENT';
-
-	var initialState = {
-	    modalType: undefined,
-	    modalProps: {}
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case OPEN:
-	            return (0, _utils.assign)(state, {
-	                modalType: action.modalType,
-	                modalProps: action.modalProps
-	            });
-	        case CLOSE:
-	            return (0, _utils.assign)(state, initialState);
-	        default:
-	            return state;
-	    }
-	}
-
-	function closeModal() {
-	    return { type: CLOSE };
-	}
-
-	function openBetModal(game) {
-	    return {
-	        type: OPEN,
-	        modalType: BET,
-	        modalProps: { game: game }
-	    };
-	}
-
-	function openSpecialBetModal() {
-	    return {
-	        type: OPEN,
-	        modalType: SPECIAL_BET,
-	        modalProps: {}
-	    };
-	}
-
-	function openJoinGroupModal() {
-	    return {
-	        type: OPEN,
-	        modalType: JOIN_GROUP,
-	        modalProps: {}
-	    };
-	}
-
-	function openCreateGroupModal() {
-	    return {
-	        type: OPEN,
-	        modalType: CREATE_GROUP,
-	        modalProps: {}
-	    };
-	}
-
-	function openLeaveGroupModal(group) {
-	    return {
-	        type: OPEN,
-	        modalType: LEAVE_GROUP,
-	        modalProps: { group: group }
-	    };
-	}
-
-	function openEditGroupDescriptionModal(group) {
-	    return {
-	        type: OPEN,
-	        modalType: EDIT_GROUP_DESCRIPTION,
-	        modalProps: { group: group }
-	    };
-	}
-
-	function openEditGroupPasswordModal(group) {
-	    return {
-	        type: OPEN,
-	        modalType: EDIT_GROUP_PASSWORD,
-	        modalProps: { group: group }
-	    };
-	}
-
-	function openEditUserPasswordModal(user) {
-	    return {
-	        type: OPEN,
-	        modalType: EDIT_USER_PASSWORD,
-	        modalProps: { user: user }
-	    };
-	}
-
-	function openChangeTournamentModal() {
-	    return {
-	        type: OPEN,
-	        modalType: CHANGE_TOURNAMENT,
-	        modalProps: {}
-	    };
-	}
-
-/***/ },
-/* 265 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _rounds = __webpack_require__(266);
-
-	var _components = __webpack_require__(267);
-
-	var _PlaceSpecialBetButton = __webpack_require__(287);
-
-	var _PlaceSpecialBetButton2 = _interopRequireDefault(_PlaceSpecialBetButton);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Bets = function (_Component) {
-	    _inherits(Bets, _Component);
-
-	    function Bets(props) {
-	        _classCallCheck(this, Bets);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Bets).call(this, props));
-	    }
-
-	    _createClass(Bets, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var _props = this.props;
-	            var dispatch = _props.dispatch;
-	            var user = _props.user;
-	            var tournament = _props.tournament;
-	            // TODO do i need to re-fetch user here?
-
-	            dispatch((0, _rounds.fetchRounds)(tournament));
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _props2 = this.props;
-	            var user = _props2.user;
-	            var rounds = _props2.rounds;
-	            var tournament = _props2.tournament;
-	            var tournaments = _props2.tournaments;
-
-	            // If we should continue to show the special bets button
-
-	            var now = new Date();
-	            var currTournament = tournaments.data.filter(function (t) {
-	                return t.id == tournament;
-	            })[0];
-	            var currTournamentDate = currTournament ? new Date(currTournament.start_date) : false;
-	            var tournamentHasStarted = now > currTournamentDate;
-
-	            return _react2.default.createElement(
-	                'div',
-	                { className: 'bets-container' },
-	                _react2.default.createElement(_components.Points, {
-	                    user: user }),
-	                _react2.default.createElement(_components.SpecialBets, {
-	                    user: user,
-	                    tournamentHasStarted: tournamentHasStarted,
-	                    bettable: true }),
-	                _react2.default.createElement(_components.Rounds, {
-	                    rounds: rounds })
-	            );
-	        }
-	    }]);
-
-	    return Bets;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        user: state.user,
-	        rounds: state.rounds,
-	        tournament: state.tournament,
-	        tournaments: state.tournaments
-	    };
-	})(Bets);
-
-/***/ },
-/* 266 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.invalidateRounds = invalidateRounds;
-	exports.requestRounds = requestRounds;
-	exports.receiveRounds = receiveRounds;
-	exports.fetchRounds = fetchRounds;
-
-	var _isomorphicFetch = __webpack_require__(256);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _utils = __webpack_require__(258);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var INVALIDATE = 'supertipset/rounds/INVALIDATE';
-	var REQUEST = 'supertipset/rounds/REQUEST';
-	var RECEIVE = 'supertipset/rounds/RECEIVE';
-
-	var initialState = {
-	    isFetching: false,
-	    didInvalidate: false,
-	    data: []
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case INVALIDATE:
-	            return (0, _utils.assign)(state, {
-	                didInvalidate: true
-	            });
-	        case REQUEST:
-	            return (0, _utils.assign)(state, {
-	                isFetching: true,
-	                didInvalidate: false
-	            });
-	        case RECEIVE:
-	            return (0, _utils.assign)(state, {
-	                isFetching: false,
-	                didInvalidate: false,
-	                data: action.rounds
-	            });
-	        default:
-	            return state;
-	    }
-	}
-
-	function invalidateRounds() {
-	    return { type: INVALIDATE };
-	}
-
-	function requestRounds() {
-	    return { type: REQUEST };
-	}
-
-	function receiveRounds(rounds) {
-	    return { type: RECEIVE, rounds: rounds };
-	}
-
-	function shouldFetch(rounds) {
-	    if (rounds.isFetching) {
-	        return false;
-	    } else if (rounds.data.length == 0) {
-	        return true;
-	    } else {
-	        return rounds.didInvalidate;
-	    }
-	}
-
-	function fetchRounds(tournament) {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var rounds = _getState.rounds;
-
-
-	        if (!shouldFetch(rounds)) {
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestRounds());
-
-	        var url = _utils.baseURL + '/api/rounds/?tournament=' + tournament;
-
-	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receiveRounds(json));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch rounds');
-	            }
-	        });
-	    };
-	}
-
-/***/ },
-/* 267 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.ErrorNotification = exports.SuccessNotification = exports.UserTopBets = exports.UserTotalTopList = exports.GroupMembersTopList = exports.GroupTotalTopList = exports.GroupAverageTopList = exports.GroupMembers = exports.GroupListSummary = exports.GroupList = exports.ProfileBets = exports.Profile = exports.Game = exports.Round = exports.Rounds = exports.SpecialBets = exports.Points = exports.Tournaments = exports.BackButton = undefined;
-
-	var _BackButton2 = __webpack_require__(268);
-
-	var _BackButton3 = _interopRequireDefault(_BackButton2);
-
-	var _Tournaments2 = __webpack_require__(269);
-
-	var _Tournaments3 = _interopRequireDefault(_Tournaments2);
-
-	var _Points2 = __webpack_require__(270);
-
-	var _Points3 = _interopRequireDefault(_Points2);
-
-	var _SpecialBets2 = __webpack_require__(271);
-
-	var _SpecialBets3 = _interopRequireDefault(_SpecialBets2);
-
-	var _Rounds2 = __webpack_require__(272);
-
-	var _Rounds3 = _interopRequireDefault(_Rounds2);
-
-	var _Round2 = __webpack_require__(273);
-
-	var _Round3 = _interopRequireDefault(_Round2);
-
-	var _Game2 = __webpack_require__(274);
-
-	var _Game3 = _interopRequireDefault(_Game2);
-
-	var _Profile2 = __webpack_require__(275);
-
-	var _Profile3 = _interopRequireDefault(_Profile2);
-
-	var _ProfileBets2 = __webpack_require__(277);
-
-	var _ProfileBets3 = _interopRequireDefault(_ProfileBets2);
-
-	var _GroupList2 = __webpack_require__(278);
-
-	var _GroupList3 = _interopRequireDefault(_GroupList2);
-
-	var _GroupListSummary2 = __webpack_require__(276);
-
-	var _GroupListSummary3 = _interopRequireDefault(_GroupListSummary2);
-
-	var _GroupMembers2 = __webpack_require__(279);
-
-	var _GroupMembers3 = _interopRequireDefault(_GroupMembers2);
-
-	var _GroupAverageTopList2 = __webpack_require__(280);
-
-	var _GroupAverageTopList3 = _interopRequireDefault(_GroupAverageTopList2);
-
-	var _GroupTotalTopList2 = __webpack_require__(281);
-
-	var _GroupTotalTopList3 = _interopRequireDefault(_GroupTotalTopList2);
-
-	var _GroupMembersTopList2 = __webpack_require__(282);
-
-	var _GroupMembersTopList3 = _interopRequireDefault(_GroupMembersTopList2);
-
-	var _UserTotalTopList2 = __webpack_require__(283);
-
-	var _UserTotalTopList3 = _interopRequireDefault(_UserTotalTopList2);
-
-	var _UserTopBets2 = __webpack_require__(284);
-
-	var _UserTopBets3 = _interopRequireDefault(_UserTopBets2);
-
-	var _SuccessNotification2 = __webpack_require__(285);
-
-	var _SuccessNotification3 = _interopRequireDefault(_SuccessNotification2);
-
-	var _ErrorNotification2 = __webpack_require__(286);
-
-	var _ErrorNotification3 = _interopRequireDefault(_ErrorNotification2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.BackButton = _BackButton3.default;
-	exports.Tournaments = _Tournaments3.default;
-	exports.Points = _Points3.default;
-	exports.SpecialBets = _SpecialBets3.default;
-	exports.Rounds = _Rounds3.default;
-	exports.Round = _Round3.default;
-	exports.Game = _Game3.default;
-	exports.Profile = _Profile3.default;
-	exports.ProfileBets = _ProfileBets3.default;
-	exports.GroupList = _GroupList3.default;
-	exports.GroupListSummary = _GroupListSummary3.default;
-	exports.GroupMembers = _GroupMembers3.default;
-	exports.GroupAverageTopList = _GroupAverageTopList3.default;
-	exports.GroupTotalTopList = _GroupTotalTopList3.default;
-	exports.GroupMembersTopList = _GroupMembersTopList3.default;
-	exports.UserTotalTopList = _UserTotalTopList3.default;
-	exports.UserTopBets = _UserTopBets3.default;
-	exports.SuccessNotification = _SuccessNotification3.default;
-	exports.ErrorNotification = _ErrorNotification3.default;
-
-/***/ },
-/* 268 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var goBack = function goBack() {
-	    return history.go(-1);
-	};
-
-	var BackButton = function BackButton() {
-	    return _react2.default.createElement(
-	        'button',
-	        {
-	            onClick: goBack,
-	            className: 'back-button',
-	            type: 'button' },
-	        'Tillbaka'
-	    );
-	};
-
-	exports.default = BackButton;
-
-/***/ },
-/* 269 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var option = function option(tournament, i) {
-	    return _react2.default.createElement(
-	        'option',
-	        { key: i, value: tournament.id },
-	        tournament.name
-	    );
-	};
-
-	var Tournaments = function Tournaments(_ref) {
-	    var tournaments = _ref.tournaments;
-	    var onChange = _ref.onChange;
-
-	    var c = function c(e) {
-	        return onChange(Number(e.target.value));
-	    };
-
-	    return _react2.default.createElement(
-	        'select',
-	        { onChange: c },
-	        tournaments.map(option)
-	    );
-	};
-
-	exports.default = Tournaments;
-
-/***/ },
-/* 270 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var sum = function sum(p) {
-	    return p.reduce(function (a, n) {
-	        return a + n.points;
-	    }, 0);
-	};
-
-	var Points = function Points(_ref) {
-	    var user = _ref.user;
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'user-points' },
-	        _react2.default.createElement(
-	            'h6',
-	            null,
-	            'POÄNG'
-	        ),
-	        _react2.default.createElement(
-	            'p',
-	            null,
-	            !user.isFetching && user.data.hasOwnProperty('id') ? sum(user.data.points) : '-'
-	        )
-	    );
-	};
-
-	exports.default = Points;
-
-/***/ },
-/* 271 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _containers = __webpack_require__(253);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var SpecialBets = function SpecialBets(_ref) {
-	    var user = _ref.user;
-	    var tournamentHasStarted = _ref.tournamentHasStarted;
-	    var bettable = _ref.bettable;
-
-
-	    // No special bets available yet
-	    if (user.isFetching || !user.data.hasOwnProperty('id')) {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'special-bets-container' },
-	            _react2.default.createElement(
-	                'h5',
-	                null,
-	                'Specialtips (Laddar...)'
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'special-bets' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'winner' },
-	                    _react2.default.createElement(
-	                        'h6',
-	                        null,
-	                        'VINNARE'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '-'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'goal-scorer' },
-	                    _react2.default.createElement(
-	                        'h6',
-	                        null,
-	                        'SKYTTEKUNG'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '-'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'goals' },
-	                    _react2.default.createElement(
-	                        'h6',
-	                        null,
-	                        'MÅL'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '-'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'points' },
-	                    _react2.default.createElement(
-	                        'h6',
-	                        null,
-	                        'POÄNG'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '0'
-	                    )
-	                )
-	            )
-	        );
-	    }
-
-	    // No special bets exists
-	    if (user.data.special_bets.length == 0) {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'special-bets-container' },
-	            _react2.default.createElement(
-	                'h5',
-	                null,
-	                'Specialtips',
-	                bettable ? _react2.default.createElement(_containers.PlaceSpecialBetButton, null) : ''
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'special-bets' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'winner' },
-	                    _react2.default.createElement(
-	                        'h6',
-	                        null,
-	                        'VINNARE'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '-'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'goal-scorer' },
-	                    _react2.default.createElement(
-	                        'h6',
-	                        null,
-	                        'SKYTTEKUNG'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '-'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'goals' },
-	                    _react2.default.createElement(
-	                        'h6',
-	                        null,
-	                        'MÅL'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '-'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'points' },
-	                    _react2.default.createElement(
-	                        'h6',
-	                        null,
-	                        'POÄNG'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '0'
-	                    )
-	                )
-	            )
-	        );
-	    }
-
-	    // TODO Check for special bet results (points)
-	    var bets = user.data.special_bets[0];
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'special-bets-container' },
-	        _react2.default.createElement(
-	            'h5',
-	            null,
-	            'Specialtips',
-	            bettable && !tournamentHasStarted ? _react2.default.createElement(_containers.PlaceSpecialBetButton, null) : ''
-	        ),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'special-bets' },
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'winner' },
-	                _react2.default.createElement(
-	                    'h6',
-	                    null,
-	                    'VINNARE'
-	                ),
-	                _react2.default.createElement(
-	                    'span',
-	                    null,
-	                    bets.team.name
-	                )
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'goal-scorer' },
-	                _react2.default.createElement(
-	                    'h6',
-	                    null,
-	                    'SKYTTEKUNG'
-	                ),
-	                _react2.default.createElement(
-	                    'span',
-	                    null,
-	                    bets.player.firstname,
-	                    ' ',
-	                    bets.player.lastname
-	                )
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'goals' },
-	                _react2.default.createElement(
-	                    'h6',
-	                    null,
-	                    'MÅL'
-	                ),
-	                _react2.default.createElement(
-	                    'span',
-	                    null,
-	                    bets.player_goals
-	                )
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'points' },
-	                _react2.default.createElement(
-	                    'h6',
-	                    null,
-	                    'POÄNG'
-	                ),
-	                _react2.default.createElement(
-	                    'span',
-	                    null,
-	                    '0'
-	                )
-	            )
-	        )
-	    );
-	};
-
-	exports.default = SpecialBets;
-
-/***/ },
-/* 272 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _Round = __webpack_require__(273);
-
-	var _Round2 = _interopRequireDefault(_Round);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var round = function round(r, i) {
-	    return _react2.default.createElement(_Round2.default, { key: i, round: r });
-	};
-
-	var Rounds = function Rounds(_ref) {
-	    var rounds = _ref.rounds;
-
-
-	    if (rounds.isFetching || rounds.data.length === 0) {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'rounds' },
-	            'Laddar...'
-	        );
-	    }
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'rounds' },
-	        rounds.data.map(round)
-	    );
-	};
-
-	exports.default = Rounds;
-
-/***/ },
-/* 273 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _Game = __webpack_require__(274);
-
-	var _Game2 = _interopRequireDefault(_Game);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var game = function game(g, i) {
-	    return _react2.default.createElement(_Game2.default, { key: i, game: g });
-	};
-
-	var isActive = function isActive(roundStart, roundEnd) {
-	    var now = new Date();
-	    var start = new Date(Date.parse(roundStart));
-	    var end = new Date(Date.parse(roundEnd));
-
-	    return start < now && end > now;
-	};
-
-	var Round = function Round(_ref) {
-	    var round = _ref.round;
-
-	    var active = isActive(round.start_date, round.stop_date);
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: active ? 'round active' : 'round inactive' },
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            round.name
-	        ),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'round-headers' },
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'deadline' },
-	                'Deadline'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'matchup' },
-	                'Match (grupp)'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'res' },
-	                'Resultat'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'bet' },
-	                'Tips'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'pts' },
-	                'Poäng'
-	            )
-	        ),
-	        round.games.map(game)
-	    );
-	};
-
-	exports.default = Round;
-
-/***/ },
-/* 274 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _containers = __webpack_require__(253);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var hasStarted = function hasStarted(gameStart) {
-	    var now = new Date();
-	    var start = new Date(Date.parse(gameStart));
-
-	    return now > start;
-	};
-
-	var formatDate = function formatDate(gameStart) {
-	    var date = new Date(Date.parse(gameStart));
-
-	    var d = date.getDate();
-	    var m = date.getMonth() + 1;
-	    var hour = date.getHours();
-	    var min = date.getMinutes();
-	    var hh = hour < 10 ? '0' + hour : hour;
-	    var mm = min < 10 ? '0' + min : min;
-
-	    return d + '/' + m + ' ' + hh + ':' + mm;
-	};
-
-	var getBetsForGame = function getBetsForGame(id, user) {
-	    var foundBet = user.data.bets.filter(function (bet) {
-	        return bet.game.id === id;
-	    });
-	    return foundBet.length ? foundBet[0] : false;
-	};
-
-	var getPointsForGame = function getPointsForGame(id, user) {
-	    return user.data.points.filter(function (pts) {
-	        return pts.game === id;
-	    }).reduce(function (a, n) {
-	        return n.points;
-	    }, 0);
-	};
-
-	var Game = function Game(_ref) {
-	    var game = _ref.game;
-	    var user = _ref.user;
-
-	    if (user.isFetching || !user.data.hasOwnProperty('id')) {
-	        return false;
-	    }
-
-	    var started = hasStarted(game.start_date);
-	    var matchup = game.team_1.name + ' - ' + game.team_2.name + ' (' + game.group_name + ')';
-
-	    var bet = getBetsForGame(game.id, user);
-
-	    if (!started) {
-	        var start = formatDate(game.start_date);
-
-	        // TODO: check if a game is active - then they cant place a bet
-
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'game-row' },
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'deadline' },
-	                start
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'matchup' },
-	                matchup
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'res' },
-	                '-'
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'bet' },
-	                bet ? bet.team_1_bet + ' - ' + bet.team_2_bet : 'x - x'
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'pts' },
-	                _react2.default.createElement(_containers.PlaceBetButton, { game: game })
-	            )
-	        );
-	    }
-
-	    var done = started && game.result.length > 0;
-	    var result = game.result.length === 0 ? '-' : game.result[0].team_1_goals + ' - ' + game.result[0].team_2_goals;
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'game-row' },
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'deadline' },
-	            done ? 'Avgjord' : 'Pågår'
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'matchup' },
-	            matchup
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'res' },
-	            result
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'bet' },
-	            bet ? bet.team_1_bet + ' - ' + bet.team_2_bet : 'x - x'
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'pts' },
-	            bet ? getPointsForGame(game.id, user) : 0
-	        )
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(function (state) {
-	    return { user: state.user };
-	})(Game);
-
-/***/ },
-/* 275 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _Points = __webpack_require__(270);
-
-	var _Points2 = _interopRequireDefault(_Points);
-
-	var _SpecialBets = __webpack_require__(271);
-
-	var _SpecialBets2 = _interopRequireDefault(_SpecialBets);
-
-	var _GroupListSummary = __webpack_require__(276);
-
-	var _GroupListSummary2 = _interopRequireDefault(_GroupListSummary);
-
-	var _ProfileBets = __webpack_require__(277);
-
-	var _ProfileBets2 = _interopRequireDefault(_ProfileBets);
-
-	var _containers = __webpack_require__(253);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Profile = function Profile(_ref) {
-	    var profile = _ref.profile;
-	    var tournamentHasStarted = _ref.tournamentHasStarted;
-	    var isCurrentUser = _ref.isCurrentUser;
-
-
-	    var fullname = profile.data.firstname + ' ' + profile.data.lastname;
-	    var username = _react2.default.createElement(
-	        'small',
-	        null,
-	        '(',
-	        profile.data.username,
-	        ')'
-	    );
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'profile' },
-	        isCurrentUser ? _react2.default.createElement(_containers.EditUserPasswordButton, null) : '',
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            fullname,
-	            ' ',
-	            username
-	        ),
-	        _react2.default.createElement(_Points2.default, { user: profile }),
-	        _react2.default.createElement(_SpecialBets2.default, {
-	            user: profile,
-	            tournamentHasStarted: tournamentHasStarted,
-	            bettable: isCurrentUser }),
-	        _react2.default.createElement(_GroupListSummary2.default, {
-	            user: profile,
-	            groups: profile.data.groups,
-	            isCurrentUser: isCurrentUser }),
-	        !isCurrentUser && profile.data.bets.length ? _react2.default.createElement(_ProfileBets2.default, {
-	            bets: profile.data.bets,
-	            points: profile.data.points }) : ''
-	    );
-	};
-
-	exports.default = Profile;
-
-/***/ },
-/* 276 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(196);
-
-	var _containers = __webpack_require__(253);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var groupSummary = function groupSummary(user, isCurrentUser) {
-	    return function (g, i) {
-	        return _react2.default.createElement(
-	            'div',
-	            { key: i, className: 'group-summary-row' },
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'pos' },
-	                i + 1
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'name' },
-	                _react2.default.createElement(
-	                    _reactRouter.Link,
-	                    { to: '/s/groups/' + g.id },
-	                    g.name
-	                )
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'members' },
-	                g.users.length
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'admin' },
-	                user.data.id == g.admin.id ? g.admin.username : _react2.default.createElement(
-	                    _reactRouter.Link,
-	                    { to: '/s/profile/' + g.admin.id },
-	                    g.admin.username
-	                )
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'leave' },
-	                isCurrentUser ? _react2.default.createElement(_containers.LeaveGroupButton, { group: g }) : ''
-	            )
-	        );
-	    };
-	};
-
-	var GroupListSummary = function GroupListSummary(_ref) {
-	    var user = _ref.user;
-	    var groups = _ref.groups;
-	    var isCurrentUser = _ref.isCurrentUser;
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'groups-summary' },
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Ligor'
-	        ),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'group-headers' },
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'pos' },
-	                '#'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'name' },
-	                'Liga'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'members' },
-	                'Medlemmar'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'admin' },
-	                'Admin'
-	            ),
-	            _react2.default.createElement('h6', { className: 'leave' })
-	        ),
-	        groups.map(groupSummary(user, isCurrentUser))
-	    );
-	};
-
-	exports.default = GroupListSummary;
-
-/***/ },
-/* 277 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var showBet = function showBet(points) {
-	    return function (bet, i) {
-	        var p = points.filter(function (point) {
-	            return point.game === bet.game.id;
-	        });
-
-	        return _react2.default.createElement(
-	            'div',
-	            { key: i, className: 'profile-bet' },
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'game' },
-	                bet.game.team_1.name + ' - ' + bet.game.team_2.name
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'res' },
-	                bet.game.result.length ? bet.game.result[0].team_1_goals + ' - ' + bet.game.result[0].team_2_goals : '-'
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'bet' },
-	                bet.team_1_bet + ' - ' + bet.team_1_bet
-	            ),
-	            _react2.default.createElement(
-	                'span',
-	                { className: 'points' },
-	                p.length ? p[0].points : '-'
-	            )
-	        );
-	    };
-	};
-
-	var ProfileBets = function ProfileBets(_ref) {
-	    var bets = _ref.bets;
-	    var points = _ref.points;
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'profile-bets-container' },
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Tips'
-	        ),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'profile-bets-headers' },
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'game' },
-	                'Match (grupp)'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'res' },
-	                'Resultat'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'bet' },
-	                'Tips'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'points' },
-	                'Poäng'
-	            )
-	        ),
-	        bets.map(showBet(points))
-	    );
-	};
-
-	exports.default = ProfileBets;
-
-/***/ },
-/* 278 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(196);
-
-	var _containers = __webpack_require__(253);
-
-	var _GroupMembers = __webpack_require__(279);
-
-	var _GroupMembers2 = _interopRequireDefault(_GroupMembers);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var group = function group(g, i) {
-	    return _react2.default.createElement(
-	        _GroupMembers2.default,
-	        { key: i, group: g },
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'group-name' },
-	            _react2.default.createElement(
-	                _reactRouter.Link,
-	                { to: '/s/groups/' + g.id },
-	                g.name
-	            ),
-	            _react2.default.createElement(_containers.LeaveGroupButton, { group: g })
-	        )
-	    );
-	};
-
-	var sortByGroupName = function sortByGroupName(a, b) {
-	    return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1;
-	};
-
-	var GroupList = function GroupList(_ref) {
-	    var groups = _ref.groups;
-
-	    if (groups.isFetching) {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'groups' },
-	            _react2.default.createElement(
-	                'p',
-	                null,
-	                'Laddar...'
-	            )
-	        );
-	    }
-
-	    if (groups.data.length === 0) {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'groups' },
-	            _react2.default.createElement(
-	                'p',
-	                null,
-	                'Du är inte med i några ligor.'
-	            )
-	        );
-	    }
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'groups' },
-	        groups.data.sort(sortByGroupName).map(group)
-	    );
-	};
-
-	exports.default = GroupList;
-
-/***/ },
-/* 279 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(196);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var member = function member(m, i) {
-	    return _react2.default.createElement(
-	        'div',
-	        { key: i, className: 'group-row' },
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'pos' },
-	            i + 1
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'member' },
-	            _react2.default.createElement(
-	                _reactRouter.Link,
-	                { to: '/s/profile/' + m.id },
-	                m.username
-	            )
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'team' },
-	            m.team
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'points' },
-	            m.totalPoints
-	        )
-	    );
-	};
-
-	var reduceTeamName = function reduceTeamName(p, c) {
-	    return c.team.name;
-	};
-	var reducePoints = function reducePoints(p, c) {
-	    return p += c.points;
-	};
-	var reduceBetResults = function reduceBetResults(p, c) {
-	    return c.player + c.goals + c.team;
-	};
-	var sortByPoints = function sortByPoints(a, b) {
-	    return b.totalPoints - a.totalPoints;
-	};
-	var getUser = function getUser(u) {
-	    return {
-	        id: u.id,
-	        username: u.username,
-	        team: u.special_bets.reduce(reduceTeamName, '-'),
-	        totalPoints: u.points.reduce(reducePoints, 0) + u.special_bet_results.reduce(reduceBetResults, 0)
-	    };
-	};
-
-	var GroupMembers = function GroupMembers(_ref) {
-	    var group = _ref.group;
-	    var children = _ref.children;
-
-
-	    var orderedMembers = group.users.map(getUser).sort(sortByPoints);
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'group-container' },
-	        children,
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'group-headers' },
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'pos' },
-	                '#'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'member' },
-	                'Medlem'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'team' },
-	                'Lag'
-	            ),
-	            _react2.default.createElement(
-	                'h6',
-	                { className: 'points' },
-	                'Poäng'
-	            )
-	        ),
-	        orderedMembers.map(member)
-	    );
-	};
-
-	exports.default = GroupMembers;
-
-/***/ },
-/* 280 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(196);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var group = function group(g, i) {
-	    return _react2.default.createElement(
-	        'div',
-	        { key: i, className: 'toplist-row' },
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'pos' },
-	            i + 1
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'name' },
-	            _react2.default.createElement(
-	                _reactRouter.Link,
-	                { to: '/s/groups/' + g.id },
-	                g.name
-	            )
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'sum' },
-	            g.averagePoints
-	        )
-	    );
-	};
-
-	var reduceUserPoints = function reduceUserPoints(a, n) {
-	    return a + n.points;
-	};
-	var reduceUserBetResults = function reduceUserBetResults(a, n) {
-	    return a + (n.goals + n.player + n.team);
-	};
-	var reduceUserTotal = function reduceUserTotal(a, n) {
-	    return a + n.points.reduce(reduceUserPoints, 0) + n.special_bet_results.reduce(reduceUserBetResults, 0);
-	};
-	var sortByPoints = function sortByPoints(a, b) {
-	    return b.averagePoints - a.averagePoints;
-	};
-	var getGroupWithPoints = function getGroupWithPoints(g) {
-	    return {
-	        id: g.id,
-	        name: g.name,
-	        averagePoints: Math.floor(g.users.reduce(reduceUserTotal, 0) / g.users.length)
-	    };
-	};
-
-	var GroupAverageTopList = function GroupAverageTopList(_ref) {
-	    var groups = _ref.groups;
-
-
-	    if (groups.isFetching || groups.data.length == 0) {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'toplist-container' },
-	            _react2.default.createElement(
-	                'h2',
-	                null,
-	                'Medelpoäng'
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'toplist user-total' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'toplist-headers' },
-	                    _react2.default.createElement(
-	                        'h6',
-	                        { className: 'pos' },
-	                        '#'
-	                    ),
-	                    _react2.default.createElement(
-	                        'h6',
-	                        { className: 'name' },
-	                        'Liga'
-	                    ),
-	                    _react2.default.createElement(
-	                        'h6',
-	                        { className: 'sum' },
-	                        'Poäng'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'Laddar...'
-	                )
-	            )
-	        );
-	    }
-
-	    var orderedGroups = groups.data.map(getGroupWithPoints).sort(sortByPoints);
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'toplist-container' },
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Medelpoäng'
-	        ),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'toplist user-total' },
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'toplist-headers' },
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'pos' },
-	                    '#'
-	                ),
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'name' },
-	                    'Liga'
-	                ),
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'sum' },
-	                    'Poäng'
-	                )
-	            ),
-	            orderedGroups.map(group)
-	        )
-	    );
-	};
-
-	exports.default = GroupAverageTopList;
-
-/***/ },
-/* 281 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(196);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var group = function group(g, i) {
-	    return _react2.default.createElement(
-	        'li',
-	        { key: i },
-	        i + 1,
-	        ' | ',
-	        _react2.default.createElement(
-	            _reactRouter.Link,
-	            { to: '/s/groups/' + g.id },
-	            g.name
-	        ),
-	        ' | ',
-	        g.totalPoints
-	    );
-	};
-
-	var reduceUserPoints = function reduceUserPoints(a, n) {
-	    return a + n.points;
-	};
-	var reduceUserBetResults = function reduceUserBetResults(a, n) {
-	    return a + (n.goals + n.player + n.team);
-	};
-	var reduceUserTotal = function reduceUserTotal(a, n) {
-	    return a + n.points.reduce(reduceUserPoints, 0) + n.special_bet_results.reduce(reduceUserBetResults, 0);
-	};
-
-	var GroupTotalTopList = function GroupTotalTopList(_ref) {
-	    var groups = _ref.groups;
-
-
-	    if (groups.isFetching || groups.data.length == 0) {
-	        return _react2.default.createElement(
-	            'p',
-	            null,
-	            'Laddar ligor...'
-	        );
-	    }
-
-	    var orderedGroups = groups.data.map(function (g) {
-	        return {
-	            id: g.id,
-	            name: g.name,
-	            totalPoints: g.users.reduce(reduceUserTotal, 0)
-	        };
-	    }).sort(function (a, b) {
-	        return b.totalPoints - a.totalPoints;
-	    });
-
-	    return _react2.default.createElement(
-	        'ol',
-	        null,
-	        orderedGroups.map(group)
-	    );
-	};
-
-	exports.default = GroupTotalTopList;
-
-/***/ },
-/* 282 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(196);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var group = function group(g, i) {
-	    return _react2.default.createElement(
-	        'div',
-	        { key: i, className: 'toplist-row' },
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'pos' },
-	            i + 1
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'name' },
-	            _react2.default.createElement(
-	                _reactRouter.Link,
-	                { to: '/s/groups/' + g.id },
-	                g.name
-	            )
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'sum' },
-	            g.members
-	        )
-	    );
-	};
-
-	var sortByMembers = function sortByMembers(a, b) {
-	    return b.members - a.members;
-	};
-	var getGroupWithMembers = function getGroupWithMembers(g) {
-	    return {
-	        id: g.id,
-	        name: g.name,
-	        members: g.users.length
-	    };
-	};
-
-	var GroupMembersTopList = function GroupMembersTopList(_ref) {
-	    var groups = _ref.groups;
-
-
-	    if (groups.isFetching || groups.data.length == 0) {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'toplist-container' },
-	            _react2.default.createElement(
-	                'h2',
-	                null,
-	                'Medlemmar'
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'toplist user-total' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'toplist-headers' },
-	                    _react2.default.createElement(
-	                        'h6',
-	                        { className: 'pos' },
-	                        '#'
-	                    ),
-	                    _react2.default.createElement(
-	                        'h6',
-	                        { className: 'name' },
-	                        'Liga'
-	                    ),
-	                    _react2.default.createElement(
-	                        'h6',
-	                        { className: 'sum' },
-	                        'Antal'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'Laddar...'
-	                )
-	            )
-	        );
-	    }
-
-	    var orderedGroups = groups.data.map(getGroupWithMembers).sort(sortByMembers);
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'toplist-container' },
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Medlemmar'
-	        ),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'toplist user-total' },
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'toplist-headers' },
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'pos' },
-	                    '#'
-	                ),
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'name' },
-	                    'Liga'
-	                ),
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'sum' },
-	                    'Antal'
-	                )
-	            ),
-	            orderedGroups.map(group)
-	        )
-	    );
-	};
-
-	exports.default = GroupMembersTopList;
-
-/***/ },
-/* 283 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(196);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var user = function user(u, i) {
-	    return _react2.default.createElement(
-	        'div',
-	        { key: i, className: 'toplist-row' },
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'pos' },
-	            i + 1
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'name' },
-	            _react2.default.createElement(
-	                _reactRouter.Link,
-	                { to: '/s/profile/' + u.id },
-	                u.username
-	            )
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'sum' },
-	            u.totalPoints
-	        )
-	    );
-	};
-
-	var reducePoints = function reducePoints(a, n) {
-	    return a + n.points;
-	};
-	var reduceBetResults = function reduceBetResults(a, n) {
-	    return a + (n.goals + n.player + n.team);
-	};
-	var sortByPoints = function sortByPoints(a, b) {
-	    return b.totalPoints - a.totalPoints;
-	};
-	var getUserWithPoints = function getUserWithPoints(u) {
-	    return {
-	        id: u.id,
-	        username: u.username,
-	        totalPoints: u.points.reduce(reducePoints, 0) + u.special_bet_results.reduce(reduceBetResults, 0)
-	    };
-	};
-
-	var UserTotalTopList = function UserTotalTopList(_ref) {
-	    var users = _ref.users;
-
-
-	    if (users.isFetching || users.data.length == 0) {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'toplist-container' },
-	            _react2.default.createElement(
-	                'h2',
-	                null,
-	                'Högsta poäng'
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'toplist user-total' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'toplist-headers' },
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '#'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        'Användare'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        'Poäng'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'Laddar...'
-	                )
-	            )
-	        );
-	    }
-
-	    var orderedUsers = users.data.map(getUserWithPoints).sort(sortByPoints);
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'toplist-container' },
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Högsta poäng'
-	        ),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'toplist user-total' },
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'toplist-headers' },
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'pos' },
-	                    '#'
-	                ),
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'name' },
-	                    'Användare'
-	                ),
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'sum' },
-	                    'Poäng'
-	                )
-	            ),
-	            orderedUsers.map(user)
-	        )
-	    );
-	};
-
-	exports.default = UserTotalTopList;
-
-/***/ },
-/* 284 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(196);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var user = function user(u, i) {
-	    return _react2.default.createElement(
-	        'div',
-	        { key: i, className: 'toplist-row' },
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'pos' },
-	            i + 1
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'name' },
-	            _react2.default.createElement(
-	                _reactRouter.Link,
-	                { to: '/s/profile/' + u.id },
-	                u.username
-	            )
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'sum' },
-	            u.topBets
-	        )
-	    );
-	};
-
-	var sortByPoints = function sortByPoints(a, b) {
-	    return b.topBets - a.topBets;
-	};
-	var getUserWithPoints = function getUserWithPoints(u) {
-	    return {
-	        id: u.id,
-	        username: u.username,
-	        topBets: u.points.filter(function (pts) {
-	            return pts.points == 10;
-	        }).length
-	    };
-	};
-
-	var UserTopBets = function UserTopBets(_ref) {
-	    var users = _ref.users;
-
-
-	    if (users.isFetching || users.data.length == 0) {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'toplist-container' },
-	            _react2.default.createElement(
-	                'h2',
-	                null,
-	                'Högsta poäng'
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'toplist user-total' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'toplist-headers' },
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '#'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        'Användare'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        'Poäng'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'Laddar...'
-	                )
-	            )
-	        );
-	    }
-
-	    var orderedUsers = users.data.map(getUserWithPoints).sort(sortByPoints);
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'toplist-container' },
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Antal tior'
-	        ),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'toplist user-total' },
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'toplist-headers' },
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'pos' },
-	                    '#'
-	                ),
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'name' },
-	                    'Användare'
-	                ),
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'sum' },
-	                    'Antal'
-	                )
-	            ),
-	            orderedUsers.map(user)
-	        )
-	    );
-	};
-
-	exports.default = UserTopBets;
-
-/***/ },
-/* 285 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _notification = __webpack_require__(260);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var SuccessNotification = function SuccessNotification(_ref) {
-	    var dispatch = _ref.dispatch;
-	    var message = _ref.message;
-
-	    var hide = function hide() {
-	        return dispatch((0, _notification.hideNotification)());
-	    };
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'notification success', onClick: hide },
-	        _react2.default.createElement(
-	            'p',
-	            null,
-	            message
-	        )
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(function (state) {
-	    return { notification: state.notification };
-	})(SuccessNotification);
-
-/***/ },
-/* 286 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _notification = __webpack_require__(260);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ErrorNotification = function ErrorNotification(_ref) {
-	    var dispatch = _ref.dispatch;
-	    var message = _ref.message;
-
-	    var hide = function hide() {
-	        return dispatch((0, _notification.hideNotification)());
-	    };
-
-	    return _react2.default.createElement(
-	        'div',
-	        { onClick: hide, className: 'notification error' },
-	        _react2.default.createElement(
-	            'p',
-	            null,
-	            message
-	        )
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(function (state) {
-	    return { notification: state.notification };
-	})(ErrorNotification);
-
-/***/ },
-/* 287 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _components = __webpack_require__(267);
-
-	var _modal = __webpack_require__(264);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var PlaceSpecialBetButton = function PlaceSpecialBetButton(_ref) {
-	    var openModal = _ref.openModal;
-	    return _react2.default.createElement(
-	        'button',
-	        {
-	            onClick: openModal,
-	            className: 'place-special-bet-button',
-	            type: 'button' },
-	        'Tippa'
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	},
-	// Dispatch to props
-	function (dispatch) {
-	    return {
-	        openModal: function openModal() {
-	            return dispatch((0, _modal.openSpecialBetModal)());
-	        }
-	    };
-	})(PlaceSpecialBetButton);
-
-/***/ },
-/* 288 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _group = __webpack_require__(289);
-
-	var _components = __webpack_require__(267);
-
-	var _EditGroupDescriptionButton = __webpack_require__(290);
-
-	var _EditGroupDescriptionButton2 = _interopRequireDefault(_EditGroupDescriptionButton);
-
-	var _EditGroupPasswordButton = __webpack_require__(291);
-
-	var _EditGroupPasswordButton2 = _interopRequireDefault(_EditGroupPasswordButton);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Group = function (_Component) {
-	    _inherits(Group, _Component);
-
-	    function Group(props) {
-	        _classCallCheck(this, Group);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Group).call(this, props));
-	    }
-
-	    _createClass(Group, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var _props = this.props;
-	            var dispatch = _props.dispatch;
-	            var params = _props.params;
-	            var tournament = _props.tournament;
-
-
-	            if (params.hasOwnProperty('id')) {
-	                dispatch((0, _group.fetchGroup)(params.id, tournament));
-	            }
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _props2 = this.props;
-	            var params = _props2.params;
-	            var group = _props2.group;
-	            var user = _props2.user;
-	            var dispatch = _props2.dispatch;
-
-	            // TODO wont need this?
-
-	            if (!params.hasOwnProperty('id')) {
-	                return _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'Det finns ingen liga med detta ID.'
-	                );
-	            }
-
-	            if (group.isFetching || group.data.length === 0) {
-	                return _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'Ligan laddas.'
-	                );
-	            }
-
-	            var isAdmin = user.id === group.data.admin.id;
-
-	            return _react2.default.createElement(
-	                _components.GroupMembers,
-	                { group: group.data },
-	                _react2.default.createElement(_components.BackButton, null),
-	                isAdmin ? _react2.default.createElement(_EditGroupPasswordButton2.default, { group: group.data }) : '',
-	                _react2.default.createElement(
-	                    'h2',
-	                    { className: 'group-title' },
-	                    group.data.name,
-	                    ' ',
-	                    isAdmin ? _react2.default.createElement(
-	                        'small',
-	                        null,
-	                        '(admin)'
-	                    ) : ''
-	                ),
-	                _react2.default.createElement(
-	                    'p',
-	                    { className: 'group-description' },
-	                    group.data.description,
-	                    isAdmin ? _react2.default.createElement(_EditGroupDescriptionButton2.default, { group: group.data }) : ''
-	                )
-	            );
-	        }
-	    }]);
-
-	    return Group;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        user: state.user,
-	        group: state.group,
-	        tournament: state.tournament
-	    };
-	})(Group);
-
-/***/ },
-/* 289 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.invalidateGroup = invalidateGroup;
-	exports.requestGroup = requestGroup;
-	exports.receiveGroup = receiveGroup;
-	exports.fetchGroup = fetchGroup;
-	exports.requestEditGroupDescription = requestEditGroupDescription;
-	exports.receiveEditGroupDescription = receiveEditGroupDescription;
-	exports.editGroupDescription = editGroupDescription;
-	exports.requestEditGroupPassword = requestEditGroupPassword;
-	exports.receiveEditGroupPassword = receiveEditGroupPassword;
-	exports.editGroupPassword = editGroupPassword;
-
-	var _isomorphicFetch = __webpack_require__(256);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _notification = __webpack_require__(260);
-
-	var _utils = __webpack_require__(258);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var INVALIDATE = 'supertipset/group/INVALIDATE';
-	// Group
-	var REQUEST = 'supertipset/group/REQUEST';
-	var RECEIVE = 'supertipset/group/RECEIVE';
-	// Group description
-	var REQUEST_EDIT_DESCRIPTION = 'supertipset/group/REQUEST_EDIT_DESCRIPTION';
-	var RECEIVE_EDIT_DESCRIPTION = 'supertipset/group/RECEIVE_EDIT_DESCRIPTION';
-	// Group password
-	var REQUEST_EDIT_PASSWORD = 'supertipset/group/REQUEST_EDIT_PASSWORD';
-	var RECEIVE_EDIT_PASSWORD = 'supertipset/group/RECEIVE_EDIT_PASSWORD';
-
-	var initialState = {
-	    isFetching: false,
-	    didInvalidate: false,
-	    data: []
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case INVALIDATE:
-	            return (0, _utils.assign)(state, {
-	                didInvalidate: true
-	            });
-	        case REQUEST:
-	            return (0, _utils.assign)(state, {
-	                isFetching: true,
-	                didInvalidate: false
-	            });
-	        case RECEIVE:
-	            return (0, _utils.assign)(state, {
-	                isFetching: false,
-	                didInvalidate: false,
-	                data: action.group
-	            });
-	        case RECEIVE_EDIT_DESCRIPTION:
-	            return (0, _utils.assign)(state, {
-	                data: (0, _utils.assign)(state.data, {
-	                    description: action.group.description
-	                })
-	            });
-	        // TODO listen to other actions?
-	        default:
-	            return state;
-	    }
-	}
-
-	function invalidateGroup() {
-	    return { type: INVALIDATE };
-	}
-
-	function requestGroup() {
-	    return { type: REQUEST };
-	}
-
-	function receiveGroup(group) {
-	    return { type: RECEIVE, group: group };
-	}
-
-	function shouldFetch(group, id) {
-	    if (group.isFetching) {
-	        return false;
-	    } else if (!group.data.hasOwnProperty('id')) {
-	        return true;
-	    } else if (group.data.hasOwnProperty('id') && group.data.id !== id) {
-	        return true;
-	    } else {
-	        return group.didInvalidate;
-	    }
-	}
-
-	function fetchGroup(id, tournament) {
-	    return function (dispatch, getState) {
-	        var _getState = getState();
-
-	        var group = _getState.group;
-
-
-	        if (!shouldFetch(group, id)) {
-	            return Promise.resolve();
-	        }
-
-	        dispatch(requestGroup());
-
-	        return (0, _isomorphicFetch2.default)(_utils.baseURL + '/api/groups/' + id + '/detail/?tournament=' + tournament).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    return dispatch(receiveGroup(json));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('could not fetch group');
-	            }
-	        });
-	    };
-	}
-
-	function requestEditGroupDescription() {
-	    return { type: REQUEST_EDIT_DESCRIPTION };
-	}
-
-	function receiveEditGroupDescription(group) {
-	    return { type: RECEIVE_EDIT_DESCRIPTION, group: group };
-	}
-
-	function editGroupDescription(user, group, name, description) {
-	    return function (dispatch) {
-	        dispatch(requestEditGroupDescription());
-
-	        var payload = (0, _utils.preparePut)({
-	            user: user,
-	            name: name,
-	            description: description
-	        });
-
-	        var url = _utils.baseURL + '/api/groups/' + group + '/';
-
-	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    dispatch(receiveEditGroupDescription(json));
-	                    // TODO change notification message?
-	                    dispatch((0, _notification.successNotification)('Gruppen har redigerats!'));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('request edit group description not ok');
-	            }
-	        });
-	    };
-	}
-
-	function requestEditGroupPassword() {
-	    return { type: REQUEST_EDIT_PASSWORD };
-	}
-
-	function receiveEditGroupPassword(group) {
-	    return { type: RECEIVE_EDIT_PASSWORD, group: group };
-	}
-
-	function editGroupPassword(user, group, name, password) {
-	    return function (dispatch) {
-	        dispatch(requestEditGroupDescription());
-
-	        var payload = (0, _utils.preparePut)({
-	            user: user,
-	            name: name,
-	            password: password
-	        });
-
-	        var url = _utils.baseURL + '/api/groups/' + group + '/password/';
-
-	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
-	            if (res.ok) {
-	                res.json().then(function (json) {
-	                    dispatch(receiveEditGroupPassword(json));
-	                    // TODO change notification message?
-	                    dispatch((0, _notification.successNotification)('Gruppen har redigerats!'));
-	                });
-	            } else {
-	                // TODO error handling
-	                console.log('request edit group password not ok');
-	            }
-	        });
-	    };
-	}
-
-/***/ },
-/* 290 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(264);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var EditGroupDescriptionButton = function EditGroupDescriptionButton(_ref) {
-	    var user = _ref.user;
-	    var group = _ref.group;
-	    var openModal = _ref.openModal;
-
-	    var open = function open(group) {
-	        return function () {
-	            return openModal(group);
-	        };
-	    };
-
-	    return _react2.default.createElement(
-	        'button',
-	        {
-	            onClick: open(group),
-	            className: 'edit-group-description',
-	            type: 'button' },
-	        'Redigera'
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	},
-	// Dispatch to props
-	function (dispatch) {
-	    return {
-	        openModal: function openModal(g) {
-	            return dispatch((0, _modal.openEditGroupDescriptionModal)(g));
-	        }
-	    };
-	})(EditGroupDescriptionButton);
-
-/***/ },
-/* 291 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _modal = __webpack_require__(264);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var EditGroupPasswordButton = function EditGroupPasswordButton(_ref) {
-	    var user = _ref.user;
-	    var group = _ref.group;
-	    var openModal = _ref.openModal;
-
-	    var open = function open(group) {
-	        return function () {
-	            return openModal(group);
-	        };
-	    };
-
-	    return _react2.default.createElement(
-	        'button',
-	        {
-	            onClick: open(group),
-	            className: 'edit-group-password',
-	            type: 'button' },
-	        'Ändra lösenord'
-	    );
-	};
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return { user: state.user };
-	},
-	// Dispatch to props
-	function (dispatch) {
-	    return {
-	        openModal: function openModal(g) {
-	            return dispatch((0, _modal.openEditGroupPasswordModal)(g));
-	        }
-	    };
-	})(EditGroupPasswordButton);
-
-/***/ },
-/* 292 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(177);
-
-	var _groups = __webpack_require__(293);
-
-	var _components = __webpack_require__(267);
-
-	var _JoinGroupButton = __webpack_require__(294);
-
-	var _JoinGroupButton2 = _interopRequireDefault(_JoinGroupButton);
-
-	var _CreateGroupButton = __webpack_require__(295);
-
-	var _CreateGroupButton2 = _interopRequireDefault(_CreateGroupButton);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Groups = function (_Component) {
-	    _inherits(Groups, _Component);
-
-	    function Groups(props) {
-	        _classCallCheck(this, Groups);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Groups).call(this, props));
-	    }
-
-	    _createClass(Groups, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var _props = this.props;
-	            var dispatch = _props.dispatch;
-	            var user = _props.user;
-	            var tournament = _props.tournament;
-
-
-	            dispatch((0, _groups.fetchGroups)(user.id, tournament));
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var groups = this.props.groups;
-
-
-	            return _react2.default.createElement(
-	                'div',
-	                { className: 'groups-container' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'group-actions' },
-	                    _react2.default.createElement(_JoinGroupButton2.default, null),
-	                    _react2.default.createElement(
-	                        'span',
-	                        { className: 'div' },
-	                        '|'
-	                    ),
-	                    _react2.default.createElement(_CreateGroupButton2.default, null)
-	                ),
-	                _react2.default.createElement(_components.GroupList, { groups: groups })
-	            );
-	        }
-	    }]);
-
-	    return Groups;
-	}(_react.Component);
-
-	exports.default = (0, _reactRedux.connect)(
-	// State to props
-	function (state) {
-	    return {
-	        user: state.user,
-	        groups: state.groups,
-	        tournament: state.tournament
-	    };
-	})(Groups);
-
-/***/ },
-/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31736,6 +28714,3111 @@
 	}
 
 /***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.requestTeams = requestTeams;
+	exports.receiveTeams = receiveTeams;
+	exports.fetchTeams = fetchTeams;
+
+	var _isomorphicFetch = __webpack_require__(256);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _utils = __webpack_require__(258);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var REQUEST = 'supertipset/teams/REQUEST';
+	var RECEIVE = 'supertipset/teams/RECEIVE';
+
+	var initialState = {
+	    isFetching: false,
+	    data: []
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case REQUEST:
+	            return (0, _utils.assign)(state, {
+	                isFetching: true
+	            });
+	        case RECEIVE:
+	            return (0, _utils.assign)(state, {
+	                isFetching: false,
+	                data: action.teams
+	            });
+	        default:
+	            return state;
+	    }
+	}
+
+	function requestTeams() {
+	    return { type: REQUEST };
+	}
+
+	function receiveTeams(teams) {
+	    return { type: RECEIVE, teams: teams };
+	}
+
+	function shouldFetch(teams) {
+	    if (teams.isFetching) {
+	        return false;
+	    } else if (teams.data.length == 0) {
+	        return true;
+	    }
+	}
+
+	function fetchTeams() {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var teams = _getState.teams;
+
+
+	        if (!shouldFetch(teams)) {
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestTeams());
+
+	        var url = _utils.baseURL + '/api/teams/';
+
+	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receiveTeams(json));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to fetch teams');
+	            }
+	        });
+	    };
+	}
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.requestPlayers = requestPlayers;
+	exports.receivePlayers = receivePlayers;
+	exports.fetchPlayers = fetchPlayers;
+
+	var _isomorphicFetch = __webpack_require__(256);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _utils = __webpack_require__(258);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var REQUEST = 'supertipset/players/REQUEST';
+	var RECEIVE = 'supertipset/players/RECEIVE';
+
+	var initialState = {
+	    isFetching: false,
+	    data: []
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case REQUEST:
+	            return (0, _utils.assign)(state, {
+	                isFetching: true
+	            });
+	        case RECEIVE:
+	            return (0, _utils.assign)(state, {
+	                isFetching: false,
+	                data: action.players
+	            });
+	        default:
+	            return state;
+	    }
+	}
+
+	function requestPlayers() {
+	    return { type: REQUEST };
+	}
+
+	function receivePlayers(players) {
+	    return { type: RECEIVE, players: players };
+	}
+
+	function shouldFetch(players) {
+	    if (players.isFetching) {
+	        return false;
+	    } else if (players.data.length == 0) {
+	        return true;
+	    }
+	}
+
+	function fetchPlayers() {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var players = _getState.players;
+
+
+	        if (!shouldFetch(players)) {
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestPlayers());
+
+	        var url = _utils.baseURL + '/api/players/';
+
+	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receivePlayers(json));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to fetch players');
+	            }
+	        });
+	    };
+	}
+
+/***/ },
+/* 264 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(265);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ChangeTournamentButton = function ChangeTournamentButton(_ref) {
+	    var tournament = _ref.tournament;
+	    var tournaments = _ref.tournaments;
+	    var openModal = _ref.openModal;
+
+	    var name = tournaments.data.filter(function (t) {
+	        return t.id == tournament;
+	    })[0].name;
+
+	    // TODO what should be the display text?
+	    return _react2.default.createElement(
+	        'button',
+	        { onClick: openModal, className: 'change-tournament', type: 'button' },
+	        name
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        tournament: state.tournament,
+	        tournaments: state.tournaments
+	    };
+	},
+	// Dispatch to props
+	function (dispatch) {
+	    return {
+	        openModal: function openModal() {
+	            return dispatch((0, _modal.openChangeTournamentModal)());
+	        }
+	    };
+	})(ChangeTournamentButton);
+
+/***/ },
+/* 265 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.closeModal = closeModal;
+	exports.openBetModal = openBetModal;
+	exports.openSpecialBetModal = openSpecialBetModal;
+	exports.openJoinGroupModal = openJoinGroupModal;
+	exports.openCreateGroupModal = openCreateGroupModal;
+	exports.openLeaveGroupModal = openLeaveGroupModal;
+	exports.openEditGroupDescriptionModal = openEditGroupDescriptionModal;
+	exports.openEditGroupPasswordModal = openEditGroupPasswordModal;
+	exports.openEditUserPasswordModal = openEditUserPasswordModal;
+	exports.openChangeTournamentModal = openChangeTournamentModal;
+
+	var _utils = __webpack_require__(258);
+
+	// open / close
+	var OPEN = 'supertipset/modal/OPEN';
+	var CLOSE = 'supertipset/modal/CLOSE';
+	// different modal types
+	var BET = 'supertipset/modal/BET';
+	var SPECIAL_BET = 'supertipset/modal/SPECIAL_BET';
+	var JOIN_GROUP = 'supertipset/modal/JOIN_GROUP';
+	var CREATE_GROUP = 'supertipset/modal/CREATE_GROUP';
+	var LEAVE_GROUP = 'supertipset/modal/LEAVE_GROUP';
+	var EDIT_GROUP_DESCRIPTION = 'supertipset/modal/EDIT_GROUP_DESCRIPTION';
+	var EDIT_GROUP_PASSWORD = 'supertipset/modal/EDIT_GROUP_PASSWORD';
+	var EDIT_USER_PASSWORD = 'supertipset/modal/EDIT_USER_PASSWORD';
+	var CHANGE_TOURNAMENT = 'supertipset/modal/CHANGE_TOURNAMENT';
+
+	var initialState = {
+	    modalType: undefined,
+	    modalProps: {}
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case OPEN:
+	            return (0, _utils.assign)(state, {
+	                modalType: action.modalType,
+	                modalProps: action.modalProps
+	            });
+	        case CLOSE:
+	            return (0, _utils.assign)(state, initialState);
+	        default:
+	            return state;
+	    }
+	}
+
+	function closeModal() {
+	    return { type: CLOSE };
+	}
+
+	function openBetModal(game) {
+	    return {
+	        type: OPEN,
+	        modalType: BET,
+	        modalProps: { game: game }
+	    };
+	}
+
+	function openSpecialBetModal() {
+	    return {
+	        type: OPEN,
+	        modalType: SPECIAL_BET,
+	        modalProps: {}
+	    };
+	}
+
+	function openJoinGroupModal() {
+	    return {
+	        type: OPEN,
+	        modalType: JOIN_GROUP,
+	        modalProps: {}
+	    };
+	}
+
+	function openCreateGroupModal() {
+	    return {
+	        type: OPEN,
+	        modalType: CREATE_GROUP,
+	        modalProps: {}
+	    };
+	}
+
+	function openLeaveGroupModal(group) {
+	    return {
+	        type: OPEN,
+	        modalType: LEAVE_GROUP,
+	        modalProps: { group: group }
+	    };
+	}
+
+	function openEditGroupDescriptionModal(group) {
+	    return {
+	        type: OPEN,
+	        modalType: EDIT_GROUP_DESCRIPTION,
+	        modalProps: { group: group }
+	    };
+	}
+
+	function openEditGroupPasswordModal(group) {
+	    return {
+	        type: OPEN,
+	        modalType: EDIT_GROUP_PASSWORD,
+	        modalProps: { group: group }
+	    };
+	}
+
+	function openEditUserPasswordModal(user) {
+	    return {
+	        type: OPEN,
+	        modalType: EDIT_USER_PASSWORD,
+	        modalProps: { user: user }
+	    };
+	}
+
+	function openChangeTournamentModal() {
+	    return {
+	        type: OPEN,
+	        modalType: CHANGE_TOURNAMENT,
+	        modalProps: {}
+	    };
+	}
+
+/***/ },
+/* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _rounds = __webpack_require__(267);
+
+	var _components = __webpack_require__(268);
+
+	var _PlaceSpecialBetButton = __webpack_require__(288);
+
+	var _PlaceSpecialBetButton2 = _interopRequireDefault(_PlaceSpecialBetButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Bets = function (_Component) {
+	    _inherits(Bets, _Component);
+
+	    function Bets(props) {
+	        _classCallCheck(this, Bets);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Bets).call(this, props));
+	    }
+
+	    _createClass(Bets, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _props = this.props;
+	            var dispatch = _props.dispatch;
+	            var user = _props.user;
+	            var tournament = _props.tournament;
+	            // TODO do i need to re-fetch user here?
+
+	            dispatch((0, _rounds.fetchRounds)(tournament));
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _props2 = this.props;
+	            var user = _props2.user;
+	            var rounds = _props2.rounds;
+	            var tournament = _props2.tournament;
+	            var tournaments = _props2.tournaments;
+
+	            // If we should continue to show the special bets button
+
+	            var now = new Date();
+	            var currTournament = tournaments.data.filter(function (t) {
+	                return t.id == tournament;
+	            })[0];
+	            var currTournamentDate = currTournament ? new Date(currTournament.start_date) : false;
+	            var tournamentHasStarted = now > currTournamentDate;
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'bets-container' },
+	                _react2.default.createElement(_components.Points, {
+	                    user: user }),
+	                _react2.default.createElement(_components.SpecialBets, {
+	                    user: user,
+	                    tournamentHasStarted: tournamentHasStarted,
+	                    bettable: true }),
+	                _react2.default.createElement(_components.Rounds, {
+	                    rounds: rounds })
+	            );
+	        }
+	    }]);
+
+	    return Bets;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        user: state.user,
+	        rounds: state.rounds,
+	        tournament: state.tournament,
+	        tournaments: state.tournaments
+	    };
+	})(Bets);
+
+/***/ },
+/* 267 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.invalidateRounds = invalidateRounds;
+	exports.requestRounds = requestRounds;
+	exports.receiveRounds = receiveRounds;
+	exports.fetchRounds = fetchRounds;
+
+	var _isomorphicFetch = __webpack_require__(256);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _utils = __webpack_require__(258);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var INVALIDATE = 'supertipset/rounds/INVALIDATE';
+	var REQUEST = 'supertipset/rounds/REQUEST';
+	var RECEIVE = 'supertipset/rounds/RECEIVE';
+
+	var initialState = {
+	    isFetching: false,
+	    didInvalidate: false,
+	    data: []
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case INVALIDATE:
+	            return (0, _utils.assign)(state, {
+	                didInvalidate: true
+	            });
+	        case REQUEST:
+	            return (0, _utils.assign)(state, {
+	                isFetching: true,
+	                didInvalidate: false
+	            });
+	        case RECEIVE:
+	            return (0, _utils.assign)(state, {
+	                isFetching: false,
+	                didInvalidate: false,
+	                data: action.rounds
+	            });
+	        default:
+	            return state;
+	    }
+	}
+
+	function invalidateRounds() {
+	    return { type: INVALIDATE };
+	}
+
+	function requestRounds() {
+	    return { type: REQUEST };
+	}
+
+	function receiveRounds(rounds) {
+	    return { type: RECEIVE, rounds: rounds };
+	}
+
+	function shouldFetch(rounds) {
+	    if (rounds.isFetching) {
+	        return false;
+	    } else if (rounds.data.length == 0) {
+	        return true;
+	    } else {
+	        return rounds.didInvalidate;
+	    }
+	}
+
+	function fetchRounds(tournament) {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var rounds = _getState.rounds;
+
+
+	        if (!shouldFetch(rounds)) {
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestRounds());
+
+	        var url = _utils.baseURL + '/api/rounds/?tournament=' + tournament;
+
+	        return (0, _isomorphicFetch2.default)(url).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receiveRounds(json));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('unable to fetch rounds');
+	            }
+	        });
+	    };
+	}
+
+/***/ },
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.ErrorNotification = exports.SuccessNotification = exports.UserTopBets = exports.UserTotalTopList = exports.GroupMembersTopList = exports.GroupTotalTopList = exports.GroupAverageTopList = exports.GroupMembers = exports.GroupListSummary = exports.GroupList = exports.ProfileBets = exports.Profile = exports.Game = exports.Round = exports.Rounds = exports.SpecialBets = exports.Points = exports.Tournaments = exports.BackButton = undefined;
+
+	var _BackButton2 = __webpack_require__(269);
+
+	var _BackButton3 = _interopRequireDefault(_BackButton2);
+
+	var _Tournaments2 = __webpack_require__(270);
+
+	var _Tournaments3 = _interopRequireDefault(_Tournaments2);
+
+	var _Points2 = __webpack_require__(271);
+
+	var _Points3 = _interopRequireDefault(_Points2);
+
+	var _SpecialBets2 = __webpack_require__(272);
+
+	var _SpecialBets3 = _interopRequireDefault(_SpecialBets2);
+
+	var _Rounds2 = __webpack_require__(273);
+
+	var _Rounds3 = _interopRequireDefault(_Rounds2);
+
+	var _Round2 = __webpack_require__(274);
+
+	var _Round3 = _interopRequireDefault(_Round2);
+
+	var _Game2 = __webpack_require__(275);
+
+	var _Game3 = _interopRequireDefault(_Game2);
+
+	var _Profile2 = __webpack_require__(276);
+
+	var _Profile3 = _interopRequireDefault(_Profile2);
+
+	var _ProfileBets2 = __webpack_require__(278);
+
+	var _ProfileBets3 = _interopRequireDefault(_ProfileBets2);
+
+	var _GroupList2 = __webpack_require__(279);
+
+	var _GroupList3 = _interopRequireDefault(_GroupList2);
+
+	var _GroupListSummary2 = __webpack_require__(277);
+
+	var _GroupListSummary3 = _interopRequireDefault(_GroupListSummary2);
+
+	var _GroupMembers2 = __webpack_require__(280);
+
+	var _GroupMembers3 = _interopRequireDefault(_GroupMembers2);
+
+	var _GroupAverageTopList2 = __webpack_require__(281);
+
+	var _GroupAverageTopList3 = _interopRequireDefault(_GroupAverageTopList2);
+
+	var _GroupTotalTopList2 = __webpack_require__(282);
+
+	var _GroupTotalTopList3 = _interopRequireDefault(_GroupTotalTopList2);
+
+	var _GroupMembersTopList2 = __webpack_require__(283);
+
+	var _GroupMembersTopList3 = _interopRequireDefault(_GroupMembersTopList2);
+
+	var _UserTotalTopList2 = __webpack_require__(284);
+
+	var _UserTotalTopList3 = _interopRequireDefault(_UserTotalTopList2);
+
+	var _UserTopBets2 = __webpack_require__(285);
+
+	var _UserTopBets3 = _interopRequireDefault(_UserTopBets2);
+
+	var _SuccessNotification2 = __webpack_require__(286);
+
+	var _SuccessNotification3 = _interopRequireDefault(_SuccessNotification2);
+
+	var _ErrorNotification2 = __webpack_require__(287);
+
+	var _ErrorNotification3 = _interopRequireDefault(_ErrorNotification2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.BackButton = _BackButton3.default;
+	exports.Tournaments = _Tournaments3.default;
+	exports.Points = _Points3.default;
+	exports.SpecialBets = _SpecialBets3.default;
+	exports.Rounds = _Rounds3.default;
+	exports.Round = _Round3.default;
+	exports.Game = _Game3.default;
+	exports.Profile = _Profile3.default;
+	exports.ProfileBets = _ProfileBets3.default;
+	exports.GroupList = _GroupList3.default;
+	exports.GroupListSummary = _GroupListSummary3.default;
+	exports.GroupMembers = _GroupMembers3.default;
+	exports.GroupAverageTopList = _GroupAverageTopList3.default;
+	exports.GroupTotalTopList = _GroupTotalTopList3.default;
+	exports.GroupMembersTopList = _GroupMembersTopList3.default;
+	exports.UserTotalTopList = _UserTotalTopList3.default;
+	exports.UserTopBets = _UserTopBets3.default;
+	exports.SuccessNotification = _SuccessNotification3.default;
+	exports.ErrorNotification = _ErrorNotification3.default;
+
+/***/ },
+/* 269 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var goBack = function goBack() {
+	    return history.go(-1);
+	};
+
+	var BackButton = function BackButton() {
+	    return _react2.default.createElement(
+	        'button',
+	        {
+	            onClick: goBack,
+	            className: 'back-button',
+	            type: 'button' },
+	        'Tillbaka'
+	    );
+	};
+
+	exports.default = BackButton;
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var option = function option(tournament, i) {
+	    return _react2.default.createElement(
+	        'option',
+	        { key: i, value: tournament.id },
+	        tournament.name
+	    );
+	};
+
+	var Tournaments = function Tournaments(_ref) {
+	    var tournaments = _ref.tournaments;
+	    var onChange = _ref.onChange;
+
+	    var c = function c(e) {
+	        return onChange(Number(e.target.value));
+	    };
+
+	    return _react2.default.createElement(
+	        'select',
+	        { onChange: c },
+	        tournaments.map(option)
+	    );
+	};
+
+	exports.default = Tournaments;
+
+/***/ },
+/* 271 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var sum = function sum(p) {
+	    return p.reduce(function (a, n) {
+	        return a + n.points;
+	    }, 0);
+	};
+
+	var Points = function Points(_ref) {
+	    var user = _ref.user;
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'user-points' },
+	        _react2.default.createElement(
+	            'h6',
+	            null,
+	            'POÄNG'
+	        ),
+	        _react2.default.createElement(
+	            'p',
+	            null,
+	            !user.isFetching && user.data.hasOwnProperty('id') ? sum(user.data.points) : '-'
+	        )
+	    );
+	};
+
+	exports.default = Points;
+
+/***/ },
+/* 272 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _containers = __webpack_require__(253);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SpecialBets = function SpecialBets(_ref) {
+	    var user = _ref.user;
+	    var tournamentHasStarted = _ref.tournamentHasStarted;
+	    var bettable = _ref.bettable;
+
+
+	    // No special bets available yet
+	    if (user.isFetching || !user.data.hasOwnProperty('id')) {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'special-bets-container' },
+	            _react2.default.createElement(
+	                'h5',
+	                null,
+	                'Specialtips (Laddar...)'
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'special-bets' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'winner' },
+	                    _react2.default.createElement(
+	                        'h6',
+	                        null,
+	                        'VINNARE'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        '-'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'goal-scorer' },
+	                    _react2.default.createElement(
+	                        'h6',
+	                        null,
+	                        'SKYTTEKUNG'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        '-'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'goals' },
+	                    _react2.default.createElement(
+	                        'h6',
+	                        null,
+	                        'MÅL'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        '-'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'points' },
+	                    _react2.default.createElement(
+	                        'h6',
+	                        null,
+	                        'POÄNG'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        '0'
+	                    )
+	                )
+	            )
+	        );
+	    }
+
+	    // No special bets exists
+	    if (user.data.special_bets.length == 0) {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'special-bets-container' },
+	            _react2.default.createElement(
+	                'h5',
+	                null,
+	                'Specialtips',
+	                bettable ? _react2.default.createElement(_containers.PlaceSpecialBetButton, null) : ''
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'special-bets' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'winner' },
+	                    _react2.default.createElement(
+	                        'h6',
+	                        null,
+	                        'VINNARE'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        '-'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'goal-scorer' },
+	                    _react2.default.createElement(
+	                        'h6',
+	                        null,
+	                        'SKYTTEKUNG'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        '-'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'goals' },
+	                    _react2.default.createElement(
+	                        'h6',
+	                        null,
+	                        'MÅL'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        '-'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'points' },
+	                    _react2.default.createElement(
+	                        'h6',
+	                        null,
+	                        'POÄNG'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        '0'
+	                    )
+	                )
+	            )
+	        );
+	    }
+
+	    // TODO Check for special bet results (points)
+	    var bets = user.data.special_bets[0];
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'special-bets-container' },
+	        _react2.default.createElement(
+	            'h5',
+	            null,
+	            'Specialtips',
+	            bettable && !tournamentHasStarted ? _react2.default.createElement(_containers.PlaceSpecialBetButton, null) : ''
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'special-bets' },
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'winner' },
+	                _react2.default.createElement(
+	                    'h6',
+	                    null,
+	                    'VINNARE'
+	                ),
+	                _react2.default.createElement(
+	                    'span',
+	                    null,
+	                    bets.team.name
+	                )
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'goal-scorer' },
+	                _react2.default.createElement(
+	                    'h6',
+	                    null,
+	                    'SKYTTEKUNG'
+	                ),
+	                _react2.default.createElement(
+	                    'span',
+	                    null,
+	                    bets.player.firstname,
+	                    ' ',
+	                    bets.player.lastname
+	                )
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'goals' },
+	                _react2.default.createElement(
+	                    'h6',
+	                    null,
+	                    'MÅL'
+	                ),
+	                _react2.default.createElement(
+	                    'span',
+	                    null,
+	                    bets.player_goals
+	                )
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'points' },
+	                _react2.default.createElement(
+	                    'h6',
+	                    null,
+	                    'POÄNG'
+	                ),
+	                _react2.default.createElement(
+	                    'span',
+	                    null,
+	                    '0'
+	                )
+	            )
+	        )
+	    );
+	};
+
+	exports.default = SpecialBets;
+
+/***/ },
+/* 273 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Round = __webpack_require__(274);
+
+	var _Round2 = _interopRequireDefault(_Round);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var round = function round(r, i) {
+	    return _react2.default.createElement(_Round2.default, { key: i, round: r });
+	};
+
+	var Rounds = function Rounds(_ref) {
+	    var rounds = _ref.rounds;
+
+
+	    if (rounds.isFetching || rounds.data.length === 0) {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'rounds' },
+	            'Laddar...'
+	        );
+	    }
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'rounds' },
+	        rounds.data.map(round)
+	    );
+	};
+
+	exports.default = Rounds;
+
+/***/ },
+/* 274 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Game = __webpack_require__(275);
+
+	var _Game2 = _interopRequireDefault(_Game);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var game = function game(g, i) {
+	    return _react2.default.createElement(_Game2.default, { key: i, game: g });
+	};
+
+	var isActive = function isActive(roundStart, roundEnd) {
+	    var now = new Date();
+	    var start = new Date(Date.parse(roundStart));
+	    var end = new Date(Date.parse(roundEnd));
+
+	    return start < now && end > now;
+	};
+
+	var Round = function Round(_ref) {
+	    var round = _ref.round;
+
+	    var active = isActive(round.start_date, round.stop_date);
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: active ? 'round active' : 'round inactive' },
+	        _react2.default.createElement(
+	            'h2',
+	            null,
+	            round.name
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'round-headers' },
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'deadline' },
+	                'Deadline'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'matchup' },
+	                'Match (grupp)'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'res' },
+	                'Resultat'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'bet' },
+	                'Tips'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'pts' },
+	                'Poäng'
+	            )
+	        ),
+	        round.games.map(game)
+	    );
+	};
+
+	exports.default = Round;
+
+/***/ },
+/* 275 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _containers = __webpack_require__(253);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var hasStarted = function hasStarted(gameStart) {
+	    var now = new Date();
+	    var start = new Date(Date.parse(gameStart));
+
+	    return now > start;
+	};
+
+	var formatDate = function formatDate(gameStart) {
+	    var date = new Date(Date.parse(gameStart));
+
+	    var d = date.getDate();
+	    var m = date.getMonth() + 1;
+	    var hour = date.getHours();
+	    var min = date.getMinutes();
+	    var hh = hour < 10 ? '0' + hour : hour;
+	    var mm = min < 10 ? '0' + min : min;
+
+	    return d + '/' + m + ' ' + hh + ':' + mm;
+	};
+
+	var getBetsForGame = function getBetsForGame(id, user) {
+	    var foundBet = user.data.bets.filter(function (bet) {
+	        return bet.game.id === id;
+	    });
+	    return foundBet.length ? foundBet[0] : false;
+	};
+
+	var getPointsForGame = function getPointsForGame(id, user) {
+	    return user.data.points.filter(function (pts) {
+	        return pts.game === id;
+	    }).reduce(function (a, n) {
+	        return n.points;
+	    }, 0);
+	};
+
+	var Game = function Game(_ref) {
+	    var game = _ref.game;
+	    var user = _ref.user;
+
+	    if (user.isFetching || !user.data.hasOwnProperty('id')) {
+	        return false;
+	    }
+
+	    var started = hasStarted(game.start_date);
+	    var matchup = game.team_1.name + ' - ' + game.team_2.name + ' (' + game.group_name + ')';
+
+	    var bet = getBetsForGame(game.id, user);
+
+	    if (!started) {
+	        var start = formatDate(game.start_date);
+
+	        // TODO: check if a game is active - then they cant place a bet
+
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'game-row' },
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'deadline' },
+	                start
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'matchup' },
+	                matchup
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'res' },
+	                '-'
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'bet' },
+	                bet ? bet.team_1_bet + ' - ' + bet.team_2_bet : 'x - x'
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'pts' },
+	                _react2.default.createElement(_containers.PlaceBetButton, { game: game })
+	            )
+	        );
+	    }
+
+	    var done = started && game.result.length > 0;
+	    var result = game.result.length === 0 ? '-' : game.result[0].team_1_goals + ' - ' + game.result[0].team_2_goals;
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'game-row' },
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'deadline' },
+	            done ? 'Avgjord' : 'Pågår'
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'matchup' },
+	            matchup
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'res' },
+	            result
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'bet' },
+	            bet ? bet.team_1_bet + ' - ' + bet.team_2_bet : 'x - x'
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'pts' },
+	            bet ? getPointsForGame(game.id, user) : 0
+	        )
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(function (state) {
+	    return { user: state.user };
+	})(Game);
+
+/***/ },
+/* 276 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Points = __webpack_require__(271);
+
+	var _Points2 = _interopRequireDefault(_Points);
+
+	var _SpecialBets = __webpack_require__(272);
+
+	var _SpecialBets2 = _interopRequireDefault(_SpecialBets);
+
+	var _GroupListSummary = __webpack_require__(277);
+
+	var _GroupListSummary2 = _interopRequireDefault(_GroupListSummary);
+
+	var _ProfileBets = __webpack_require__(278);
+
+	var _ProfileBets2 = _interopRequireDefault(_ProfileBets);
+
+	var _containers = __webpack_require__(253);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Profile = function Profile(_ref) {
+	    var profile = _ref.profile;
+	    var tournamentHasStarted = _ref.tournamentHasStarted;
+	    var isCurrentUser = _ref.isCurrentUser;
+
+
+	    var fullname = profile.data.firstname + ' ' + profile.data.lastname;
+	    var username = _react2.default.createElement(
+	        'small',
+	        null,
+	        '(',
+	        profile.data.username,
+	        ')'
+	    );
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'profile' },
+	        isCurrentUser ? _react2.default.createElement(_containers.EditUserPasswordButton, null) : '',
+	        _react2.default.createElement(
+	            'h2',
+	            null,
+	            fullname,
+	            ' ',
+	            username
+	        ),
+	        _react2.default.createElement(_Points2.default, { user: profile }),
+	        _react2.default.createElement(_SpecialBets2.default, {
+	            user: profile,
+	            tournamentHasStarted: tournamentHasStarted,
+	            bettable: isCurrentUser }),
+	        _react2.default.createElement(_GroupListSummary2.default, {
+	            user: profile,
+	            groups: profile.data.groups,
+	            isCurrentUser: isCurrentUser }),
+	        !isCurrentUser && profile.data.bets.length ? _react2.default.createElement(_ProfileBets2.default, {
+	            bets: profile.data.bets,
+	            points: profile.data.points }) : ''
+	    );
+	};
+
+	exports.default = Profile;
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(196);
+
+	var _containers = __webpack_require__(253);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var groupSummary = function groupSummary(user, isCurrentUser) {
+	    return function (g, i) {
+	        return _react2.default.createElement(
+	            'div',
+	            { key: i, className: 'group-summary-row' },
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'pos' },
+	                i + 1
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'name' },
+	                _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: '/s/groups/' + g.id },
+	                    g.name
+	                )
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'members' },
+	                g.users.length
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'admin' },
+	                user.data.id == g.admin.id ? g.admin.username : _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: '/s/profile/' + g.admin.id },
+	                    g.admin.username
+	                )
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'leave' },
+	                isCurrentUser ? _react2.default.createElement(_containers.LeaveGroupButton, { group: g }) : ''
+	            )
+	        );
+	    };
+	};
+
+	var GroupListSummary = function GroupListSummary(_ref) {
+	    var user = _ref.user;
+	    var groups = _ref.groups;
+	    var isCurrentUser = _ref.isCurrentUser;
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'groups-summary' },
+	        _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Ligor'
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'group-headers' },
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'pos' },
+	                '#'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'name' },
+	                'Liga'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'members' },
+	                'Medlemmar'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'admin' },
+	                'Admin'
+	            ),
+	            _react2.default.createElement('h6', { className: 'leave' })
+	        ),
+	        groups.map(groupSummary(user, isCurrentUser))
+	    );
+	};
+
+	exports.default = GroupListSummary;
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var showBet = function showBet(points) {
+	    return function (bet, i) {
+	        var p = points.filter(function (point) {
+	            return point.game === bet.game.id;
+	        });
+
+	        return _react2.default.createElement(
+	            'div',
+	            { key: i, className: 'profile-bet' },
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'game' },
+	                bet.game.team_1.name + ' - ' + bet.game.team_2.name
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'res' },
+	                bet.game.result.length ? bet.game.result[0].team_1_goals + ' - ' + bet.game.result[0].team_2_goals : '-'
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'bet' },
+	                bet.team_1_bet + ' - ' + bet.team_1_bet
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                { className: 'points' },
+	                p.length ? p[0].points : '-'
+	            )
+	        );
+	    };
+	};
+
+	var ProfileBets = function ProfileBets(_ref) {
+	    var bets = _ref.bets;
+	    var points = _ref.points;
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'profile-bets-container' },
+	        _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Tips'
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'profile-bets-headers' },
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'game' },
+	                'Match (grupp)'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'res' },
+	                'Resultat'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'bet' },
+	                'Tips'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'points' },
+	                'Poäng'
+	            )
+	        ),
+	        bets.map(showBet(points))
+	    );
+	};
+
+	exports.default = ProfileBets;
+
+/***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(196);
+
+	var _containers = __webpack_require__(253);
+
+	var _GroupMembers = __webpack_require__(280);
+
+	var _GroupMembers2 = _interopRequireDefault(_GroupMembers);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var group = function group(g, i) {
+	    return _react2.default.createElement(
+	        _GroupMembers2.default,
+	        { key: i, group: g },
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'group-name' },
+	            _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/s/groups/' + g.id },
+	                g.name
+	            ),
+	            _react2.default.createElement(_containers.LeaveGroupButton, { group: g })
+	        )
+	    );
+	};
+
+	var sortByGroupName = function sortByGroupName(a, b) {
+	    return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1;
+	};
+
+	var GroupList = function GroupList(_ref) {
+	    var groups = _ref.groups;
+
+	    if (groups.isFetching) {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'groups' },
+	            _react2.default.createElement(
+	                'p',
+	                null,
+	                'Laddar...'
+	            )
+	        );
+	    }
+
+	    if (groups.data.length === 0) {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'groups' },
+	            _react2.default.createElement(
+	                'p',
+	                null,
+	                'Du är inte med i några ligor.'
+	            )
+	        );
+	    }
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'groups' },
+	        groups.data.sort(sortByGroupName).map(group)
+	    );
+	};
+
+	exports.default = GroupList;
+
+/***/ },
+/* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(196);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var member = function member(m, i) {
+	    return _react2.default.createElement(
+	        'div',
+	        { key: i, className: 'group-row' },
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'pos' },
+	            i + 1
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'member' },
+	            _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/s/profile/' + m.id },
+	                m.username
+	            )
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'team' },
+	            m.team
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'points' },
+	            m.totalPoints
+	        )
+	    );
+	};
+
+	var reduceTeamName = function reduceTeamName(p, c) {
+	    return c.team.name;
+	};
+	var reducePoints = function reducePoints(p, c) {
+	    return p += c.points;
+	};
+	var reduceBetResults = function reduceBetResults(p, c) {
+	    return c.player + c.goals + c.team;
+	};
+	var sortByPoints = function sortByPoints(a, b) {
+	    return b.totalPoints - a.totalPoints;
+	};
+	var getUser = function getUser(u) {
+	    return {
+	        id: u.id,
+	        username: u.username,
+	        team: u.special_bets.reduce(reduceTeamName, '-'),
+	        totalPoints: u.points.reduce(reducePoints, 0) + u.special_bet_results.reduce(reduceBetResults, 0)
+	    };
+	};
+
+	var GroupMembers = function GroupMembers(_ref) {
+	    var group = _ref.group;
+	    var children = _ref.children;
+
+
+	    var orderedMembers = group.users.map(getUser).sort(sortByPoints);
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'group-container' },
+	        children,
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'group-headers' },
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'pos' },
+	                '#'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'member' },
+	                'Medlem'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'team' },
+	                'Lag'
+	            ),
+	            _react2.default.createElement(
+	                'h6',
+	                { className: 'points' },
+	                'Poäng'
+	            )
+	        ),
+	        orderedMembers.map(member)
+	    );
+	};
+
+	exports.default = GroupMembers;
+
+/***/ },
+/* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(196);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var group = function group(g, i) {
+	    return _react2.default.createElement(
+	        'div',
+	        { key: i, className: 'toplist-row' },
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'pos' },
+	            i + 1
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'name' },
+	            _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/s/groups/' + g.id },
+	                g.name
+	            )
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'sum' },
+	            g.averagePoints
+	        )
+	    );
+	};
+
+	var reduceUserPoints = function reduceUserPoints(a, n) {
+	    return a + n.points;
+	};
+	var reduceUserBetResults = function reduceUserBetResults(a, n) {
+	    return a + (n.goals + n.player + n.team);
+	};
+	var reduceUserTotal = function reduceUserTotal(a, n) {
+	    return a + n.points.reduce(reduceUserPoints, 0) + n.special_bet_results.reduce(reduceUserBetResults, 0);
+	};
+	var sortByPoints = function sortByPoints(a, b) {
+	    return b.averagePoints - a.averagePoints;
+	};
+	var getGroupWithPoints = function getGroupWithPoints(g) {
+	    return {
+	        id: g.id,
+	        name: g.name,
+	        averagePoints: Math.floor(g.users.reduce(reduceUserTotal, 0) / g.users.length)
+	    };
+	};
+
+	var GroupAverageTopList = function GroupAverageTopList(_ref) {
+	    var groups = _ref.groups;
+
+
+	    if (groups.isFetching || groups.data.length == 0) {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'toplist-container' },
+	            _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Medelpoäng'
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'toplist user-total' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'toplist-headers' },
+	                    _react2.default.createElement(
+	                        'h6',
+	                        { className: 'pos' },
+	                        '#'
+	                    ),
+	                    _react2.default.createElement(
+	                        'h6',
+	                        { className: 'name' },
+	                        'Liga'
+	                    ),
+	                    _react2.default.createElement(
+	                        'h6',
+	                        { className: 'sum' },
+	                        'Poäng'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Laddar...'
+	                )
+	            )
+	        );
+	    }
+
+	    var orderedGroups = groups.data.map(getGroupWithPoints).sort(sortByPoints);
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'toplist-container' },
+	        _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Medelpoäng'
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'toplist user-total' },
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'toplist-headers' },
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'pos' },
+	                    '#'
+	                ),
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'name' },
+	                    'Liga'
+	                ),
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'sum' },
+	                    'Poäng'
+	                )
+	            ),
+	            orderedGroups.map(group)
+	        )
+	    );
+	};
+
+	exports.default = GroupAverageTopList;
+
+/***/ },
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(196);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var group = function group(g, i) {
+	    return _react2.default.createElement(
+	        'li',
+	        { key: i },
+	        i + 1,
+	        ' | ',
+	        _react2.default.createElement(
+	            _reactRouter.Link,
+	            { to: '/s/groups/' + g.id },
+	            g.name
+	        ),
+	        ' | ',
+	        g.totalPoints
+	    );
+	};
+
+	var reduceUserPoints = function reduceUserPoints(a, n) {
+	    return a + n.points;
+	};
+	var reduceUserBetResults = function reduceUserBetResults(a, n) {
+	    return a + (n.goals + n.player + n.team);
+	};
+	var reduceUserTotal = function reduceUserTotal(a, n) {
+	    return a + n.points.reduce(reduceUserPoints, 0) + n.special_bet_results.reduce(reduceUserBetResults, 0);
+	};
+
+	var GroupTotalTopList = function GroupTotalTopList(_ref) {
+	    var groups = _ref.groups;
+
+
+	    if (groups.isFetching || groups.data.length == 0) {
+	        return _react2.default.createElement(
+	            'p',
+	            null,
+	            'Laddar ligor...'
+	        );
+	    }
+
+	    var orderedGroups = groups.data.map(function (g) {
+	        return {
+	            id: g.id,
+	            name: g.name,
+	            totalPoints: g.users.reduce(reduceUserTotal, 0)
+	        };
+	    }).sort(function (a, b) {
+	        return b.totalPoints - a.totalPoints;
+	    });
+
+	    return _react2.default.createElement(
+	        'ol',
+	        null,
+	        orderedGroups.map(group)
+	    );
+	};
+
+	exports.default = GroupTotalTopList;
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(196);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var group = function group(g, i) {
+	    return _react2.default.createElement(
+	        'div',
+	        { key: i, className: 'toplist-row' },
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'pos' },
+	            i + 1
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'name' },
+	            _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/s/groups/' + g.id },
+	                g.name
+	            )
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'sum' },
+	            g.members
+	        )
+	    );
+	};
+
+	var sortByMembers = function sortByMembers(a, b) {
+	    return b.members - a.members;
+	};
+	var getGroupWithMembers = function getGroupWithMembers(g) {
+	    return {
+	        id: g.id,
+	        name: g.name,
+	        members: g.users.length
+	    };
+	};
+
+	var GroupMembersTopList = function GroupMembersTopList(_ref) {
+	    var groups = _ref.groups;
+
+
+	    if (groups.isFetching || groups.data.length == 0) {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'toplist-container' },
+	            _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Medlemmar'
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'toplist user-total' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'toplist-headers' },
+	                    _react2.default.createElement(
+	                        'h6',
+	                        { className: 'pos' },
+	                        '#'
+	                    ),
+	                    _react2.default.createElement(
+	                        'h6',
+	                        { className: 'name' },
+	                        'Liga'
+	                    ),
+	                    _react2.default.createElement(
+	                        'h6',
+	                        { className: 'sum' },
+	                        'Antal'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Laddar...'
+	                )
+	            )
+	        );
+	    }
+
+	    var orderedGroups = groups.data.map(getGroupWithMembers).sort(sortByMembers);
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'toplist-container' },
+	        _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Medlemmar'
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'toplist user-total' },
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'toplist-headers' },
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'pos' },
+	                    '#'
+	                ),
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'name' },
+	                    'Liga'
+	                ),
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'sum' },
+	                    'Antal'
+	                )
+	            ),
+	            orderedGroups.map(group)
+	        )
+	    );
+	};
+
+	exports.default = GroupMembersTopList;
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(196);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var user = function user(u, i) {
+	    return _react2.default.createElement(
+	        'div',
+	        { key: i, className: 'toplist-row' },
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'pos' },
+	            i + 1
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'name' },
+	            _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/s/profile/' + u.id },
+	                u.username
+	            )
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'sum' },
+	            u.totalPoints
+	        )
+	    );
+	};
+
+	var reducePoints = function reducePoints(a, n) {
+	    return a + n.points;
+	};
+	var reduceBetResults = function reduceBetResults(a, n) {
+	    return a + (n.goals + n.player + n.team);
+	};
+	var sortByPoints = function sortByPoints(a, b) {
+	    return b.totalPoints - a.totalPoints;
+	};
+	var getUserWithPoints = function getUserWithPoints(u) {
+	    return {
+	        id: u.id,
+	        username: u.username,
+	        totalPoints: u.points.reduce(reducePoints, 0) + u.special_bet_results.reduce(reduceBetResults, 0)
+	    };
+	};
+
+	var UserTotalTopList = function UserTotalTopList(_ref) {
+	    var users = _ref.users;
+
+
+	    if (users.isFetching || users.data.length == 0) {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'toplist-container' },
+	            _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Högsta poäng'
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'toplist user-total' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'toplist-headers' },
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        '#'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'Användare'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'Poäng'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Laddar...'
+	                )
+	            )
+	        );
+	    }
+
+	    var orderedUsers = users.data.map(getUserWithPoints).sort(sortByPoints);
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'toplist-container' },
+	        _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Högsta poäng'
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'toplist user-total' },
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'toplist-headers' },
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'pos' },
+	                    '#'
+	                ),
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'name' },
+	                    'Användare'
+	                ),
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'sum' },
+	                    'Poäng'
+	                )
+	            ),
+	            orderedUsers.map(user)
+	        )
+	    );
+	};
+
+	exports.default = UserTotalTopList;
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(196);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var user = function user(u, i) {
+	    return _react2.default.createElement(
+	        'div',
+	        { key: i, className: 'toplist-row' },
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'pos' },
+	            i + 1
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'name' },
+	            _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/s/profile/' + u.id },
+	                u.username
+	            )
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'sum' },
+	            u.topBets
+	        )
+	    );
+	};
+
+	var sortByPoints = function sortByPoints(a, b) {
+	    return b.topBets - a.topBets;
+	};
+	var getUserWithPoints = function getUserWithPoints(u) {
+	    return {
+	        id: u.id,
+	        username: u.username,
+	        topBets: u.points.filter(function (pts) {
+	            return pts.points == 10;
+	        }).length
+	    };
+	};
+
+	var UserTopBets = function UserTopBets(_ref) {
+	    var users = _ref.users;
+
+
+	    if (users.isFetching || users.data.length == 0) {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'toplist-container' },
+	            _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Högsta poäng'
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'toplist user-total' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'toplist-headers' },
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        '#'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'Användare'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'Poäng'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Laddar...'
+	                )
+	            )
+	        );
+	    }
+
+	    var orderedUsers = users.data.map(getUserWithPoints).sort(sortByPoints);
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'toplist-container' },
+	        _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Antal tior'
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'toplist user-total' },
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'toplist-headers' },
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'pos' },
+	                    '#'
+	                ),
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'name' },
+	                    'Användare'
+	                ),
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'sum' },
+	                    'Antal'
+	                )
+	            ),
+	            orderedUsers.map(user)
+	        )
+	    );
+	};
+
+	exports.default = UserTopBets;
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _notification = __webpack_require__(260);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SuccessNotification = function SuccessNotification(_ref) {
+	    var dispatch = _ref.dispatch;
+	    var message = _ref.message;
+
+	    var hide = function hide() {
+	        return dispatch((0, _notification.hideNotification)());
+	    };
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'notification success', onClick: hide },
+	        _react2.default.createElement(
+	            'p',
+	            null,
+	            message
+	        )
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(function (state) {
+	    return { notification: state.notification };
+	})(SuccessNotification);
+
+/***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _notification = __webpack_require__(260);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ErrorNotification = function ErrorNotification(_ref) {
+	    var dispatch = _ref.dispatch;
+	    var message = _ref.message;
+
+	    var hide = function hide() {
+	        return dispatch((0, _notification.hideNotification)());
+	    };
+
+	    return _react2.default.createElement(
+	        'div',
+	        { onClick: hide, className: 'notification error' },
+	        _react2.default.createElement(
+	            'p',
+	            null,
+	            message
+	        )
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(function (state) {
+	    return { notification: state.notification };
+	})(ErrorNotification);
+
+/***/ },
+/* 288 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _components = __webpack_require__(268);
+
+	var _modal = __webpack_require__(265);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var PlaceSpecialBetButton = function PlaceSpecialBetButton(_ref) {
+	    var openModal = _ref.openModal;
+	    return _react2.default.createElement(
+	        'button',
+	        {
+	            onClick: openModal,
+	            className: 'place-special-bet-button',
+	            type: 'button' },
+	        'Tippa'
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	},
+	// Dispatch to props
+	function (dispatch) {
+	    return {
+	        openModal: function openModal() {
+	            return dispatch((0, _modal.openSpecialBetModal)());
+	        }
+	    };
+	})(PlaceSpecialBetButton);
+
+/***/ },
+/* 289 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _group = __webpack_require__(290);
+
+	var _components = __webpack_require__(268);
+
+	var _EditGroupDescriptionButton = __webpack_require__(291);
+
+	var _EditGroupDescriptionButton2 = _interopRequireDefault(_EditGroupDescriptionButton);
+
+	var _EditGroupPasswordButton = __webpack_require__(292);
+
+	var _EditGroupPasswordButton2 = _interopRequireDefault(_EditGroupPasswordButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Group = function (_Component) {
+	    _inherits(Group, _Component);
+
+	    function Group(props) {
+	        _classCallCheck(this, Group);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Group).call(this, props));
+	    }
+
+	    _createClass(Group, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _props = this.props;
+	            var dispatch = _props.dispatch;
+	            var params = _props.params;
+	            var tournament = _props.tournament;
+
+
+	            if (params.hasOwnProperty('id')) {
+	                dispatch((0, _group.fetchGroup)(params.id, tournament));
+	            }
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _props2 = this.props;
+	            var params = _props2.params;
+	            var group = _props2.group;
+	            var user = _props2.user;
+	            var dispatch = _props2.dispatch;
+
+	            // TODO wont need this?
+
+	            if (!params.hasOwnProperty('id')) {
+	                return _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Det finns ingen liga med detta ID.'
+	                );
+	            }
+
+	            if (group.isFetching || group.data.length === 0) {
+	                return _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Ligan laddas.'
+	                );
+	            }
+
+	            var isAdmin = user.id === group.data.admin.id;
+
+	            return _react2.default.createElement(
+	                _components.GroupMembers,
+	                { group: group.data },
+	                _react2.default.createElement(_components.BackButton, null),
+	                isAdmin ? _react2.default.createElement(_EditGroupPasswordButton2.default, { group: group.data }) : '',
+	                _react2.default.createElement(
+	                    'h2',
+	                    { className: 'group-title' },
+	                    group.data.name,
+	                    ' ',
+	                    isAdmin ? _react2.default.createElement(
+	                        'small',
+	                        null,
+	                        '(admin)'
+	                    ) : ''
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    { className: 'group-description' },
+	                    group.data.description,
+	                    isAdmin ? _react2.default.createElement(_EditGroupDescriptionButton2.default, { group: group.data }) : ''
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Group;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        user: state.user,
+	        group: state.group,
+	        tournament: state.tournament
+	    };
+	})(Group);
+
+/***/ },
+/* 290 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.invalidateGroup = invalidateGroup;
+	exports.requestGroup = requestGroup;
+	exports.receiveGroup = receiveGroup;
+	exports.fetchGroup = fetchGroup;
+	exports.requestEditGroupDescription = requestEditGroupDescription;
+	exports.receiveEditGroupDescription = receiveEditGroupDescription;
+	exports.editGroupDescription = editGroupDescription;
+	exports.requestEditGroupPassword = requestEditGroupPassword;
+	exports.receiveEditGroupPassword = receiveEditGroupPassword;
+	exports.editGroupPassword = editGroupPassword;
+
+	var _isomorphicFetch = __webpack_require__(256);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _notification = __webpack_require__(260);
+
+	var _utils = __webpack_require__(258);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var INVALIDATE = 'supertipset/group/INVALIDATE';
+	// Group
+	var REQUEST = 'supertipset/group/REQUEST';
+	var RECEIVE = 'supertipset/group/RECEIVE';
+	// Group description
+	var REQUEST_EDIT_DESCRIPTION = 'supertipset/group/REQUEST_EDIT_DESCRIPTION';
+	var RECEIVE_EDIT_DESCRIPTION = 'supertipset/group/RECEIVE_EDIT_DESCRIPTION';
+	// Group password
+	var REQUEST_EDIT_PASSWORD = 'supertipset/group/REQUEST_EDIT_PASSWORD';
+	var RECEIVE_EDIT_PASSWORD = 'supertipset/group/RECEIVE_EDIT_PASSWORD';
+
+	var initialState = {
+	    isFetching: false,
+	    didInvalidate: false,
+	    data: []
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case INVALIDATE:
+	            return (0, _utils.assign)(state, {
+	                didInvalidate: true
+	            });
+	        case REQUEST:
+	            return (0, _utils.assign)(state, {
+	                isFetching: true,
+	                didInvalidate: false
+	            });
+	        case RECEIVE:
+	            return (0, _utils.assign)(state, {
+	                isFetching: false,
+	                didInvalidate: false,
+	                data: action.group
+	            });
+	        case RECEIVE_EDIT_DESCRIPTION:
+	            return (0, _utils.assign)(state, {
+	                data: (0, _utils.assign)(state.data, {
+	                    description: action.group.description
+	                })
+	            });
+	        // TODO listen to other actions?
+	        default:
+	            return state;
+	    }
+	}
+
+	function invalidateGroup() {
+	    return { type: INVALIDATE };
+	}
+
+	function requestGroup() {
+	    return { type: REQUEST };
+	}
+
+	function receiveGroup(group) {
+	    return { type: RECEIVE, group: group };
+	}
+
+	function shouldFetch(group, id) {
+	    if (group.isFetching) {
+	        return false;
+	    } else if (!group.data.hasOwnProperty('id')) {
+	        return true;
+	    } else if (group.data.hasOwnProperty('id') && group.data.id !== id) {
+	        return true;
+	    } else {
+	        return group.didInvalidate;
+	    }
+	}
+
+	function fetchGroup(id, tournament) {
+	    return function (dispatch, getState) {
+	        var _getState = getState();
+
+	        var group = _getState.group;
+
+
+	        if (!shouldFetch(group, id)) {
+	            return Promise.resolve();
+	        }
+
+	        dispatch(requestGroup());
+
+	        return (0, _isomorphicFetch2.default)(_utils.baseURL + '/api/groups/' + id + '/detail/?tournament=' + tournament).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    return dispatch(receiveGroup(json));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('could not fetch group');
+	            }
+	        });
+	    };
+	}
+
+	function requestEditGroupDescription() {
+	    return { type: REQUEST_EDIT_DESCRIPTION };
+	}
+
+	function receiveEditGroupDescription(group) {
+	    return { type: RECEIVE_EDIT_DESCRIPTION, group: group };
+	}
+
+	function editGroupDescription(user, group, name, description) {
+	    return function (dispatch) {
+	        dispatch(requestEditGroupDescription());
+
+	        var payload = (0, _utils.preparePut)({
+	            user: user,
+	            name: name,
+	            description: description
+	        });
+
+	        var url = _utils.baseURL + '/api/groups/' + group + '/';
+
+	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    dispatch(receiveEditGroupDescription(json));
+	                    // TODO change notification message?
+	                    dispatch((0, _notification.successNotification)('Gruppen har redigerats!'));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('request edit group description not ok');
+	            }
+	        });
+	    };
+	}
+
+	function requestEditGroupPassword() {
+	    return { type: REQUEST_EDIT_PASSWORD };
+	}
+
+	function receiveEditGroupPassword(group) {
+	    return { type: RECEIVE_EDIT_PASSWORD, group: group };
+	}
+
+	function editGroupPassword(user, group, name, password) {
+	    return function (dispatch) {
+	        dispatch(requestEditGroupDescription());
+
+	        var payload = (0, _utils.preparePut)({
+	            user: user,
+	            name: name,
+	            password: password
+	        });
+
+	        var url = _utils.baseURL + '/api/groups/' + group + '/password/';
+
+	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
+	            if (res.ok) {
+	                res.json().then(function (json) {
+	                    dispatch(receiveEditGroupPassword(json));
+	                    // TODO change notification message?
+	                    dispatch((0, _notification.successNotification)('Gruppen har redigerats!'));
+	                });
+	            } else {
+	                // TODO error handling
+	                console.log('request edit group password not ok');
+	            }
+	        });
+	    };
+	}
+
+/***/ },
+/* 291 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(265);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EditGroupDescriptionButton = function EditGroupDescriptionButton(_ref) {
+	    var user = _ref.user;
+	    var group = _ref.group;
+	    var openModal = _ref.openModal;
+
+	    var open = function open(group) {
+	        return function () {
+	            return openModal(group);
+	        };
+	    };
+
+	    return _react2.default.createElement(
+	        'button',
+	        {
+	            onClick: open(group),
+	            className: 'edit-group-description',
+	            type: 'button' },
+	        'Redigera'
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	},
+	// Dispatch to props
+	function (dispatch) {
+	    return {
+	        openModal: function openModal(g) {
+	            return dispatch((0, _modal.openEditGroupDescriptionModal)(g));
+	        }
+	    };
+	})(EditGroupDescriptionButton);
+
+/***/ },
+/* 292 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _modal = __webpack_require__(265);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EditGroupPasswordButton = function EditGroupPasswordButton(_ref) {
+	    var user = _ref.user;
+	    var group = _ref.group;
+	    var openModal = _ref.openModal;
+
+	    var open = function open(group) {
+	        return function () {
+	            return openModal(group);
+	        };
+	    };
+
+	    return _react2.default.createElement(
+	        'button',
+	        {
+	            onClick: open(group),
+	            className: 'edit-group-password',
+	            type: 'button' },
+	        'Ändra lösenord'
+	    );
+	};
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return { user: state.user };
+	},
+	// Dispatch to props
+	function (dispatch) {
+	    return {
+	        openModal: function openModal(g) {
+	            return dispatch((0, _modal.openEditGroupPasswordModal)(g));
+	        }
+	    };
+	})(EditGroupPasswordButton);
+
+/***/ },
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _groups = __webpack_require__(261);
+
+	var _components = __webpack_require__(268);
+
+	var _JoinGroupButton = __webpack_require__(294);
+
+	var _JoinGroupButton2 = _interopRequireDefault(_JoinGroupButton);
+
+	var _CreateGroupButton = __webpack_require__(295);
+
+	var _CreateGroupButton2 = _interopRequireDefault(_CreateGroupButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Groups = function (_Component) {
+	    _inherits(Groups, _Component);
+
+	    function Groups(props) {
+	        _classCallCheck(this, Groups);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Groups).call(this, props));
+	    }
+
+	    _createClass(Groups, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _props = this.props;
+	            var dispatch = _props.dispatch;
+	            var user = _props.user;
+	            var tournament = _props.tournament;
+
+
+	            dispatch((0, _groups.fetchGroups)(user.id, tournament));
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var groups = this.props.groups;
+
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'groups-container' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'group-actions' },
+	                    _react2.default.createElement(_JoinGroupButton2.default, null),
+	                    _react2.default.createElement(
+	                        'span',
+	                        { className: 'div' },
+	                        '|'
+	                    ),
+	                    _react2.default.createElement(_CreateGroupButton2.default, null)
+	                ),
+	                _react2.default.createElement(_components.GroupList, { groups: groups })
+	            );
+	        }
+	    }]);
+
+	    return Groups;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(
+	// State to props
+	function (state) {
+	    return {
+	        user: state.user,
+	        groups: state.groups,
+	        tournament: state.tournament
+	    };
+	})(Groups);
+
+/***/ },
 /* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -31751,7 +31834,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31797,7 +31880,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31848,7 +31931,7 @@
 
 	var _toplists = __webpack_require__(297);
 
-	var _components = __webpack_require__(267);
+	var _components = __webpack_require__(268);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32121,7 +32204,7 @@
 
 	var _profile = __webpack_require__(299);
 
-	var _components = __webpack_require__(267);
+	var _components = __webpack_require__(268);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32225,7 +32308,7 @@
 
 	var _utils = __webpack_require__(258);
 
-	var _groups = __webpack_require__(293);
+	var _groups = __webpack_require__(261);
 
 	var _user = __webpack_require__(259);
 
@@ -32295,6 +32378,18 @@
 	            return (0, _utils.assign)(state, {
 	                data: (0, _utils.assign)(state.data, {
 	                    special_bets: state.data.special_bets.concat(action.specialBet)
+	                })
+	            });
+	        case _user.UPDATE_SPECIAL_BET:
+	            if (!state.data.hasOwnProperty('id')) {
+	                return state;
+	            }
+
+	            return (0, _utils.assign)(state, {
+	                data: (0, _utils.assign)(state.data, {
+	                    special_bets: state.data.special_bets.map(function (b) {
+	                        return b.id == action.specialBet.id ? action.specialBet : b;
+	                    })
 	                })
 	            });
 	        default:
@@ -32380,7 +32475,7 @@
 
 	var _profile = __webpack_require__(299);
 
-	var _components = __webpack_require__(267);
+	var _components = __webpack_require__(268);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32601,7 +32696,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32668,7 +32763,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
 	var _tournament = __webpack_require__(305);
 
@@ -32756,9 +32851,9 @@
 
 	var _reactRouter = __webpack_require__(196);
 
-	var _group = __webpack_require__(289);
+	var _group = __webpack_require__(290);
 
-	var _groups = __webpack_require__(293);
+	var _groups = __webpack_require__(261);
 
 	var _profile = __webpack_require__(299);
 
@@ -32766,7 +32861,7 @@
 
 	var _user = __webpack_require__(259);
 
-	var _rounds = __webpack_require__(266);
+	var _rounds = __webpack_require__(267);
 
 	var CHANGE = 'supertipset/tournament/CHANGE';
 
@@ -32825,9 +32920,9 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
-	var _groups = __webpack_require__(293);
+	var _groups = __webpack_require__(261);
 
 	var _Modal = __webpack_require__(303);
 
@@ -32925,9 +33020,9 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
-	var _groups = __webpack_require__(293);
+	var _groups = __webpack_require__(261);
 
 	var _Modal = __webpack_require__(303);
 
@@ -33029,9 +33124,9 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
-	var _groups = __webpack_require__(293);
+	var _groups = __webpack_require__(261);
 
 	var _Modal = __webpack_require__(303);
 
@@ -33165,9 +33260,9 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
-	var _group = __webpack_require__(289);
+	var _group = __webpack_require__(290);
 
 	var _Modal = __webpack_require__(303);
 
@@ -33239,9 +33334,9 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
-	var _group = __webpack_require__(289);
+	var _group = __webpack_require__(290);
 
 	var _Modal = __webpack_require__(303);
 
@@ -33329,7 +33424,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
 	var _user = __webpack_require__(259);
 
@@ -33418,7 +33513,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
 	var _user = __webpack_require__(259);
 
@@ -33447,13 +33542,19 @@
 	    var submit = function submit(e) {
 	        e.preventDefault();
 
-	        if (user.data.bets.filter(function (b) {
+	        var bet = user.data.bets.filter(function (b) {
 	            return b.game.id == game.id;
-	        }).length) {
-	            console.log('has bet - should send PUT request');
-	        }
+	        }).reduce(function (a, b) {
+	            return b;
+	        }, {});
 
-	        dispatch((0, _user.placeBet)(user.id, game.id, data.teamOne, data.teamTwo));
+	        if (bet.hasOwnProperty('id')) {
+	            // Update a current bet
+	            dispatch((0, _user.replaceBet)(bet.id, data.teamOne, data.teamTwo));
+	        } else {
+	            // Place a new bet
+	            dispatch((0, _user.placeBet)(user.id, game.id, data.teamOne, data.teamTwo));
+	        }
 
 	        dispatch((0, _modal.closeModal)());
 	    };
@@ -33522,7 +33623,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
 	var _user = __webpack_require__(259);
 
@@ -33573,11 +33674,19 @@
 	    var submit = function submit(e) {
 	        e.preventDefault();
 
-	        if (user.data.special_bets.length) {
-	            console.log('has special bets - should send PUT request');
-	        }
+	        var bet = user.data.special_bets.filter(function (b) {
+	            return b.tournament == tournament;
+	        }).reduce(function (a, b) {
+	            return b;
+	        }, {});
 
-	        dispatch((0, _user.placeSpecialBet)(user.id, data.player, data.goals, data.team, tournament));
+	        if (bet.hasOwnProperty('id')) {
+	            // Update a current special bet
+	            dispatch((0, _user.replaceSpecialBet)(bet.id, data.player, data.goals, data.team));
+	        } else {
+	            // Place a new special bet
+	            dispatch((0, _user.placeSpecialBet)(user.id, data.player, data.goals, data.team, tournament));
+	        }
 
 	        dispatch((0, _modal.closeModal)());
 	    };
@@ -33662,7 +33771,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _components = __webpack_require__(267);
+	var _components = __webpack_require__(268);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33708,7 +33817,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33763,7 +33872,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33818,7 +33927,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modal = __webpack_require__(264);
+	var _modal = __webpack_require__(265);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33859,11 +33968,11 @@
 	});
 	exports.toplists = exports.notification = exports.modal = exports.players = exports.teams = exports.tournaments = exports.tournament = exports.rounds = exports.profile = exports.user = exports.groups = exports.group = undefined;
 
-	var _group2 = __webpack_require__(289);
+	var _group2 = __webpack_require__(290);
 
 	var _group3 = _interopRequireDefault(_group2);
 
-	var _groups2 = __webpack_require__(293);
+	var _groups2 = __webpack_require__(261);
 
 	var _groups3 = _interopRequireDefault(_groups2);
 
@@ -33875,7 +33984,7 @@
 
 	var _profile3 = _interopRequireDefault(_profile2);
 
-	var _rounds2 = __webpack_require__(266);
+	var _rounds2 = __webpack_require__(267);
 
 	var _rounds3 = _interopRequireDefault(_rounds2);
 
@@ -33887,15 +33996,15 @@
 
 	var _tournaments3 = _interopRequireDefault(_tournaments2);
 
-	var _teams2 = __webpack_require__(261);
+	var _teams2 = __webpack_require__(262);
 
 	var _teams3 = _interopRequireDefault(_teams2);
 
-	var _players2 = __webpack_require__(262);
+	var _players2 = __webpack_require__(263);
 
 	var _players3 = _interopRequireDefault(_players2);
 
-	var _modal2 = __webpack_require__(264);
+	var _modal2 = __webpack_require__(265);
 
 	var _modal3 = _interopRequireDefault(_modal2);
 

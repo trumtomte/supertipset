@@ -278,6 +278,19 @@ class SpecialBetViewSet(viewsets.ModelViewSet):
         serializer.save(user=user, player=player, team=team,
                         tournament=tournament)
 
+    def update(self, request, pk=None):
+        special_bet = self.get_object()
+        player = Player.objects.get(pk=self.request.data['player'])
+        team = Team.objects.get(pk=self.request.data['team'])
+        player_goals = self.request.data['player_goals']
+
+        special_bet.player = player
+        special_bet.team = team
+        special_bet.player_goals = player_goals
+        special_bet.save()
+
+        serializer = SpecialBetSerializer(special_bet)
+        return Response(serializer.data)
 
 # Goal
 class GoalViewSet(viewsets.ModelViewSet):

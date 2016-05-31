@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { closeModal } from '../ducks/modal'
-import { placeBet } from '../ducks/user'
+import { placeBet, replaceBet } from '../ducks/user'
 import Modal from './Modal'
 
 const PlaceBetModal = ({ user, game, dispatch }) => {
@@ -17,16 +17,26 @@ const PlaceBetModal = ({ user, game, dispatch }) => {
     const submit = (e) => {
         e.preventDefault()
 
-        if (user.data.bets.filter(b => b.game.id == game.id).length) {
-            console.log('has bet - should send PUT request')
-        }
+        const bet = user.data.bets
+            .filter(b => b.game.id == game.id)
+            .reduce((a, b) => b, {})
 
-        dispatch(placeBet(
-            user.id,
-            game.id,
-            data.teamOne,
-            data.teamTwo
-        ))
+        if (bet.hasOwnProperty('id')) {
+            // Update a current bet
+            dispatch(replaceBet(
+                bet.id,
+                data.teamOne,
+                data.teamTwo
+            ))
+        } else {
+            // Place a new bet
+            dispatch(placeBet(
+                user.id,
+                game.id,
+                data.teamOne,
+                data.teamTwo
+            ))
+        }
 
         dispatch(closeModal())
     }

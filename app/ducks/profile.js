@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import { baseURL, assign } from './utils'
 import { RECEIVE_LEAVE, RECEIVE_JOIN, RECEIVE_CREATE } from './groups'
-import { RECEIVE_SPECIAL_BET } from './user'
+import { RECEIVE_SPECIAL_BET, UPDATE_SPECIAL_BET } from './user'
 
 const INVALIDATE = 'supertipset/profile/INVALIDATE'
 const REQUEST = 'supertipset/profile/REQUEST'
@@ -62,6 +62,16 @@ export default function reducer(state = initialState, action) {
             return assign(state, {
                 data: assign(state.data, {
                     special_bets: state.data.special_bets.concat(action.specialBet)
+                })
+            })
+        case UPDATE_SPECIAL_BET:
+            if (!state.data.hasOwnProperty('id')) {
+                return state
+            }
+
+            return assign(state, {
+                data: assign(state.data, {
+                    special_bets: state.data.special_bets.map(b => b.id == action.specialBet.id ? action.specialBet : b)
                 })
             })
         default:
