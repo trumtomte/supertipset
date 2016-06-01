@@ -204,7 +204,10 @@ def import_players(filename):
     for player_row in players:
         if len(player_row) > 0:
             player, team = player_row.split(', ')
-            firstname, lastname = player.split(' ')
+            names = player.split(' ')
+
+            firstname = names.pop(0)
+            lastname = ' '.join(names)
 
             t = Team.objects.get(country=team)
             p = Player(firstname=firstname, lastname=lastname)
