@@ -39,6 +39,7 @@ const CreateGroupModal = ({ user, tournament, dispatch }) => {
                 onChange={setData}
                 ref={focus}
                 type='text'
+                max='48'
                 name='name'
                 placeholder='Namn' />
             <input

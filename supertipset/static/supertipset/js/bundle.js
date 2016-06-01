@@ -32980,6 +32980,7 @@
 	            onChange: setData,
 	            ref: focus,
 	            type: 'text',
+	            max: '48',
 	            name: 'name',
 	            placeholder: 'Namn' }),
 	        _react2.default.createElement('input', {
@@ -33088,6 +33089,7 @@
 	        _react2.default.createElement('input', {
 	            onChange: setData,
 	            ref: focus,
+	            max: '48',
 	            type: 'text',
 	            name: 'name',
 	            placeholder: 'Liga' }),

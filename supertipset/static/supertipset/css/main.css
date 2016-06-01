@@ -1487,6 +1487,11 @@ header nav button:hover {
 }
 
 @media (max-width: 660px) {
+    .group-container .edit-group-password {
+        position: static;
+        display: block;
+        margin: 15px auto;
+    }
     .back-button {
         position: static;
         display: block;
@@ -1524,6 +1529,7 @@ header nav button:hover {
         font-size: 13px;
     }
 
+    .group-container .team,
     .groups-summary .members,
     .groups-summary .admin {
         display: none;
@@ -1577,11 +1583,23 @@ header nav button:hover {
     }
 
     .special-bets-container {
-        width: 95%;
+        width: 100%;
     }
 
     .special-bets span {
         padding: 15px 5px;
+    }
+
+    .modal-content {
+        max-width: 95%;
+    }
+
+    .modal-title {
+        font-size: 20px;
+    }
+
+    .modal-content h3 {
+        font-size: 14px;
     }
 }
 
@@ -1593,7 +1611,7 @@ header nav button:hover {
 
 @media (max-width: 450px) {
     .special-bets h6 {
-        font-size: 10px;
+        font-size: 9px;
         padding: 5px;
     }
 }

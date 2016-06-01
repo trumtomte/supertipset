@@ -43,6 +43,7 @@ const JoinGroupModal = ({ user, groups, dispatch }) => {
             <input
                 onChange={setData}
                 ref={focus}
+                max='48'
                 type='text'
                 name='name'
                 placeholder='Liga' />
