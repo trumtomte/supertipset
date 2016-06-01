@@ -18,6 +18,14 @@ const playerOpt = (p, i) => (
     </option>
 )
 
+// <optgroup> for a team
+const teamOptGroup = (t, i) => (
+    <optgroup label={t.name} key={i}>
+        {t.players.map(playerOpt)}
+    </optgroup>
+)
+
+
 const PlaceSpecialBetModal = ({ user, teams, players, tournament, dispatch }) => {
     // Mutable form-data + defaults
     let data = {
@@ -26,16 +34,18 @@ const PlaceSpecialBetModal = ({ user, teams, players, tournament, dispatch }) =>
         goals: 0
     }
 
+    const bet = user.data.special_bets
+        .filter(b => b.tournament == tournament)
+        .reduce((a, b) => b, {})
+
+    const betExists = bet.hasOwnProperty('id')
+
     const close = () => dispatch(closeModal())
 
     const submit = (e) => {
         e.preventDefault()
 
-        const bet = user.data.special_bets
-            .filter(b => b.tournament == tournament)
-            .reduce((a, b) => b, {})
-
-        if (bet.hasOwnProperty('id')) {
+        if (betExists) {
             // Update a current special bet
             dispatch(replaceSpecialBet(
                 bet.id,
@@ -61,6 +71,16 @@ const PlaceSpecialBetModal = ({ user, teams, players, tournament, dispatch }) =>
     
     const setData = e => data[e.target.name] = Number(e.target.value)
 
+    const teamsWithPlayers = teams.data.map(team => {
+        return {
+            id: team.id,
+            name: team.name,
+            players: players.data.filter(p => p.teams[0].id == team.id)
+        }
+    })
+
+    console.log(teamsWithPlayers)
+
     return (
         <Modal submit={submit}>
             <h2 className='modal-title'>Tippa specialtips</h2>
@@ -76,13 +96,13 @@ const PlaceSpecialBetModal = ({ user, teams, players, tournament, dispatch }) =>
             <select
                 onChange={setData}
                 name='player'>
-                {players.data.map(playerOpt)}
+                {teamsWithPlayers.map(teamOptGroup)}
             </select>
 
             <h3>Mål</h3>
             <input
                 onChange={setData}
-                defaultValue={0}
+                defaultValue={betExists ? bet.player_goals : 0}
                 min='0'
                 className='special-bet-goals'
                 type='number'

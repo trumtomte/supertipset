@@ -11,17 +11,19 @@ const PlaceBetModal = ({ user, game, dispatch }) => {
         teamTwo: 0
     }
 
+    const bet = user.data.bets
+        .filter(b => b.game.id == game.id)
+        .reduce((a, b) => b, {})
+
+    const betExists = bet.hasOwnProperty('id')
+
     const close = () => dispatch(closeModal())
 
     // TODO check if game has started etc
     const submit = (e) => {
         e.preventDefault()
 
-        const bet = user.data.bets
-            .filter(b => b.game.id == game.id)
-            .reduce((a, b) => b, {})
-
-        if (bet.hasOwnProperty('id')) {
+        if (betExists) {
             // Update a current bet
             dispatch(replaceBet(
                 bet.id,
@@ -54,13 +56,13 @@ const PlaceBetModal = ({ user, game, dispatch }) => {
                 <input
                     onChange={setData}
                     ref={focus}
-                    defaultValue={0}
+                    defaultValue={betExists ? bet.team_1_bet : 0}
                     min='0'
                     type='number'
                     name='teamOne' />
                 <input
                     onChange={setData}
-                    defaultValue={0}
+                    defaultValue={betExists ? bet.team_2_bet : 0}
                     min='0'
                     type='number'
                     name='teamTwo' />

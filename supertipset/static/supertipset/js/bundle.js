@@ -33536,6 +33536,14 @@
 	        teamTwo: 0
 	    };
 
+	    var bet = user.data.bets.filter(function (b) {
+	        return b.game.id == game.id;
+	    }).reduce(function (a, b) {
+	        return b;
+	    }, {});
+
+	    var betExists = bet.hasOwnProperty('id');
+
 	    var close = function close() {
 	        return dispatch((0, _modal.closeModal)());
 	    };
@@ -33544,13 +33552,7 @@
 	    var submit = function submit(e) {
 	        e.preventDefault();
 
-	        var bet = user.data.bets.filter(function (b) {
-	            return b.game.id == game.id;
-	        }).reduce(function (a, b) {
-	            return b;
-	        }, {});
-
-	        if (bet.hasOwnProperty('id')) {
+	        if (betExists) {
 	            // Update a current bet
 	            dispatch((0, _user.replaceBet)(bet.id, data.teamOne, data.teamTwo));
 	        } else {
@@ -33589,13 +33591,13 @@
 	            _react2.default.createElement('input', {
 	                onChange: setData,
 	                ref: focus,
-	                defaultValue: 0,
+	                defaultValue: betExists ? bet.team_1_bet : 0,
 	                min: '0',
 	                type: 'number',
 	                name: 'teamOne' }),
 	            _react2.default.createElement('input', {
 	                onChange: setData,
-	                defaultValue: 0,
+	                defaultValue: betExists ? bet.team_2_bet : 0,
 	                min: '0',
 	                type: 'number',
 	                name: 'teamTwo' })
@@ -33655,6 +33657,15 @@
 	    );
 	};
 
+	// <optgroup> for a team
+	var teamOptGroup = function teamOptGroup(t, i) {
+	    return _react2.default.createElement(
+	        'optgroup',
+	        { label: t.name, key: i },
+	        t.players.map(playerOpt)
+	    );
+	};
+
 	var PlaceSpecialBetModal = function PlaceSpecialBetModal(_ref) {
 	    var user = _ref.user;
 	    var teams = _ref.teams;
@@ -33669,6 +33680,14 @@
 	        goals: 0
 	    };
 
+	    var bet = user.data.special_bets.filter(function (b) {
+	        return b.tournament == tournament;
+	    }).reduce(function (a, b) {
+	        return b;
+	    }, {});
+
+	    var betExists = bet.hasOwnProperty('id');
+
 	    var close = function close() {
 	        return dispatch((0, _modal.closeModal)());
 	    };
@@ -33676,13 +33695,7 @@
 	    var submit = function submit(e) {
 	        e.preventDefault();
 
-	        var bet = user.data.special_bets.filter(function (b) {
-	            return b.tournament == tournament;
-	        }).reduce(function (a, b) {
-	            return b;
-	        }, {});
-
-	        if (bet.hasOwnProperty('id')) {
+	        if (betExists) {
 	            // Update a current special bet
 	            dispatch((0, _user.replaceSpecialBet)(bet.id, data.player, data.goals, data.team));
 	        } else {
@@ -33698,6 +33711,18 @@
 	    var setData = function setData(e) {
 	        return data[e.target.name] = Number(e.target.value);
 	    };
+
+	    var teamsWithPlayers = teams.data.map(function (team) {
+	        return {
+	            id: team.id,
+	            name: team.name,
+	            players: players.data.filter(function (p) {
+	                return p.teams[0].id == team.id;
+	            })
+	        };
+	    });
+
+	    console.log(teamsWithPlayers);
 
 	    return _react2.default.createElement(
 	        _Modal2.default,
@@ -33729,7 +33754,7 @@
 	            {
 	                onChange: setData,
 	                name: 'player' },
-	            players.data.map(playerOpt)
+	            teamsWithPlayers.map(teamOptGroup)
 	        ),
 	        _react2.default.createElement(
 	            'h3',
@@ -33738,7 +33763,7 @@
 	        ),
 	        _react2.default.createElement('input', {
 	            onChange: setData,
-	            defaultValue: 0,
+	            defaultValue: betExists ? bet.player_goals : 0,
 	            min: '0',
 	            className: 'special-bet-goals',
 	            type: 'number',
