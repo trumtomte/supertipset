@@ -194,3 +194,19 @@ class Goal(models.Model):
         return "{} mål av {} i matchen: {}".format(self.goals,
                                                    str(self.player),
                                                    str(self.game))
+
+def import_players(filename):
+
+    with open(filename, 'r') as f:
+        players = f.read().split('\n')
+    f.close()
+
+    for player_row in players:
+        if len(player_row) > 0:
+            player, team = player_row.split(', ')
+            firstname, lastname = player.split(' ')
+
+            t = Team.objects.get(country=team)
+            p = Player(firstname=firstname, lastname=lastname)
+            p.save()
+            p.teams.add(t)
