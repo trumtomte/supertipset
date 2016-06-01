@@ -25,7 +25,7 @@ const UserTopBets = ({ users }) => {
     if (users.isFetching || users.data.length == 0) {
         return (
             <div className='toplist-container'>
-                <h2>Högsta poäng</h2>
+                <h2>Flest 10:or</h2>
                 <div className='toplist user-total'>
                     <div className='toplist-headers'>
                         <span>#</span>
@@ -42,7 +42,7 @@ const UserTopBets = ({ users }) => {
 
     return (
         <div className='toplist-container'>
-            <h2>Antal tior</h2>
+            <h2>Flest 10:or</h2>
             <div className='toplist user-total'>
                 <div className='toplist-headers'>
                     <h6 className='pos'>#</h6>

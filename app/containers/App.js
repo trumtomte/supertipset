@@ -26,13 +26,21 @@ class App extends Component {
         const { children, tournaments } = this.props
 
         const ACTIVE = {
-            background: '#1ABC9C',
+            background: '#1ADC9C',
             color: 'white'
         }
 
+        // Change tournament button
+        // {!tournaments.isFetching && tournaments.data.length > 1
+        //     ? <ChangeTournamentButton />
+        //     : ''}
+
         return (
             <div className='wrapper'>
-                <a className='logout' href='/logout'>Logga ut</a>
+                <div className='top'>
+                    <h6 className='brand'>SUPERTIPSET.NU</h6>
+                    <a className='logout' href='/logout'>Logga ut</a>
+                </div>
                 <header>
                     <nav>
                         <Link
@@ -59,10 +67,6 @@ class App extends Component {
                             className='profile-link link'>
                             Profil
                         </Link>
-
-                        {!tournaments.isFetching && tournaments.data.length > 1
-                            ? <ChangeTournamentButton />
-                            : ''}
                     </nav>
                 </header>
                 <div className='content'>{children}</div>

@@ -27394,17 +27394,31 @@
 
 
 	            var ACTIVE = {
-	                background: '#1ABC9C',
+	                background: '#1ADC9C',
 	                color: 'white'
 	            };
+
+	            // Change tournament button
+	            // {!tournaments.isFetching && tournaments.data.length > 1
+	            //     ? <ChangeTournamentButton />
+	            //     : ''}
 
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'wrapper' },
 	                _react2.default.createElement(
-	                    'a',
-	                    { className: 'logout', href: '/logout' },
-	                    'Logga ut'
+	                    'div',
+	                    { className: 'top' },
+	                    _react2.default.createElement(
+	                        'h6',
+	                        { className: 'brand' },
+	                        'SUPERTIPSET.NU'
+	                    ),
+	                    _react2.default.createElement(
+	                        'a',
+	                        { className: 'logout', href: '/logout' },
+	                        'Logga ut'
+	                    )
 	                ),
 	                _react2.default.createElement(
 	                    'header',
@@ -27443,8 +27457,7 @@
 	                                activeStyle: ACTIVE,
 	                                className: 'profile-link link' },
 	                            'Profil'
-	                        ),
-	                        !tournaments.isFetching && tournaments.data.length > 1 ? _react2.default.createElement(_ChangeTournamentButton2.default, null) : ''
+	                        )
 	                    )
 	                ),
 	                _react2.default.createElement(
@@ -31078,7 +31091,7 @@
 	            _react2.default.createElement(
 	                'h2',
 	                null,
-	                'Högsta poäng'
+	                'Flest 10:or'
 	            ),
 	            _react2.default.createElement(
 	                'div',
@@ -31119,7 +31132,7 @@
 	        _react2.default.createElement(
 	            'h2',
 	            null,
-	            'Antal tior'
+	            'Flest 10:or'
 	        ),
 	        _react2.default.createElement(
 	            'div',

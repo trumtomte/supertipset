@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Bangers);
+
 /**
  * Normalize
  * ==========
@@ -449,10 +451,22 @@ body {
     position: relative;
 }
 
+.top {
+    display: flex;
+    margin-bottom: 20px;
+    padding: 0 12px;
+}
+
+.brand {
+    font-size: 26px;
+    font-family: Bangers, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #4C697A;
+    margin: 0;
+    letter-spacing: 3px;
+    flex: 1 1 0;
+}
+
 .logout {
-    position: absolute;
-    right: 15px;
-    top: 8px;
     font-size: 14px;
     color: #3498DB;
     text-decoration: none;
@@ -481,18 +495,16 @@ footer {
  **/
 header {
     margin-bottom: 40px;
+    padding: 0 10px;
 }
 
 header nav {
-    max-width: 650px;
+    max-width: 100%;
     margin: 0 auto;
     display: flex;
-    border: 1px solid #17a689;
-    border-radius: 4px;
 }
 
 header nav .link {
-    border-right: 1px solid #17a689;
 }
 header nav .link:last-child {
     border: 0;
@@ -503,20 +515,21 @@ header nav button {
     flex: 1 1 0;
     display: inline-block;
     cursor: pointer;
-    padding: 8px 0;
-    background: transparent;
+    padding: 16px 0;
+    background: #1ABC9C;;
     text-align: center;
-    color: #15987e;
+    color: white;
     font-weight: 200;
-    letter-spacing: 1px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
     text-decoration: none;
     border: 0;
-    font-size: 16px;
+    font-size: 14px;
     outline: none;
 }
 header nav a:hover,
 header nav button:hover {
-    background: #1ABC9C;
+    background: #1AFC9C;
     color: white;
 }
 /* }}} */
@@ -893,11 +906,11 @@ header nav button:hover {
  **/
 .toplists-container {
     display: flex;
+    justify-content: space-between;
 }
 
 .toplist-container {
-    flex: 1 1 0;
-    margin: 0 20px;
+    flex: 0 1 48%;
 }
 
 .toplist-container h2 {
@@ -1429,14 +1442,6 @@ header nav button:hover {
  * ==========
  * {{{
  **/
-@media (max-width: 850px) {
-    .logout {
-        display: block;
-        position: static;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-}
 
 @media (max-width: 800px) {
     .toplists-container {
@@ -1537,9 +1542,6 @@ header nav button:hover {
 }
 
 @media (max-width: 550px) {
-    header nav a, header nav button {
-        font-size: 14px;
-    }
 }
 
 @media (max-width: 530px) {
@@ -1601,6 +1603,11 @@ header nav button:hover {
     .modal-content h3 {
         font-size: 14px;
     }
+
+    header nav a, header nav button {
+        font-size: 12px;
+        letter-spacing: 2px;
+    }
 }
 
 @media (max-width: 460px) {
@@ -1618,7 +1625,8 @@ header nav button:hover {
 
 @media (max-width: 370px) {
     header nav a, header nav button {
-        font-size: 12px;
+        font-size: 11px;
+        letter-spacing: 1px;
     }
 }
 /* }}} */
