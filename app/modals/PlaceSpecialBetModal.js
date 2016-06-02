@@ -27,18 +27,18 @@ const teamOptGroup = (t, i) => (
 
 
 const PlaceSpecialBetModal = ({ user, teams, players, tournament, dispatch }) => {
-    // Mutable form-data + defaults
-    let data = {
-        team: teams.data[0].id,
-        player: teams.data[0].id,
-        goals: 0
-    }
-
     const bet = user.data.special_bets
         .filter(b => b.tournament == tournament)
         .reduce((a, b) => b, {})
 
     const betExists = bet.hasOwnProperty('id')
+
+    // Mutable form-data + defaults
+    let data = {
+        team: betExists ? bet.team.id : teams.data[0].id,
+        player: betExists ? bet.player.id : players.data[0].id,
+        goals: betExists ? bet.player_goals : 0
+    }
 
     const close = () => dispatch(closeModal())
 

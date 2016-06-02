@@ -5,17 +5,17 @@ import { placeBet, replaceBet } from '../ducks/user'
 import Modal from './Modal'
 
 const PlaceBetModal = ({ user, game, dispatch }) => {
-    // Mutable form-data + defaults
-    let data = {
-        teamOne: 0,
-        teamTwo: 0
-    }
-
     const bet = user.data.bets
         .filter(b => b.game.id == game.id)
         .reduce((a, b) => b, {})
 
     const betExists = bet.hasOwnProperty('id')
+    
+    // Mutable form-data + defaults
+    let data = {
+        teamOne: betExists ? bet.team_1_bet : 0,
+        teamTwo: betExists ? bet.team_2_bet : 0
+    }
 
     const close = () => dispatch(closeModal())
 

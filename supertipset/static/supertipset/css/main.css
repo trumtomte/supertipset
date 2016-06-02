@@ -1540,6 +1540,10 @@ header nav button:hover {
     .groups-summary .admin {
         display: none;
     }
+
+    body {
+        font-weight: 400;
+    }
 }
 
 @media (max-width: 550px) {

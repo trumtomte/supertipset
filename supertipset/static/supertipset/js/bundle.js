@@ -33560,12 +33560,6 @@
 	    var game = _ref.game;
 	    var dispatch = _ref.dispatch;
 
-	    // Mutable form-data + defaults
-	    var data = {
-	        teamOne: 0,
-	        teamTwo: 0
-	    };
-
 	    var bet = user.data.bets.filter(function (b) {
 	        return b.game.id == game.id;
 	    }).reduce(function (a, b) {
@@ -33573,6 +33567,12 @@
 	    }, {});
 
 	    var betExists = bet.hasOwnProperty('id');
+
+	    // Mutable form-data + defaults
+	    var data = {
+	        teamOne: betExists ? bet.team_1_bet : 0,
+	        teamTwo: betExists ? bet.team_2_bet : 0
+	    };
 
 	    var close = function close() {
 	        return dispatch((0, _modal.closeModal)());
@@ -33703,13 +33703,6 @@
 	    var tournament = _ref.tournament;
 	    var dispatch = _ref.dispatch;
 
-	    // Mutable form-data + defaults
-	    var data = {
-	        team: teams.data[0].id,
-	        player: teams.data[0].id,
-	        goals: 0
-	    };
-
 	    var bet = user.data.special_bets.filter(function (b) {
 	        return b.tournament == tournament;
 	    }).reduce(function (a, b) {
@@ -33717,6 +33710,13 @@
 	    }, {});
 
 	    var betExists = bet.hasOwnProperty('id');
+
+	    // Mutable form-data + defaults
+	    var data = {
+	        team: betExists ? bet.team.id : teams.data[0].id,
+	        player: betExists ? bet.player.id : players.data[0].id,
+	        goals: betExists ? bet.player_goals : 0
+	    };
 
 	    var close = function close() {
 	        return dispatch((0, _modal.closeModal)());
