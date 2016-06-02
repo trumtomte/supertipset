@@ -16,9 +16,19 @@
         <div class="form">
             <h1 class="logo"><a href="http://www.supertipset.nu" class="">Supertipset.nu</a></h1>
             <ul class="tab-group">
+                {% if error_login %}
+                <li class="tab"><a href="#welcome">Regler</a></li>
+                <li class="tab"><a href="#signup">Registrera</a></li>
+                <li class="tab active"><a href="#login">Logga in</a></li>
+                {% elif error_register %}
+                <li class="tab"><a href="#welcome">Regler</a></li>
+                <li class="tab active"><a href="#signup">Registrera</a></li>
+                <li class="tab"><a href="#login">Logga in</a></li>
+                {% else %}
                 <li class="tab active"><a href="#welcome">Regler</a></li>
                 <li class="tab"><a href="#signup">Registrera</a></li>
                 <li class="tab"><a href="#login">Logga in</a></li>
+                {% endif %}
             </ul>
             <div class="tab-content">
                 <div id="welcome">
@@ -121,7 +131,7 @@
                         {% csrf_token %}
                         <div class="field-wrap">
                             <label>
-                                E-post<span class="req">*</span>
+                                Användarnamn<span class="req">*</span>
                             </label>
                             <input type="text" name="username" required autocomplete="off" />
                         </div>
