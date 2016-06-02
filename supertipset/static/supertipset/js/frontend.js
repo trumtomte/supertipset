@@ -76,9 +76,9 @@ $(document).ready(function() {
 
         target = $(this).attr('href');
 
-        $('.tab-content > div').not(target).hide();
+        $('.tab-content > div').not(target).removeClass('active').hide();
 
-        $(target).fadeIn(600);
+        $(target).fadeIn(600).addClass('active');
 
     });
 

@@ -31,7 +31,7 @@
                 {% endif %}
             </ul>
             <div class="tab-content">
-                <div id="welcome">
+                <div id="welcome" class="{% if not error_login and not error_register %}active{% endif %}">
                     <h2>Vad är Supertipset?</h2>
                     <p>Supertipset är ett utmanade och roligt bettingspel som är enkelt nog för att alla ska kunna delta. Du kan skapa dina egna ligor och utmana dina vänner, familjemedlemmar och kollegor. Vem besitter den bästa fotbollskunskapen, och vem är en vinnare?</p>
                     <p>Sverige har kvalificerat sig till EM i Frankrike, vilket är <span class="red">superkul</span>. Ta tillfället i akt och förhöj upplevelsen av fotbolls-EM med Supertipset. Anmäl dig <span class="red">kostnadsfritt</span> redan idag!</p>
@@ -59,7 +59,7 @@
                         <p>&copy;Supertipset | Supertipset | hej@supertipset.nu</p>
                     </footer>
                 </div>
-                <div id="signup">
+                <div id="signup" class="{% if error_register %}active{% endif %}">
                     <h1>Registrera dig nu</h1>
 
                     {% if error_register %}
@@ -118,7 +118,7 @@
                         </p>
                     </footer>
                 </div>
-                <div id="login">
+                <div id="login" class="{% if error_login %}active{% endif %}">
                     <h1>Välkommen tillbaka</h1>
 
                     {% if error_login %}

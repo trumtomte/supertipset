@@ -647,9 +647,12 @@ a:hover {
     color: #ffffff;
 }
 
-.tab-content > div:last-child,
-.tab-content > div:nth-child(2) {
+.tab-content > div {
     display: none;
+}
+
+.tab-content > div.active {
+    display: block;
 }
 
 label {
