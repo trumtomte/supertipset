@@ -46,7 +46,7 @@ def login(request):
             return render(request, 'supertipset/index.html', ctx) 
 
         request.session['user_id'] = user.id
-        request.session['tournament'] = user.id
+        request.session['tournament'] = request.POST.get('tournament')
         return redirect('/s/') 
     # GET
     else:
@@ -103,7 +103,7 @@ def register(request):
         user.save()
         request.session['user_id'] = user.id
 
-        return redirect('/s/')
+        return redirect('/')
     else:
         return redirect('/')
 
