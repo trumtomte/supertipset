@@ -36,7 +36,7 @@ const SpecialBets = ({ user, tournamentHasStarted, bettable }) => {
             <div className='special-bets-container'>
                 <h5>
                     Specialtips
-                    {bettable ? <PlaceSpecialBetButton /> : ''}
+                    {bettable && !tournamentHasStarted ? <PlaceSpecialBetButton /> : ''}
                 </h5>
                 <div className='special-bets'>
                     <div className='winner'>

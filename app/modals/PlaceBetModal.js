@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { closeModal } from '../ducks/modal'
 import { placeBet, replaceBet } from '../ducks/user'
+import { errorNotification } from '../ducks/notification'
 import Modal from './Modal'
 
 const PlaceBetModal = ({ user, game, dispatch }) => {
@@ -31,13 +32,21 @@ const PlaceBetModal = ({ user, game, dispatch }) => {
                 data.teamTwo
             ))
         } else {
-            // Place a new bet
-            dispatch(placeBet(
-                user.id,
-                game.id,
-                data.teamOne,
-                data.teamTwo
-            ))
+            const now = new Date()
+            const gameStart = new Date(game.start_date)
+
+            // Game has already started
+            if (now > gameStart) {
+                dispatch(errorNotification('Ouch! Deadline har passerat.'))
+            } else {
+                // Place a new bet
+                dispatch(placeBet(
+                    user.id,
+                    game.id,
+                    data.teamOne,
+                    data.teamTwo
+                ))
+            }
         }
 
         dispatch(closeModal())

@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { closeModal } from '../ducks/modal'
 import { placeSpecialBet, replaceSpecialBet } from '../ducks/user'
+import { errorNotification } from '../ducks/notification'
 import Modal from './Modal'
 
 // <option> for a team
@@ -26,7 +27,7 @@ const teamOptGroup = (t, i) => (
 )
 
 
-const PlaceSpecialBetModal = ({ user, teams, players, tournament, dispatch }) => {
+const PlaceSpecialBetModal = ({ user, teams, players, tournament, tournaments, dispatch }) => {
     const bet = user.data.special_bets
         .filter(b => b.tournament == tournament)
         .reduce((a, b) => b, {})
@@ -54,14 +55,23 @@ const PlaceSpecialBetModal = ({ user, teams, players, tournament, dispatch }) =>
                 data.team
             ))
         } else {
-            // Place a new special bet
-            dispatch(placeSpecialBet(
-                user.id,
-                data.player,
-                data.goals,
-                data.team,
-                tournament
-            ))
+            const t = tournaments.data.filter(t => t.id == tournament).reduce((a, b) => b, {})
+            const now = new Date()
+            const tournamentStart = new Date(t.start_date)
+
+            // Tournament has already started
+            if (now > tournamentStart) {
+                dispatch(errorNotification('Ouch! Deadline har passerat.'))
+            } else {
+                // Place a new special bet
+                dispatch(placeSpecialBet(
+                    user.id,
+                    data.player,
+                    data.goals,
+                    data.team,
+                    tournament
+                ))
+            }
         }
 
         dispatch(closeModal())
@@ -78,8 +88,6 @@ const PlaceSpecialBetModal = ({ user, teams, players, tournament, dispatch }) =>
             players: players.data.filter(p => p.teams[0].id == team.id)
         }
     })
-
-    console.log(teamsWithPlayers)
 
     return (
         <Modal submit={submit}>
@@ -117,7 +125,8 @@ export default connect(
         user: state.user,
         teams: state.teams,
         players: state.players,
-        tournament: state.tournament
+        tournament: state.tournament,
+        tournaments: state.tournaments
     })
 )(PlaceSpecialBetModal)
 

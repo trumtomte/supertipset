@@ -29648,7 +29648,7 @@
 	                'h5',
 	                null,
 	                'Specialtips',
-	                bettable ? _react2.default.createElement(_containers.PlaceSpecialBetButton, null) : ''
+	                bettable && !tournamentHasStarted ? _react2.default.createElement(_containers.PlaceSpecialBetButton, null) : ''
 	            ),
 	            _react2.default.createElement(
 	                'div',
@@ -33549,6 +33549,8 @@
 
 	var _user = __webpack_require__(259);
 
+	var _notification = __webpack_require__(260);
+
 	var _Modal = __webpack_require__(303);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
@@ -33586,8 +33588,16 @@
 	            // Update a current bet
 	            dispatch((0, _user.replaceBet)(bet.id, data.teamOne, data.teamTwo));
 	        } else {
-	            // Place a new bet
-	            dispatch((0, _user.placeBet)(user.id, game.id, data.teamOne, data.teamTwo));
+	            var now = new Date();
+	            var gameStart = new Date(game.start_date);
+
+	            // Game has already started
+	            if (now > gameStart) {
+	                dispatch((0, _notification.errorNotification)('Ouch! Deadline har passerat.'));
+	            } else {
+	                // Place a new bet
+	                dispatch((0, _user.placeBet)(user.id, game.id, data.teamOne, data.teamTwo));
+	            }
 	        }
 
 	        dispatch((0, _modal.closeModal)());
@@ -33661,6 +33671,8 @@
 
 	var _user = __webpack_require__(259);
 
+	var _notification = __webpack_require__(260);
+
 	var _Modal = __webpack_require__(303);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
@@ -33701,6 +33713,7 @@
 	    var teams = _ref.teams;
 	    var players = _ref.players;
 	    var tournament = _ref.tournament;
+	    var tournaments = _ref.tournaments;
 	    var dispatch = _ref.dispatch;
 
 	    var bet = user.data.special_bets.filter(function (b) {
@@ -33729,8 +33742,21 @@
 	            // Update a current special bet
 	            dispatch((0, _user.replaceSpecialBet)(bet.id, data.player, data.goals, data.team));
 	        } else {
-	            // Place a new special bet
-	            dispatch((0, _user.placeSpecialBet)(user.id, data.player, data.goals, data.team, tournament));
+	            var t = tournaments.data.filter(function (t) {
+	                return t.id == tournament;
+	            }).reduce(function (a, b) {
+	                return b;
+	            }, {});
+	            var now = new Date();
+	            var tournamentStart = new Date(t.start_date);
+
+	            // Tournament has already started
+	            if (now > tournamentStart) {
+	                dispatch((0, _notification.errorNotification)('Ouch! Deadline har passerat.'));
+	            } else {
+	                // Place a new special bet
+	                dispatch((0, _user.placeSpecialBet)(user.id, data.player, data.goals, data.team, tournament));
+	            }
 	        }
 
 	        dispatch((0, _modal.closeModal)());
@@ -33751,8 +33777,6 @@
 	            })
 	        };
 	    });
-
-	    console.log(teamsWithPlayers);
 
 	    return _react2.default.createElement(
 	        _Modal2.default,
@@ -33808,7 +33832,8 @@
 	        user: state.user,
 	        teams: state.teams,
 	        players: state.players,
-	        tournament: state.tournament
+	        tournament: state.tournament,
+	        tournaments: state.tournaments
 	    };
 	})(PlaceSpecialBetModal);
 
