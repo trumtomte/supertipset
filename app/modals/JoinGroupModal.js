@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { closeModal } from '../ducks/modal'
 import { joinGroup } from '../ducks/groups'
+import { errorNotification } from '../ducks/notification'
 import Modal from './Modal'
 
 const JoinGroupModal = ({ user, groups, dispatch }) => {
@@ -17,6 +18,7 @@ const JoinGroupModal = ({ user, groups, dispatch }) => {
         if (data.name === '' || data.password === '') {
             // TODO error notification
             dispatch(closeModal())
+            dispatch(errorNotification('Vänligen fyll i alla fält!'))
             return false
         }
 

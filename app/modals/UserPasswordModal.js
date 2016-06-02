@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { closeModal } from '../ducks/modal'
 import { editUserPassword } from '../ducks/user'
+import { errorNotification } from '../ducks/notification'
 import Modal from './Modal'
 
 const UserPasswordModal = ({ user, dispatch }) => {
@@ -14,10 +15,10 @@ const UserPasswordModal = ({ user, dispatch }) => {
     const submit = e => {
         e.preventDefault()
 
-        if (data.passwordOne == ''
-            || data.passwordOne !== data.passwordTwo) {
+        if (data.passwordOne == '' || data.passwordOne !== data.passwordTwo) {
             // TODO error notification
             dispatch(closeModal())
+            dispatch(errorNotification('Lösenorden stämde inte - försök igen!'))
             return false
         }
 

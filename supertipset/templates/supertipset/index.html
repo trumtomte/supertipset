@@ -1,12 +1,160 @@
 <!doctype html>
-<html>
+<html class="no-js" lang="">
     <head>
         <title>Supertipset</title>
         <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         {% load staticfiles %}
-        <link rel="stylesheet" href="{% static 'supertipset/frontend.css' %}">
+        <link rel="stylesheet" href="{% static 'supertipset/css/frontend.css' %}">
     </head>
     <body>
-        <h1>Startsidan</h1>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="form">
+            <h1 class="logo"><a href="http://www.supertipset.nu" class="">Supertipset.nu</a></h1>
+            <ul class="tab-group">
+                <li class="tab active"><a href="#welcome">Regler</a></li>
+                <li class="tab"><a href="#signup">Registrera</a></li>
+                <li class="tab"><a href="#login">Logga in</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="welcome">
+                    <h2>Vad är Supertipset?</h2>
+                    <p>Supertipset är ett utmanade och roligt bettingspel som är enkelt nog för att alla ska kunna delta. Du kan skapa dina egna ligor och utmana dina vänner, familjemedlemmar och kollegor. Vem besitter den bästa fotbollskunskapen, och vem är en vinnare?</p>
+                    <p>Sverige har kvalificerat sig till EM i Frankrike, vilket är <span class="red">superkul</span>. Ta tillfället i akt och förhöj upplevelsen av fotbolls-EM med Supertipset. Anmäl dig <span class="red">kostnadsfritt</span> redan idag!</p>
+                    <h2>Spelregler</h2>
+                    <p>Supertipset går ut på att tippa resultat i samtliga matcher i EM. Först och främst är det gruppspelsmatcherna som ska tippas. Så fort lagen för finalrundorna är klara kommer även dessa matcher att finnas tillgängliga. Dina tips går att redigera upp till <span class="red">30 minuter innan avspark</span> i respektive match. Beroende på tips och matchens resultat får du olika poäng: 0p, 1p, 4p, 5p eller 10p.</p>
+                    <h2>Poängfördelning Grundtips</h2>
+                    <ul>
+                        <li>Rätt tipstecken (hemmavinst, oavgjort eller bortavinst): <span>4p</span></li>
+                        <li>Rätt antal mål för ett av lagen i matchen: <span>1p</span></li>
+                        <li>Rätt matchresultat: <span>10p</span></li>
+                    </ul>
+                    <p>Observera att det är resultat efter <span class="red">ordinarie speltid</span> som räknas. Finalmatcher som går till förlängning räknas som en oavgjord match.</p>
+                    <p>Det finns tre specialtips som gäller för hela EM-turneringen; vilket lag som vinner EM, vilken spelare som gör flest mål och hur många mål denna spelare gör. Dessa tips måste skickas in 30 minuter innan avspark i första matchen - <span class="red">10 juni, 20:30</span>.</p>
+                    <h2>Poängfördelning Specialtips</h2>
+                    <ul>
+                        <li>Rätt EM-vinnare: <span>50p</span></li>
+                        <li>Rätt skyttekung: <span>25p</span></li>
+                        <li>Rätt antal mål för skyttekung: <span>25p</span><br/> (Ger endast poäng vid rätt skyttekung)</li>
+                    </ul>
+                    <h2>Övrigt</h2>
+                    <p>Lägg in tipsen i god tid för att inte riskera överbelastning på servern. Supertipset är i BETA-version, och vi jobbar ständigt med utveckling och förbättring. Vi förbehåller oss rätten att förändra Supertipset på alla plan.</p>
+                    <p>Lycka till! <br/>önskar vännerna från <span class="logo-small">Supertipset.nu</span> &hearts;</p>
+                    <footer>
+                        <hr>
+                        <p>&copy;Supertipset | Supertipset | hej@supertipset.nu</p>
+                    </footer>
+                </div>
+                <div id="signup">
+                    <h1>Registrera dig nu</h1>
+
+                    {% if error_register %}
+                    <p class="error-reg">
+                    <span class="red">Oops! Något gick fel.</span> Fyll i obligatoriska fält på ett korrekt sätt.
+                    </p>
+                    {% endif %}
+
+                    <p>Fyll i nedanstående formulär för att anmäla dig till Supertipset. Sa vi att det var helt gratis?</p>
+                    <form action="/register/" method="post">
+                        {% csrf_token %}
+                        <div class="top-row">
+                            <div class="field-wrap">
+                                <label>
+                                    Förnamn<span class="req">*</span>
+                                </label>
+                                <input type="text" name="firstname" required autocomplete="off" />
+                            </div>
+                            <div class="field-wrap">
+                                <label>
+                                    Efternamn<span class="req">*</span>
+                                </label>
+                                <input type="text" name="lastname" required autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                E-post<span class="req">*</span>
+                            </label>
+                            <input type="email" name="email" required autocomplete="off" />
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Användarnamn<span class="req">*</span>
+                            </label>
+                            <input type="text" name="username" required autocomplete="off" />
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Lösenord<span class="req">*</span>
+                            </label>
+                            <input type="password" name="password1" required autocomplete="off" />
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Bekräfta Lösenord<span class="req">*</span>
+                            </label>
+                            <input type="password" name="password1" required autocomplete="off" />
+                        </div>
+                        <button type="submit" class="button button-block">Skicka</button>
+                    </form>
+                    <footer>
+                        <hr>
+                        <p>
+                        &copy;Supertipset | Supertipset | hej@supertipset.nu
+                        </p>
+                    </footer>
+                </div>
+                <div id="login">
+                    <h1>Välkommen tillbaka</h1>
+
+                    {% if error_login %}
+                    <p class="error-login">
+                        <span class="red">Oops! Något gick fel.</span> Fyll i en existerande e-post och rätt lösenord. Samtliga fält är obligatoriska.
+                    </p>
+                    {% endif %}
+
+                    <form action="/login/" method="post">
+                        {% csrf_token %}
+                        <div class="field-wrap">
+                            <label>
+                                E-post<span class="req">*</span>
+                            </label>
+                            <input type="text" name="username" required autocomplete="off" />
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Lösenord<span class="req">*</span>
+                            </label>
+                            <input type="password" name="password" required autocomplete="off" />
+                        </div>
+                        <div class="field-wrap">
+                            <select name="tournament">
+                                {% for tournament in tournaments %}
+                                {% if forloop.first %}
+                                <option value="{{ tournament.id }}" selected>{{ tournament.name }}</option>
+                                {% else %}
+                                <option value="{{ tournament.id }}">{{ tournament.name }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <!-- <p class="forgot"><a href="#">Glömt lösenordet?</a></p> -->
+                        <button type="submit" class="button button-block">Logga in</button>
+                    </form>
+                    <footer>
+                        <hr>
+                        <p>&copy;Supertipset | Supertipset | hej@supertipset.nu</p>
+                    </footer>
+                </div>
+            </div>
+            <!-- tab-content -->
+        </div>
+        <!-- /form -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="{% static 'supertipset/js/frontend.js' %}"></script>
     </body>
 </html>

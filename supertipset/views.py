@@ -1,14 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import check_password, make_password
 
-from api.models import User
+from api.models import User, Tournament
 
 # Front page
 def index(request):
-    return render(request, 'supertipset/index.html')
+    tournaments = Tournament.objects.all()
+    ctx = {"tournaments": tournaments}
+    return render(request, 'supertipset/index.html', ctx)
 
 # Login page
 def login(request):
+    tournaments = Tournament.objects.all()
+
     # POST
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -16,31 +20,41 @@ def login(request):
 
         # TODO error message
         if username == '' or password == '':
-            ctx = {"error": True}
-            return render(request, 'supertipset/login.html', ctx) 
+            ctx = {
+                "error_login": True,
+                "tournaments": tournaments
+            }
+            return render(request, 'supertipset/index.html', ctx) 
 
         # No user exists
         users = User.objects.filter(username=username)
         if len(users) == 0:
-            ctx = {"error": True}
-            return render(request, 'supertipset/login.html', ctx) 
+            ctx = {
+                "error_login": True,
+                "tournaments": tournaments
+            }
+            return render(request, 'supertipset/index.html', ctx) 
 
         user = users[0]
 
         # Password is incorrect
         if not check_password(password, user.password):
-            ctx = {"error": True}
-            return render(request, 'supertipset/login.html', ctx) 
+            ctx = {
+                "error_login": True,
+                "tournaments": tournaments
+            }
+            return render(request, 'supertipset/index.html', ctx) 
 
         request.session['user_id'] = user.id
-        
+        request.session['tournament'] = user.id
         return redirect('/s/') 
-
     # GET
     else:
-        return render(request, 'supertipset/login.html')
+        return redirect('/')
 
 def register(request):
+    tournaments = Tournament.objects.all()
+
     if request.method == 'POST':
         # Request data
         email = request.POST.get('email')
@@ -54,20 +68,29 @@ def register(request):
 
         # One or more arguments are missing
         if any(v == '' for v in args):
-            ctx = {"error": True}
-            return render(request, 'supertipset/register.html', ctx)
+            ctx = {
+                "error_register": True,
+                "tournaments": tournaments
+            }
+            return render(request, 'supertipset/index.html', ctx)
 
         # Passwords are not equal
         if password_1 != password_2:
-            ctx = {"error": True}
-            return render(request, 'supertipset/register.html', ctx)
+            ctx = {
+                "error_register": True,
+                "tournaments": tournaments
+            }
+            return render(request, 'supertipset/index.html', ctx)
 
         # NOTE: should we check for email as well?
         # Username already exists
         users = User.objects.filter(username=username)
         if len(users) > 0:
-            ctx = {"error": True}
-            return render(request, 'supertipset/register.html', ctx)
+            ctx = {
+                "error_register": True,
+                "tournaments": tournaments
+            }
+            return render(request, 'supertipset/index.html', ctx)
 
         # TODO: salt
         # Create password hash
@@ -82,7 +105,7 @@ def register(request):
 
         return redirect('/s/')
     else:
-        return render(request, 'supertipset/register.html')
+        return redirect('/')
 
 # Logout
 def logout(request):
@@ -94,26 +117,20 @@ def logout(request):
 # The App
 def app(request):
     user_id = request.session.get('user_id', False)
+    tournament = request.session.get('tournament', False)
 
-    if not user_id:
+    if not user_id or not tournament:
         return redirect('/login/')
 
-    # check which tournament is the current one (Default = 1)
-        # check from date fields etc
-    # get current user by id
-        # get user bets by tournament
-        # get user points by tournament
-        # get user specialbets by tournament
-        # get user specialbetsresults by tournament
-    # specialbets by tournament (so we can see each users country)
-    # profile, empty object
-    # get rounds by tournament
-    # get games by tournament
-    # get results by tournament
-    # get groups
-    # get teams
-    # get players
+    # TODO: send initial data to server?
 
-    ctx = {"user_id": user_id}
+    ctx = {
+        "user_id": user_id,
+        "tournament": tournament
+    }
 
     return render(request, 'supertipset/app.html', ctx)
+
+# 404 page
+def page_not_found(request):
+    return render(request, 'supertipset/404.html')

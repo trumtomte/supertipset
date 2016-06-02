@@ -28389,6 +28389,7 @@
 	exports.showNotification = showNotification;
 	exports.publishNotification = publishNotification;
 	exports.successNotification = successNotification;
+	exports.errorNotification = errorNotification;
 
 	var _utils = __webpack_require__(258);
 
@@ -28396,6 +28397,7 @@
 	var SHOW = 'supertipset/notification/SHOW';
 
 	var SUCCESS = 'supertipset/notification/SUCCESS';
+	var ERROR = 'supertipset/notification/ERROR';
 
 	var initialState = {
 	    notificationType: undefined,
@@ -28441,6 +28443,10 @@
 
 	function successNotification(message) {
 	    return publishNotification(SUCCESS, { message: message });
+	}
+
+	function errorNotification(message) {
+	    return publishNotification(ERROR, { message: message });
 	}
 
 /***/ },
@@ -32937,6 +32943,8 @@
 
 	var _groups = __webpack_require__(261);
 
+	var _notification = __webpack_require__(260);
+
 	var _Modal = __webpack_require__(303);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
@@ -32959,9 +32967,8 @@
 	        e.preventDefault();
 
 	        if (data.name == '' || data.passwordOne == '' || data.passwordOne !== data.passwordTwo) {
-	            // TODO error notification
-
 	            dispatch((0, _modal.closeModal)());
+	            dispatch((0, _notification.errorNotification)('Vänligen fyll i alla fält på ett korrekt vis!'));
 	            return false;
 	        }
 
@@ -33038,6 +33045,8 @@
 
 	var _groups = __webpack_require__(261);
 
+	var _notification = __webpack_require__(260);
+
 	var _Modal = __webpack_require__(303);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
@@ -33061,6 +33070,7 @@
 	        if (data.name === '' || data.password === '') {
 	            // TODO error notification
 	            dispatch((0, _modal.closeModal)());
+	            dispatch((0, _notification.errorNotification)('Vänligen fyll i alla fält!'));
 	            return false;
 	        }
 
@@ -33353,6 +33363,8 @@
 
 	var _group = __webpack_require__(290);
 
+	var _notification = __webpack_require__(260);
+
 	var _Modal = __webpack_require__(303);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
@@ -33376,10 +33388,12 @@
 	        if (data.passwordOne == '' || data.passwordOne !== data.passwordTwo) {
 	            // TODO error notification
 	            dispatch((0, _modal.closeModal)());
+	            dispatch((0, _notification.errorNotification)('Lösenorden stämde inte - försök igen!'));
 	            return false;
 	        }
 
 	        dispatch((0, _group.editGroupPassword)(user.id, group.id, group.name, data.passwordOne));
+
 	        dispatch((0, _modal.closeModal)());
 	    };
 
@@ -33443,6 +33457,8 @@
 
 	var _user = __webpack_require__(259);
 
+	var _notification = __webpack_require__(260);
+
 	var _Modal = __webpack_require__(303);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
@@ -33465,6 +33481,7 @@
 	        if (data.passwordOne == '' || data.passwordOne !== data.passwordTwo) {
 	            // TODO error notification
 	            dispatch((0, _modal.closeModal)());
+	            dispatch((0, _notification.errorNotification)('Lösenorden stämde inte - försök igen!'));
 	            return false;
 	        }
 

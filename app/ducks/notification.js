@@ -4,6 +4,7 @@ const HIDE = 'supertipset/notification/HIDE'
 const SHOW = 'supertipset/notification/SHOW'
 
 const SUCCESS = 'supertipset/notification/SUCCESS'
+const ERROR = 'supertipset/notification/ERROR'
 
 const initialState = {
     notificationType: undefined,
@@ -46,4 +47,8 @@ export function publishNotification(type, props) {
 
 export function successNotification(message) {
     return publishNotification(SUCCESS, { message })
+}
+
+export function errorNotification(message) {
+    return publishNotification(ERROR, { message })
 }

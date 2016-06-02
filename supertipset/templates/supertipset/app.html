@@ -12,10 +12,10 @@
     </head>
     <body>
         <div id="mount"></div>
-        <!-- <script>window.serverState = { user: { id: {{ user_id }} }, tournament: 1 };</script> -->
         <script>
-            window.tournamentID = 2;
+            window.tournamentID = {{ tournament }};
             window.userID = {{ user_id }};
+            // window.INITIAL_STATE = {}; ?
         </script>
         <script src="{% static 'supertipset/js/bundle.js' %}"></script>
     </body>

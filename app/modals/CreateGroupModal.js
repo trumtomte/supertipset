@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { closeModal } from '../ducks/modal'
 import { createGroup } from '../ducks/groups'
+import { errorNotification } from '../ducks/notification'
 import Modal from './Modal'
 
 const CreateGroupModal = ({ user, tournament, dispatch }) => {
@@ -18,9 +19,8 @@ const CreateGroupModal = ({ user, tournament, dispatch }) => {
         if (data.name == ''
             || data.passwordOne == ''
             || data.passwordOne !== data.passwordTwo) {
-            // TODO error notification
-
             dispatch(closeModal())
+            dispatch(errorNotification('Vänligen fyll i alla fält på ett korrekt vis!'))
             return false
         }
 

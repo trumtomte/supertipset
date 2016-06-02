@@ -443,6 +443,7 @@ body {
     font-weight: 200;
     letter-spacing: 1px;
     line-height: 130%;
+    color: #4c697a;
 }
 
 .wrapper {
@@ -462,7 +463,7 @@ body {
     font-family: Bangers, "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #4C697A;
     margin: 0;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     flex: 1 1 0;
 }
 
@@ -918,7 +919,7 @@ header nav button:hover {
     font-weight: 200;
     letter-spacing: 1px;
     margin-bottom: 15px;
-    color: #17a689;
+    color: #4c697a;
     text-align: center;
 }
 
@@ -988,7 +989,7 @@ header nav button:hover {
  * {{{
  **/
 .groups-container {
-    max-width: 650px;
+    max-width: 100%;
     margin: 0 auto;
 }
 
@@ -1627,6 +1628,22 @@ header nav button:hover {
     header nav a, header nav button {
         font-size: 11px;
         letter-spacing: 1px;
+    }
+}
+
+@media (max-width: 300px) {
+    .top {
+        display: block;
+    }
+
+    .brand {
+        text-align: center;
+    }
+
+    .logout {
+        display: block;
+        text-align: center;
+        margin: 15px 0;
     }
 }
 /* }}} */

@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { closeModal } from '../ducks/modal'
 import { editGroupPassword } from '../ducks/group'
+import { errorNotification } from '../ducks/notification'
 import Modal from './Modal'
 
 const GroupPasswordModal = ({ group, user, dispatch }) => {
@@ -17,6 +18,7 @@ const GroupPasswordModal = ({ group, user, dispatch }) => {
         if (data.passwordOne == '' || data.passwordOne !== data.passwordTwo) {
             // TODO error notification
             dispatch(closeModal())
+            dispatch(errorNotification('Lösenorden stämde inte - försök igen!'))
             return false
         }
 
@@ -26,6 +28,7 @@ const GroupPasswordModal = ({ group, user, dispatch }) => {
             group.name,
             data.passwordOne
         ))
+
         dispatch(closeModal())
     }
 
