@@ -63,7 +63,8 @@ class ResultAdmin(admin.ModelAdmin):
 
                 # TODO: possible bottleneck
                 try:
-                    p = Point(user=user, points=points, game=game)
+                    # p = Point(user=user, points=points, game=game)
+                    p = Point(user=user, points=points, result=result)
                     p.save()
                 except Exception:
                     print("<Point> object already exists for user.")

@@ -28,7 +28,8 @@ class ResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Result
-        fields = ('id', 'game', 'team_1_goals', 'team_2_goals', 'created_at')
+        # fields = ('id', 'game', 'team_1_goals', 'team_2_goals', 'created_at')
+        fields = ('id', 'result', 'team_1_goals', 'team_2_goals', 'created_at')
 
 # Game
 class GameSerializer(serializers.ModelSerializer):
@@ -123,11 +124,13 @@ class PointSerializer(serializers.ModelSerializer):
     # user = serializers.PrimaryKeyRelatedField(read_only=True)
     # game = serializers.PrimaryKeyRelatedField(read_only=True)
     user = UserSerializer(read_only=True)
-    game = GameSerializer(read_only=True)
+    result = ResultSerializer(read_only=True)
+    # game = GameSerializer(read_only=True)
 
     class Meta:
         model = Point
-        fields = ('id', 'user', 'points', 'game')
+        fields = ('id', 'user', 'points', 'result')
+        # fields = ('id', 'user', 'points', 'game')
 
 # Special Bet Result
 class SpecialBetResultSerializer(serializers.ModelSerializer):

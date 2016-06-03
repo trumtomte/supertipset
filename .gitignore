@@ -40,9 +40,11 @@ bin
 eggs
 lib
 pip-selfcheck.json
-migrations
+api/migrations/*
 include
 .Python
 
+
 static/
 !supertipset/static/
+

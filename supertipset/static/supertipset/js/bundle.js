@@ -28365,7 +28365,7 @@
 	                res.json().then(function (json) {
 	                    dispatch(updateSpecialBet(json));
 	                    // TODO better notification message?
-	                    dispatch((0, _notification.successNotification)('Specialtips sparat!'));
+	                    dispatch((0, _notification.successNotification)('Specialtips uppdaterat!'));
 	                });
 	            } else {
 	                // TODO error handling
@@ -33716,18 +33716,29 @@
 	    var tournaments = _ref.tournaments;
 	    var dispatch = _ref.dispatch;
 
+	    // TODO tournament is set as INT or object with ID
 	    var bet = user.data.special_bets.filter(function (b) {
-	        return b.tournament == tournament;
+	        return b.tournament == tournament || b.tournament.id == tournament;
 	    }).reduce(function (a, b) {
 	        return b;
 	    }, {});
 
 	    var betExists = bet.hasOwnProperty('id');
 
+	    var teamsWithPlayers = teams.data.map(function (team) {
+	        return {
+	            id: team.id,
+	            name: team.name,
+	            players: players.data.filter(function (p) {
+	                return p.teams[0].id == team.id;
+	            })
+	        };
+	    });
+
 	    // Mutable form-data + defaults
 	    var data = {
 	        team: betExists ? bet.team.id : teams.data[0].id,
-	        player: betExists ? bet.player.id : players.data[0].id,
+	        player: betExists ? bet.player.id : teamsWithPlayers[0].players[0].id,
 	        goals: betExists ? bet.player_goals : 0
 	    };
 
@@ -33767,16 +33778,6 @@
 	    var setData = function setData(e) {
 	        return data[e.target.name] = Number(e.target.value);
 	    };
-
-	    var teamsWithPlayers = teams.data.map(function (team) {
-	        return {
-	            id: team.id,
-	            name: team.name,
-	            players: players.data.filter(function (p) {
-	                return p.teams[0].id == team.id;
-	            })
-	        };
-	    });
 
 	    return _react2.default.createElement(
 	        _Modal2.default,

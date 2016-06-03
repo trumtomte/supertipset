@@ -28,16 +28,25 @@ const teamOptGroup = (t, i) => (
 
 
 const PlaceSpecialBetModal = ({ user, teams, players, tournament, tournaments, dispatch }) => {
+    // TODO tournament is set as INT or object with ID
     const bet = user.data.special_bets
-        .filter(b => b.tournament == tournament)
+        .filter(b => b.tournament == tournament || b.tournament.id == tournament)
         .reduce((a, b) => b, {})
 
     const betExists = bet.hasOwnProperty('id')
 
+    const teamsWithPlayers = teams.data.map(team => {
+        return {
+            id: team.id,
+            name: team.name,
+            players: players.data.filter(p => p.teams[0].id == team.id)
+        }
+    })
+
     // Mutable form-data + defaults
     let data = {
         team: betExists ? bet.team.id : teams.data[0].id,
-        player: betExists ? bet.player.id : players.data[0].id,
+        player: betExists ? bet.player.id : teamsWithPlayers[0].players[0].id,
         goals: betExists ? bet.player_goals : 0
     }
 
@@ -80,14 +89,6 @@ const PlaceSpecialBetModal = ({ user, teams, players, tournament, tournaments, d
     // TODO check if data for teams/players is available? i.e not fetching
     
     const setData = e => data[e.target.name] = Number(e.target.value)
-
-    const teamsWithPlayers = teams.data.map(team => {
-        return {
-            id: team.id,
-            name: team.name,
-            players: players.data.filter(p => p.teams[0].id == team.id)
-        }
-    })
 
     return (
         <Modal submit={submit}>

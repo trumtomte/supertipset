@@ -296,7 +296,7 @@ export function replaceSpecialBet(bet, player, goals, team) {
                     res.json().then(json => {
                         dispatch(updateSpecialBet(json))
                         // TODO better notification message?
-                        dispatch(successNotification('Specialtips sparat!'))
+                        dispatch(successNotification('Specialtips uppdaterat!'))
                     })
                 } else {
                     // TODO error handling

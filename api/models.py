@@ -170,16 +170,20 @@ class Point(models.Model):
     user = models.ForeignKey(User, related_name='points',
                              on_delete=models.CASCADE)
     points = models.IntegerField()
-    game = models.ForeignKey(Game)
+    # game = models.ForeignKey(Game)
+    result = models.ForeignKey(Result)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ("user", "game")
+        unique_together = ("user", "result")
+        # unique_together = ("user", "game")
 
     def __str__(self):
-        return "{} till {} i matchen: {}".format(str(self.points),
-                                                 str(self.user),
-                                                 str(self.game))
+        return "{} till {} i matchen:".format(str(self.points),
+                                                 str(self.user))
+        # return "{} till {} i matchen: {}".format(str(self.points),
+        #                                          str(self.user),
+        #                                          str(self.result))
 
 class Goal(models.Model):
     """

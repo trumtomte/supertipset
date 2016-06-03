@@ -28,9 +28,12 @@ class UserViewSet(viewsets.ModelViewSet):
     def deep(self, request):
         tournament_id = request.GET.get('tournament')
 
+        # OLD
+        # Prefetch('points', queryset=Point.objects.filter(game__round__tournament=tournament_id)) 
+
         if tournament_id:
             user = User.objects.prefetch_related(
-                        Prefetch('points', queryset=Point.objects.filter(game__round__tournament=tournament_id)) 
+                        Prefetch('points', queryset=Point.objects.filter(result__game__round__tournament=tournament_id)) 
                     ) \
                    .prefetch_related(
                         Prefetch('special_bet_results', queryset=SpecialBetResult.objects.filter(tournament=tournament_id)) 
@@ -49,13 +52,17 @@ class UserViewSet(viewsets.ModelViewSet):
     def detail(self, request, pk=None):
         tournament_id = request.GET.get('tournament')
 
+        # OLD
+        # Prefetch('points', queryset=Point.objects.filter(game__round__tournament=tournament_id)) 
+        # Prefetch('groups__users__points', queryset=Point.objects.filter(game__round__tournament=tournament_id)) 
+
         # NOTE: possible bottleneck? cache?
         if tournament_id:
             user = User.objects.prefetch_related(
                         Prefetch('bets', queryset=Bet.objects.filter(game__round__tournament=tournament_id)) 
                     ) \
                    .prefetch_related(
-                        Prefetch('points', queryset=Point.objects.filter(game__round__tournament=tournament_id)) 
+                        Prefetch('points', queryset=Point.objects.filter(result__game__round__tournament=tournament_id)) 
                     ) \
                    .prefetch_related(
                         Prefetch('special_bets', queryset=SpecialBet.objects.filter(tournament=tournament_id)) 
@@ -64,7 +71,7 @@ class UserViewSet(viewsets.ModelViewSet):
                         Prefetch('special_bet_results', queryset=SpecialBetResult.objects.filter(tournament=tournament_id)) 
                     ) \
                    .prefetch_related(
-                        Prefetch('groups__users__points', queryset=Point.objects.filter(game__round__tournament=tournament_id)) 
+                        Prefetch('groups__users__points', queryset=Point.objects.filter(result__game__round__tournament=tournament_id)) 
                     ) \
                    .prefetch_related(
                         Prefetch('groups__users__special_bets', queryset=SpecialBet.objects.filter(tournament=tournament_id)) 
@@ -175,9 +182,12 @@ class GroupViewSet(viewsets.ModelViewSet):
         users = request.GET.get('users')
         admin = request.GET.get('admin')
 
+        # OLD
+        # Prefetch('users__points', queryset=Point.objects.filter(resultgame__round__tournament=tournament_id)) 
+
         if tournament_id:
             groups = Group.objects.prefetch_related(
-                        Prefetch('users__points', queryset=Point.objects.filter(game__round__tournament=tournament_id)) 
+                        Prefetch('users__points', queryset=Point.objects.filter(result__game__round__tournament=tournament_id)) 
                     ) \
                    .prefetch_related(
                         Prefetch('users__special_bets', queryset=SpecialBet.objects.filter(tournament=tournament_id)) 
@@ -203,9 +213,12 @@ class GroupViewSet(viewsets.ModelViewSet):
     def detail(self, request, pk=None):
         tournament_id = request.GET.get('tournament')
 
+        # OLD
+        # Prefetch('users__points', queryset=Point.objects.filter(game__round__tournament=tournament_id)) 
+
         if tournament_id:
             group = Group.objects.prefetch_related(
-                        Prefetch('users__points', queryset=Point.objects.filter(game__round__tournament=tournament_id)) 
+                        Prefetch('users__points', queryset=Point.objects.filter(result__game__round__tournament=tournament_id)) 
                     ) \
                    .prefetch_related(
                         Prefetch('users__special_bets', queryset=SpecialBet.objects.filter(tournament=tournament_id)) 
@@ -304,8 +317,9 @@ class GoalViewSet(viewsets.ModelViewSet):
 # Point
 class PointViewSet(viewsets.ModelViewSet):
     queryset = Point.objects.select_related('user') \
-                            .select_related('game') \
+                            .select_related('result') \
                             .all()
+                            # .select_related('game') \
     serializer_class = PointSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = PointFilter
