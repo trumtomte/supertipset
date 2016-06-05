@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { successNotification } from './notification'
+import { successNotification, errorNotification } from './notification'
 import { baseURL, assign, preparePut, preparePost } from './utils'
 import { RECEIVE_LEAVE, RECEIVE_JOIN, RECEIVE_CREATE } from './groups'
 
@@ -125,8 +125,8 @@ export function fetchUser(id, tournament) {
                 if (res.ok) {
                     res.json().then(json => dispatch(receiveUser(json)))
                 } else {
-                    // TODO error handling
-                    console.log('unable to fetch user')
+                    // console.log('unable to fetch user')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }
@@ -157,12 +157,11 @@ export function editUserPassword(id, username, password) {
                 if (res.ok) {
                     res.json().then(json => {
                         dispatch(receiveEditUserPassword(json))
-                        // TODO better notification message?
-                        dispatch(successNotification('Du har redigerat ditt lösenord!'))
+                        dispatch(successNotification('Lösenord redigerat!'))
                     })
                 } else {
-                    // TODO Error handling
-                    console.log('unable to change user password')
+                    // console.log('unable to change user password')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }
@@ -198,12 +197,11 @@ export function placeBet(user, game, betTeamOne, betTeamTwo) {
                 if (res.ok) {
                     res.json().then(json => {
                         dispatch(receiveBet(json))
-                        // TODO better notification message?
                         dispatch(successNotification('Tips sparat!'))
                     })
                 } else {
-                    // TODO error handling
-                    console.log('unable to place bet')
+                    // console.log('unable to place bet')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }
@@ -225,12 +223,11 @@ export function replaceBet(bet, betTeamOne, betTeamTwo) {
                 if (res.ok) {
                     res.json().then(json => {
                         dispatch(updateBet(json))
-                        // TODO better notification message?
                         dispatch(successNotification('Tips sparat!'))
                     })
                 } else {
-                    // TODO error handling
-                    console.log('unable to update bet')
+                    // console.log('unable to update bet')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }
@@ -267,12 +264,11 @@ export function placeSpecialBet(user, player, goals, team, tournament) {
                 if (res.ok) {
                     res.json().then(json => {
                         dispatch(receiveSpecialBet(json))
-                        // TODO better notification message?
                         dispatch(successNotification('Specialtips sparat!'))
                     })
                 } else {
-                    // TODO error handling
-                    console.log('unable to place special bet')
+                    // console.log('unable to place special bet')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }
@@ -295,12 +291,11 @@ export function replaceSpecialBet(bet, player, goals, team) {
                 if (res.ok) {
                     res.json().then(json => {
                         dispatch(updateSpecialBet(json))
-                        // TODO better notification message?
                         dispatch(successNotification('Specialtips uppdaterat!'))
                     })
                 } else {
-                    // TODO error handling
-                    console.log('unable to update special bet')
+                    // console.log('unable to update special bet')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }

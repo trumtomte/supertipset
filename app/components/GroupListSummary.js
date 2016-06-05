@@ -5,16 +5,21 @@ import { LeaveGroupButton } from '../containers'
 const groupSummary = (user, isCurrentUser) => (g, i) => {
     return (
         <div key={i} className='group-summary-row'>
-            <span className='pos'>{i + 1}</span>
+            <span className='pos'>
+                {i + 1}
+            </span>
             <span className='name'>
                 <Link to={`/s/groups/${g.id}`}>{g.name}</Link>
             </span>
-            <span className='members'>{g.users.length}</span>
+            <span className='members'>
+                {g.users.length}
+            </span>
             <span className='admin'>
                 {user.data.id == g.admin.id
                     ? g.admin.username
                     : <Link to={`/s/profile/${g.admin.id}`}>{g.admin.username}</Link>}
             </span>
+
             {isCurrentUser
                 ? <span className='leave'><LeaveGroupButton group={g} /></span>
                 : ''}

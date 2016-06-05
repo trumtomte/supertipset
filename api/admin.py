@@ -45,7 +45,6 @@ class ResultAdmin(admin.ModelAdmin):
     # list_display = ['game', 'team_1_goals', 'team_2_goals']
 
     def calculate_points_action(self, request, queryset):
-
         # All results from games 
         for result in queryset:
             t1 = result.team_1_goals
@@ -74,10 +73,27 @@ class ResultAdmin(admin.ModelAdmin):
     # Dropdown menu text
     calculate_points_action.short_description = 'Calculate points'
 
+class TournamentAdmin(admin.ModelAdmin):
+    actions = ['calculate_points_action']
+
+    def calculate_points_action(self, request, queryset):
+        for tournament in queryset:
+            
+            special_bets = SpecialBet.objects.filter(tournament=tournament.id)
+
+            for special_bet in special_bets:
+                 print(special_bet)
+
+
+        self.message_user(request, 'Points has been calculated!')
+
+    # Dropdown menu text
+    calculate_points_action.short_description = 'Calculate points (special bets)'
+
 
 admin.site.register(User)
 admin.site.register(Group)
-admin.site.register(Tournament)
+admin.site.register(Tournament, TournamentAdmin)
 admin.site.register(Round)
 admin.site.register(Team)
 admin.site.register(Game)

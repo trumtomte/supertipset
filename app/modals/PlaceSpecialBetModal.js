@@ -26,9 +26,11 @@ const teamOptGroup = (t, i) => (
     </optgroup>
 )
 
-
 const PlaceSpecialBetModal = ({ user, teams, players, tournament, tournaments, dispatch }) => {
-    // TODO tournament is set as INT or object with ID
+    // Order teams by name
+    teams.data.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
+
+    // NOTE tournament is set as INT or object with ID
     const bet = user.data.special_bets
         .filter(b => b.tournament == tournament || b.tournament.id == tournament)
         .reduce((a, b) => b, {})

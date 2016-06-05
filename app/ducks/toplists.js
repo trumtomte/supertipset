@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import { errorNotification } from './notification'
 import { baseURL, assign } from './utils'
 
 const INVALIDATE = 'supsertipset/toplists/INVALIDATE'
@@ -101,7 +102,8 @@ export function fetchUsersForTopLists(tournament) {
                 if (res.ok) {
                     res.json().then(json => dispatch(receiveUsersForTopLists(json)))
                 } else {
-                    console.log('unable to fetch users for top lists')
+                    // console.log('unable to fetch users for top lists')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }
@@ -142,7 +144,8 @@ export function fetchGroupsForTopLists(tournament) {
                 if (res.ok) {
                     res.json().then(json => dispatch(receiveGroupsForTopLists(json)))
                 } else {
-                    console.log('unable to fetch groups for top lists')
+                    // console.log('unable to fetch groups for top lists')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }

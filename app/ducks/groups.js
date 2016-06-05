@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import { browserHistory } from 'react-router'
-import { successNotification } from './notification'
+import { successNotification, errorNotification } from './notification'
 import { baseURL, assign, preparePost, preparePut } from './utils'
 
 const INVALIDATE = 'supertipset/groups/INVALIDATE'
@@ -92,8 +92,8 @@ export function fetchGroups(user, tournament) {
                 if (res.ok) {
                     res.json().then(json => dispatch(receiveGroups(json)))
                 } else {
-                    // TODO error handling
-                    console.log('unable to fetch groups')
+                    // console.log('unable to fetch groups')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }
@@ -127,12 +127,11 @@ export function createGroup(user, name, password, tournament) {
                         dispatch(receiveCreateGroup(json))
                         dispatch(invalidateGroups())
                         browserHistory.push(`/s/groups/${json.id}`)
-                        // TODO better success message?
-                        dispatch(successNotification('Ny liga skapad!'))
+                        dispatch(successNotification('Liga skapad!'))
                     })
                 } else {
-                    // TODO error handling
-                    console.log('unable to create group')
+                    // console.log('unable to create group')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }
@@ -165,12 +164,11 @@ export function joinGroup(user, name, password) {
                         dispatch(receiveJoinGroup(json))
                         dispatch(invalidateGroups())
                         browserHistory.push(`/s/groups/${json.id}`)
-                        // TODO better notification message?
-                        dispatch(successNotification('Du har gått med i liga'))
+                        dispatch(successNotification('Du har gått med i ligan!'))
                     })
                 } else {
-                    // TODO error handling
-                    console.log('unable to join group')
+                    // console.log('unable to join group')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }
@@ -201,12 +199,11 @@ export function leaveGroup(user, group, admin) {
                 if (res.ok) {
                     res.json().then(json => {
                         dispatch(receiveLeaveGroup(json))
-                        // TODO better notification message?
                         dispatch(successNotification('Du har lämnat ligan!'))
                     })
                 } else {
-                    // TODO error handling
-                    console.log('unable to leave group')
+                    // console.log('unable to leave group')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }
@@ -231,11 +228,11 @@ export function removeGroup(user, group) {
             .then(res => { 
                 if (res.ok) {
                     dispatch(receiveRemoveGroup(group))
-                    // NOTE
+                    // NOTE remove from redux state tree
                     dispatch(receiveLeaveGroup({ id: group }))
                 } else {
-                    // TODO error handling
-                    console.log('unable to remove group')
+                    // console.log('unable to remove group')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }

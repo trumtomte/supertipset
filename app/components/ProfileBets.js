@@ -1,7 +1,21 @@
 import React from 'react'
 
+const hasStarted = gameStart => {
+    const now = new Date()
+    const start = new Date(Date.parse(gameStart))
+
+    return now > start
+}
+
 const showBet = points => (bet, i) => {
     const p = points.filter(point => point.game === bet.game.id)
+
+    // if we should show profile bets or not
+    const showBet = hasStarted(bet.game.start_date)
+
+    if (!showBet) {
+        return null
+    }
 
     return (
         <div key={i} className='profile-bet'>

@@ -9,6 +9,8 @@ const hasStarted = gameStart => {
     return now > start
 }
 
+const hasEnded = gameEnd => hasStarted(gameEnd)
+
 const formatDate = gameStart => {
     const date = new Date(Date.parse(gameStart))
 
@@ -22,10 +24,8 @@ const formatDate = gameStart => {
     return `${d}/${m} ${hh}:${mm}`
 }
 
-// TODO rewrite with reduce
 const getBetsForGame = (id, user) => {
-    const foundBet = user.data.bets.filter(bet => bet.game.id == id)
-    return foundBet.length ? foundBet[0] : false
+    return user.data.bets.filter(b => b.game.id == id).reduce((a, b) => b, {})
 }
 
 const getPointsForGame = (id, user) => {
@@ -41,11 +41,10 @@ const Game = ({ game, user }) => {
     const matchup = `${game.team_1.name} - ${game.team_2.name} (${game.group_name})`
 
     const bet = getBetsForGame(game.id, user)
+    const betExists = bet.hasOwnProperty('id')
 
     if (!started) {
         const start = formatDate(game.start_date)
-
-        // TODO: check if a game is active - then they cant place a bet
 
         return (
             <div className='game-row'>
@@ -59,7 +58,7 @@ const Game = ({ game, user }) => {
                     -
                 </span>
                 <span className='bet'>
-                    {bet ? `${bet.team_1_bet} - ${bet.team_2_bet}` : 'x - x'}
+                    {betExists ? `${bet.team_1_bet} - ${bet.team_2_bet}` : 'x - x'}
                 </span>
                 <span className='pts'>
                     <PlaceBetButton game={game} />
@@ -68,7 +67,9 @@ const Game = ({ game, user }) => {
         )
     }
 
-    const done = started && game.result.length > 0
+    // check if the end date of game has passed
+    // const done = started && game.result.length > 0
+    const done = hasEnded(game.stop_date)
     const result = game.result.length === 0 ? '-' : `${game.result[0].team_1_goals} - ${game.result[0].team_2_goals}`
 
     return (
@@ -83,15 +84,16 @@ const Game = ({ game, user }) => {
                 {result}
             </span>
             <span className='bet'>
-                {bet ? `${bet.team_1_bet} - ${bet.team_2_bet}` : 'x - x'}
+                {betExists ? `${bet.team_1_bet} - ${bet.team_2_bet}` : 'x - x'}
             </span>
             <span className='pts'>
-                {bet ? getPointsForGame(game.id, user) : 0}
+                {betExists ? getPointsForGame(game.id, user) : 0}
             </span>
         </div>
     )
 }
 
 export default connect(
+    // state to props
     state => ({ user: state.user })
 )(Game)

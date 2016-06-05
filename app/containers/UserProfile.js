@@ -10,7 +10,6 @@ class UserProfile extends Component {
 
     componentDidMount() {
         const { dispatch, user, tournament } = this.props
-
         dispatch(fetchProfile(user.id, tournament))
     }
 

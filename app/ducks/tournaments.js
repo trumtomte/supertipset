@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import { errorNotification } from './notification'
 import { baseURL, assign } from './utils'
 
 const REQUEST = 'supertipset/tournaments/REQUEST'
@@ -58,8 +59,8 @@ export function fetchTournaments() {
                 if (res.ok) {
                     res.json().then(json => dispatch(receiveTournaments(json)))
                 } else {
-                    // TODO error handling
-                    console.log('unable to fetch tournaments')
+                    // console.log('unable to fetch tournaments')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }

@@ -20,7 +20,6 @@ const PlaceBetModal = ({ user, game, dispatch }) => {
 
     const close = () => dispatch(closeModal())
 
-    // TODO check if game has started etc
     const submit = (e) => {
         e.preventDefault()
 

@@ -16,7 +16,6 @@ const JoinGroupModal = ({ user, groups, dispatch }) => {
         e.preventDefault()
 
         if (data.name === '' || data.password === '') {
-            // TODO error notification
             dispatch(closeModal())
             dispatch(errorNotification('Vänligen fyll i alla fält!'))
             return false
@@ -26,8 +25,8 @@ const JoinGroupModal = ({ user, groups, dispatch }) => {
         const groupExists = groups.data.filter(g => g.name === data.name).length
 
         if (groupExists) {
-            // TODO error notification
             dispatch(closeModal())
+            dispatch(errorNotification('Ligan finns redan!'))
             return false
         }
 

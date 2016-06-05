@@ -12,7 +12,6 @@ class Groups extends Component {
 
     componentDidMount() {
         const { dispatch, user, tournament } = this.props
-
         dispatch(fetchGroups(user.id, tournament))
     }
 

@@ -1,9 +1,7 @@
 import React from 'react'
 import Game from './Game'
 
-const game = (g, i) => (
-    <Game key={i} game={g} />
-)
+const game = (g, i) => <Game key={i} game={g} />
 
 const isActive = (roundStart, roundEnd) => {
     const now = new Date()

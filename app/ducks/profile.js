@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import { errorNotification } from './notification'
 import { baseURL, assign } from './utils'
 import { RECEIVE_LEAVE, RECEIVE_JOIN, RECEIVE_CREATE } from './groups'
 import { RECEIVE_SPECIAL_BET, UPDATE_SPECIAL_BET } from './user'
@@ -125,8 +126,8 @@ export function fetchProfile(id, tournament) {
                 if (res.ok) {
                     res.json().then(json => dispatch(receiveProfile(json)))
                 } else {
-                    // TODO error handling
-                    console.log('unable to fetch profile')
+                    // console.log('unable to fetch profile')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }

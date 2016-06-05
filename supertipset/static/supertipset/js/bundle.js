@@ -80,9 +80,7 @@
 
 	var rootReducer = (0, _redux.combineReducers)(Object.assign({}, reducers, { routing: _reactRouterRedux.routerReducer }));
 
-	var store = (0, _redux.createStore)(
-	// reducer,
-	rootReducer, (0, _redux.applyMiddleware)(_reduxThunk2.default, (0, _reduxLogger2.default)()));
+	var store = (0, _redux.createStore)(rootReducer, (0, _redux.applyMiddleware)(_reduxThunk2.default, (0, _reduxLogger2.default)()));
 
 	var history = (0, _reactRouterRedux.syncHistoryWithStore)(_reactRouter.browserHistory, store);
 
@@ -27398,7 +27396,7 @@
 	                color: 'white'
 	            };
 
-	            // Change tournament button
+	            // NOTE: Change tournament button
 	            // {!tournaments.isFetching && tournaments.data.length > 1
 	            //     ? <ChangeTournamentButton />
 	            //     : ''}
@@ -27505,6 +27503,8 @@
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
+	var _notification = __webpack_require__(260);
+
 	var _utils = __webpack_require__(258);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -27573,8 +27573,8 @@
 	                    return dispatch(receiveTournaments(json));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch tournaments');
+	                // console.log('unable to fetch tournaments')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28199,8 +28199,8 @@
 	                    return dispatch(receiveUser(json));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch user');
+	                // console.log('unable to fetch user')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28230,12 +28230,11 @@
 	            if (res.ok) {
 	                res.json().then(function (json) {
 	                    dispatch(receiveEditUserPassword(json));
-	                    // TODO better notification message?
-	                    dispatch((0, _notification.successNotification)('Du har redigerat ditt lösenord!'));
+	                    dispatch((0, _notification.successNotification)('Lösenord redigerat!'));
 	                });
 	            } else {
-	                // TODO Error handling
-	                console.log('unable to change user password');
+	                // console.log('unable to change user password')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28270,12 +28269,11 @@
 	            if (res.ok) {
 	                res.json().then(function (json) {
 	                    dispatch(receiveBet(json));
-	                    // TODO better notification message?
 	                    dispatch((0, _notification.successNotification)('Tips sparat!'));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to place bet');
+	                // console.log('unable to place bet')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28296,12 +28294,11 @@
 	            if (res.ok) {
 	                res.json().then(function (json) {
 	                    dispatch(updateBet(json));
-	                    // TODO better notification message?
 	                    dispatch((0, _notification.successNotification)('Tips sparat!'));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to update bet');
+	                // console.log('unable to update bet')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28337,12 +28334,11 @@
 	            if (res.ok) {
 	                res.json().then(function (json) {
 	                    dispatch(receiveSpecialBet(json));
-	                    // TODO better notification message?
 	                    dispatch((0, _notification.successNotification)('Specialtips sparat!'));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to place special bet');
+	                // console.log('unable to place special bet')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28364,12 +28360,11 @@
 	            if (res.ok) {
 	                res.json().then(function (json) {
 	                    dispatch(updateSpecialBet(json));
-	                    // TODO better notification message?
 	                    dispatch((0, _notification.successNotification)('Specialtips uppdaterat!'));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to update special bet');
+	                // console.log('unable to update special bet')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28587,8 +28582,8 @@
 	                    return dispatch(receiveGroups(json));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch groups');
+	                // console.log('unable to fetch groups')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28621,12 +28616,11 @@
 	                    dispatch(receiveCreateGroup(json));
 	                    dispatch(invalidateGroups());
 	                    _reactRouter.browserHistory.push('/s/groups/' + json.id);
-	                    // TODO better success message?
-	                    dispatch((0, _notification.successNotification)('Ny liga skapad!'));
+	                    dispatch((0, _notification.successNotification)('Liga skapad!'));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to create group');
+	                // console.log('unable to create group')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28658,12 +28652,11 @@
 	                    dispatch(receiveJoinGroup(json));
 	                    dispatch(invalidateGroups());
 	                    _reactRouter.browserHistory.push('/s/groups/' + json.id);
-	                    // TODO better notification message?
-	                    dispatch((0, _notification.successNotification)('Du har gått med i liga'));
+	                    dispatch((0, _notification.successNotification)('Du har gått med i ligan!'));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to join group');
+	                // console.log('unable to join group')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28693,12 +28686,11 @@
 	            if (res.ok) {
 	                res.json().then(function (json) {
 	                    dispatch(receiveLeaveGroup(json));
-	                    // TODO better notification message?
 	                    dispatch((0, _notification.successNotification)('Du har lämnat ligan!'));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to leave group');
+	                // console.log('unable to leave group')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28722,11 +28714,11 @@
 	        return (0, _isomorphicFetch2.default)(url, payload).then(function (res) {
 	            if (res.ok) {
 	                dispatch(receiveRemoveGroup(group));
-	                // NOTE
+	                // NOTE remove from redux state tree
 	                dispatch(receiveLeaveGroup({ id: group }));
 	            } else {
-	                // TODO error handling
-	                console.log('unable to remove group');
+	                // console.log('unable to remove group')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28749,6 +28741,8 @@
 	var _isomorphicFetch = __webpack_require__(256);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _notification = __webpack_require__(260);
 
 	var _utils = __webpack_require__(258);
 
@@ -28818,8 +28812,8 @@
 	                    return dispatch(receiveTeams(json));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch teams');
+	                // console.log('unable to fetch teams')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28842,6 +28836,8 @@
 	var _isomorphicFetch = __webpack_require__(256);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _notification = __webpack_require__(260);
 
 	var _utils = __webpack_require__(258);
 
@@ -28911,8 +28907,8 @@
 	                    return dispatch(receivePlayers(json));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch players');
+	                // console.log('unable to fetch players')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -28943,15 +28939,16 @@
 	    var tournaments = _ref.tournaments;
 	    var openModal = _ref.openModal;
 
-	    var name = tournaments.data.filter(function (t) {
+	    var t = tournaments.data.filter(function (t) {
 	        return t.id == tournament;
-	    })[0].name;
+	    }).reduce(function (a, b) {
+	        return b;
+	    }, {});
 
-	    // TODO what should be the display text?
 	    return _react2.default.createElement(
 	        'button',
 	        { onClick: openModal, className: 'change-tournament', type: 'button' },
-	        name
+	        t.name
 	    );
 	};
 
@@ -29157,7 +29154,6 @@
 	            var dispatch = _props.dispatch;
 	            var user = _props.user;
 	            var tournament = _props.tournament;
-	            // TODO do i need to re-fetch user here?
 
 	            dispatch((0, _rounds.fetchRounds)(tournament));
 	        }
@@ -29226,6 +29222,8 @@
 	var _isomorphicFetch = __webpack_require__(256);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _notification = __webpack_require__(260);
 
 	var _utils = __webpack_require__(258);
 
@@ -29309,8 +29307,8 @@
 	                    return dispatch(receiveRounds(json));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch rounds');
+	                // console.log('unable to fetch rounds')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -29325,7 +29323,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.ErrorNotification = exports.SuccessNotification = exports.UserTopBets = exports.UserTotalTopList = exports.GroupMembersTopList = exports.GroupTotalTopList = exports.GroupAverageTopList = exports.GroupMembers = exports.GroupListSummary = exports.GroupList = exports.ProfileBets = exports.Profile = exports.Game = exports.Round = exports.Rounds = exports.SpecialBets = exports.Points = exports.Tournaments = exports.BackButton = undefined;
+	exports.ErrorNotification = exports.SuccessNotification = exports.UserTopBetsTopList = exports.UserTotalTopList = exports.GroupMembersTopList = exports.GroupAverageTopList = exports.GroupMembers = exports.GroupListSummary = exports.GroupList = exports.ProfileBets = exports.Profile = exports.Game = exports.Round = exports.Rounds = exports.SpecialBets = exports.Points = exports.Tournaments = exports.BackButton = undefined;
 
 	var _BackButton2 = __webpack_require__(269);
 
@@ -29379,10 +29377,6 @@
 
 	var _GroupAverageTopList3 = _interopRequireDefault(_GroupAverageTopList2);
 
-	var _GroupTotalTopList2 = __webpack_require__(282);
-
-	var _GroupTotalTopList3 = _interopRequireDefault(_GroupTotalTopList2);
-
 	var _GroupMembersTopList2 = __webpack_require__(283);
 
 	var _GroupMembersTopList3 = _interopRequireDefault(_GroupMembersTopList2);
@@ -29391,9 +29385,9 @@
 
 	var _UserTotalTopList3 = _interopRequireDefault(_UserTotalTopList2);
 
-	var _UserTopBets2 = __webpack_require__(285);
+	var _UserTopBetsTopList2 = __webpack_require__(319);
 
-	var _UserTopBets3 = _interopRequireDefault(_UserTopBets2);
+	var _UserTopBetsTopList3 = _interopRequireDefault(_UserTopBetsTopList2);
 
 	var _SuccessNotification2 = __webpack_require__(286);
 
@@ -29418,10 +29412,9 @@
 	exports.GroupListSummary = _GroupListSummary3.default;
 	exports.GroupMembers = _GroupMembers3.default;
 	exports.GroupAverageTopList = _GroupAverageTopList3.default;
-	exports.GroupTotalTopList = _GroupTotalTopList3.default;
 	exports.GroupMembersTopList = _GroupMembersTopList3.default;
 	exports.UserTotalTopList = _UserTotalTopList3.default;
-	exports.UserTopBets = _UserTopBets3.default;
+	exports.UserTopBetsTopList = _UserTopBetsTopList3.default;
 	exports.SuccessNotification = _SuccessNotification3.default;
 	exports.ErrorNotification = _ErrorNotification3.default;
 
@@ -29564,7 +29557,6 @@
 	    var user = _ref.user;
 	    var tournamentHasStarted = _ref.tournamentHasStarted;
 	    var bettable = _ref.bettable;
-
 
 	    // No special bets available yet
 	    if (user.isFetching || !user.data.hasOwnProperty('id')) {
@@ -29819,7 +29811,6 @@
 	var Rounds = function Rounds(_ref) {
 	    var rounds = _ref.rounds;
 
-
 	    if (rounds.isFetching || rounds.data.length === 0) {
 	        return _react2.default.createElement(
 	            'div',
@@ -29944,6 +29935,10 @@
 	    return now > start;
 	};
 
+	var hasEnded = function hasEnded(gameEnd) {
+	    return hasStarted(gameEnd);
+	};
+
 	var formatDate = function formatDate(gameStart) {
 	    var date = new Date(Date.parse(gameStart));
 
@@ -29957,12 +29952,12 @@
 	    return d + '/' + m + ' ' + hh + ':' + mm;
 	};
 
-	// TODO rewrite with reduce
 	var getBetsForGame = function getBetsForGame(id, user) {
-	    var foundBet = user.data.bets.filter(function (bet) {
-	        return bet.game.id == id;
-	    });
-	    return foundBet.length ? foundBet[0] : false;
+	    return user.data.bets.filter(function (b) {
+	        return b.game.id == id;
+	    }).reduce(function (a, b) {
+	        return b;
+	    }, {});
 	};
 
 	var getPointsForGame = function getPointsForGame(id, user) {
@@ -29985,11 +29980,10 @@
 	    var matchup = game.team_1.name + ' - ' + game.team_2.name + ' (' + game.group_name + ')';
 
 	    var bet = getBetsForGame(game.id, user);
+	    var betExists = bet.hasOwnProperty('id');
 
 	    if (!started) {
 	        var start = formatDate(game.start_date);
-
-	        // TODO: check if a game is active - then they cant place a bet
 
 	        return _react2.default.createElement(
 	            'div',
@@ -30012,7 +30006,7 @@
 	            _react2.default.createElement(
 	                'span',
 	                { className: 'bet' },
-	                bet ? bet.team_1_bet + ' - ' + bet.team_2_bet : 'x - x'
+	                betExists ? bet.team_1_bet + ' - ' + bet.team_2_bet : 'x - x'
 	            ),
 	            _react2.default.createElement(
 	                'span',
@@ -30022,7 +30016,9 @@
 	        );
 	    }
 
-	    var done = started && game.result.length > 0;
+	    // check if the end date of game has passed
+	    // const done = started && game.result.length > 0
+	    var done = hasEnded(game.stop_date);
 	    var result = game.result.length === 0 ? '-' : game.result[0].team_1_goals + ' - ' + game.result[0].team_2_goals;
 
 	    return _react2.default.createElement(
@@ -30046,17 +30042,19 @@
 	        _react2.default.createElement(
 	            'span',
 	            { className: 'bet' },
-	            bet ? bet.team_1_bet + ' - ' + bet.team_2_bet : 'x - x'
+	            betExists ? bet.team_1_bet + ' - ' + bet.team_2_bet : 'x - x'
 	        ),
 	        _react2.default.createElement(
 	            'span',
 	            { className: 'pts' },
-	            bet ? getPointsForGame(game.id, user) : 0
+	            betExists ? getPointsForGame(game.id, user) : 0
 	        )
 	    );
 	};
 
-	exports.default = (0, _reactRedux.connect)(function (state) {
+	exports.default = (0, _reactRedux.connect)(
+	// state to props
+	function (state) {
 	    return { user: state.user };
 	})(Game);
 
@@ -30259,11 +30257,25 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var hasStarted = function hasStarted(gameStart) {
+	    var now = new Date();
+	    var start = new Date(Date.parse(gameStart));
+
+	    return now > start;
+	};
+
 	var showBet = function showBet(points) {
 	    return function (bet, i) {
 	        var p = points.filter(function (point) {
 	            return point.game === bet.game.id;
 	        });
+
+	        // if we should show profile bets or not
+	        var showBet = hasStarted(bet.game.start_date);
+
+	        if (!showBet) {
+	            return null;
+	        }
 
 	        return _react2.default.createElement(
 	            'div',
@@ -30674,81 +30686,7 @@
 	exports.default = GroupAverageTopList;
 
 /***/ },
-/* 282 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(196);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var group = function group(g, i) {
-	    return _react2.default.createElement(
-	        'li',
-	        { key: i },
-	        i + 1,
-	        ' | ',
-	        _react2.default.createElement(
-	            _reactRouter.Link,
-	            { to: '/s/groups/' + g.id },
-	            g.name
-	        ),
-	        ' | ',
-	        g.totalPoints
-	    );
-	};
-
-	var reduceUserPoints = function reduceUserPoints(a, n) {
-	    return a + n.points;
-	};
-	var reduceUserBetResults = function reduceUserBetResults(a, n) {
-	    return a + (n.goals + n.player + n.team);
-	};
-	var reduceUserTotal = function reduceUserTotal(a, n) {
-	    return a + n.points.reduce(reduceUserPoints, 0) + n.special_bet_results.reduce(reduceUserBetResults, 0);
-	};
-
-	var GroupTotalTopList = function GroupTotalTopList(_ref) {
-	    var groups = _ref.groups;
-
-
-	    if (groups.isFetching || groups.data.length == 0) {
-	        return _react2.default.createElement(
-	            'p',
-	            null,
-	            'Laddar ligor...'
-	        );
-	    }
-
-	    var orderedGroups = groups.data.map(function (g) {
-	        return {
-	            id: g.id,
-	            name: g.name,
-	            totalPoints: g.users.reduce(reduceUserTotal, 0)
-	        };
-	    }).sort(function (a, b) {
-	        return b.totalPoints - a.totalPoints;
-	    });
-
-	    return _react2.default.createElement(
-	        'ol',
-	        null,
-	        orderedGroups.map(group)
-	    );
-	};
-
-	exports.default = GroupTotalTopList;
-
-/***/ },
+/* 282 */,
 /* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -31031,146 +30969,7 @@
 	exports.default = UserTotalTopList;
 
 /***/ },
-/* 285 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(196);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var user = function user(u, i) {
-	    return _react2.default.createElement(
-	        'div',
-	        { key: i, className: 'toplist-row' },
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'pos' },
-	            i + 1
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'name' },
-	            _react2.default.createElement(
-	                _reactRouter.Link,
-	                { to: '/s/profile/' + u.id },
-	                u.username
-	            )
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'sum' },
-	            u.topBets
-	        )
-	    );
-	};
-
-	var sortByPoints = function sortByPoints(a, b) {
-	    return b.topBets - a.topBets;
-	};
-	var getUserWithPoints = function getUserWithPoints(u) {
-	    return {
-	        id: u.id,
-	        username: u.username,
-	        topBets: u.points.filter(function (pts) {
-	            return pts.points == 10;
-	        }).length
-	    };
-	};
-
-	var UserTopBets = function UserTopBets(_ref) {
-	    var users = _ref.users;
-
-
-	    if (users.isFetching || users.data.length == 0) {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'toplist-container' },
-	            _react2.default.createElement(
-	                'h2',
-	                null,
-	                'Flest 10:or'
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'toplist user-total' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'toplist-headers' },
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '#'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        'Användare'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        'Poäng'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'Laddar...'
-	                )
-	            )
-	        );
-	    }
-
-	    var orderedUsers = users.data.map(getUserWithPoints).sort(sortByPoints);
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'toplist-container' },
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Flest 10:or'
-	        ),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'toplist user-total' },
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'toplist-headers' },
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'pos' },
-	                    '#'
-	                ),
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'name' },
-	                    'Användare'
-	                ),
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'sum' },
-	                    'Antal'
-	                )
-	            ),
-	            orderedUsers.map(user)
-	        )
-	    );
-	};
-
-	exports.default = UserTopBets;
-
-/***/ },
+/* 285 */,
 /* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -31359,10 +31158,7 @@
 	            var params = _props.params;
 	            var tournament = _props.tournament;
 
-
-	            if (params.hasOwnProperty('id')) {
-	                dispatch((0, _group.fetchGroup)(params.id, tournament));
-	            }
+	            dispatch((0, _group.fetchGroup)(params.id, tournament));
 	        }
 	    }, {
 	        key: 'render',
@@ -31373,15 +31169,6 @@
 	            var user = _props2.user;
 	            var dispatch = _props2.dispatch;
 
-	            // TODO wont need this?
-
-	            if (!params.hasOwnProperty('id')) {
-	                return _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'Det finns ingen liga med detta ID.'
-	                );
-	            }
 
 	            if (group.isFetching || group.data.length === 0) {
 	                return _react2.default.createElement(
@@ -31555,8 +31342,8 @@
 	                    return dispatch(receiveGroup(json));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('could not fetch group');
+	                // console.log('could not fetch group')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -31586,12 +31373,11 @@
 	            if (res.ok) {
 	                res.json().then(function (json) {
 	                    dispatch(receiveEditGroupDescription(json));
-	                    // TODO change notification message?
-	                    dispatch((0, _notification.successNotification)('Gruppen har redigerats!'));
+	                    dispatch((0, _notification.successNotification)('Gruppens beskrivning har redigerats!'));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('request edit group description not ok');
+	                // console.log('request edit group description not ok')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -31621,12 +31407,11 @@
 	            if (res.ok) {
 	                res.json().then(function (json) {
 	                    dispatch(receiveEditGroupPassword(json));
-	                    // TODO change notification message?
-	                    dispatch((0, _notification.successNotification)('Gruppen har redigerats!'));
+	                    dispatch((0, _notification.successNotification)('Gruppens lösenord har redigerats!'));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('request edit group password not ok');
+	                // console.log('request edit group password not ok')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -31796,7 +31581,6 @@
 	            var dispatch = _props.dispatch;
 	            var user = _props.user;
 	            var tournament = _props.tournament;
-
 
 	            dispatch((0, _groups.fetchGroups)(user.id, tournament));
 	        }
@@ -31978,7 +31762,6 @@
 	            var user = _props.user;
 	            var tournament = _props.tournament;
 
-
 	            dispatch((0, _toplists.fetchUsersForTopLists)(tournament));
 	            dispatch((0, _toplists.fetchGroupsForTopLists)(tournament));
 	        }
@@ -31995,7 +31778,7 @@
 	                    'div',
 	                    { className: 'toplists-container' },
 	                    _react2.default.createElement(_components.UserTotalTopList, { users: toplists.users }),
-	                    _react2.default.createElement(_components.UserTopBets, { users: toplists.users })
+	                    _react2.default.createElement(_components.UserTopBetsTopList, { users: toplists.users })
 	                ),
 	                _react2.default.createElement(
 	                    'div',
@@ -32041,6 +31824,8 @@
 	var _isomorphicFetch = __webpack_require__(256);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _notification = __webpack_require__(260);
 
 	var _utils = __webpack_require__(258);
 
@@ -32153,7 +31938,8 @@
 	                    return dispatch(receiveUsersForTopLists(json));
 	                });
 	            } else {
-	                console.log('unable to fetch users for top lists');
+	                // console.log('unable to fetch users for top lists')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -32198,7 +31984,8 @@
 	                    return dispatch(receiveGroupsForTopLists(json));
 	                });
 	            } else {
-	                console.log('unable to fetch groups for top lists');
+	                // console.log('unable to fetch groups for top lists')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -32250,7 +32037,6 @@
 	            var dispatch = _props.dispatch;
 	            var user = _props.user;
 	            var tournament = _props.tournament;
-
 
 	            dispatch((0, _profile.fetchProfile)(user.id, tournament));
 	        }
@@ -32325,6 +32111,8 @@
 	var _isomorphicFetch = __webpack_require__(256);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	var _notification = __webpack_require__(260);
 
 	var _utils = __webpack_require__(258);
 
@@ -32468,8 +32256,8 @@
 	                    return dispatch(receiveProfile(json));
 	                });
 	            } else {
-	                // TODO error handling
-	                console.log('unable to fetch profile');
+	                // console.log('unable to fetch profile')
+	                dispatch((0, _notification.errorNotification)('Tekniskt fel! Vänligen försök igen.'));
 	            }
 	        });
 	    };
@@ -32522,7 +32310,6 @@
 	            var dispatch = _props.dispatch;
 	            var params = _props.params;
 	            var tournament = _props.tournament;
-
 
 	            dispatch((0, _profile.fetchProfile)(params.id, tournament));
 	        }
@@ -33069,7 +32856,6 @@
 	        e.preventDefault();
 
 	        if (data.name === '' || data.password === '') {
-	            // TODO error notification
 	            dispatch((0, _modal.closeModal)());
 	            dispatch((0, _notification.errorNotification)('Vänligen fyll i alla fält!'));
 	            return false;
@@ -33081,8 +32867,8 @@
 	        }).length;
 
 	        if (groupExists) {
-	            // TODO error notification
 	            dispatch((0, _modal.closeModal)());
+	            dispatch((0, _notification.errorNotification)('Ligan finns redan!'));
 	            return false;
 	        }
 
@@ -33480,7 +33266,6 @@
 	        e.preventDefault();
 
 	        if (data.passwordOne == '' || data.passwordOne !== data.passwordTwo) {
-	            // TODO error notification
 	            dispatch((0, _modal.closeModal)());
 	            dispatch((0, _notification.errorNotification)('Lösenorden stämde inte - försök igen!'));
 	            return false;
@@ -33581,7 +33366,6 @@
 	        return dispatch((0, _modal.closeModal)());
 	    };
 
-	    // TODO check if game has started etc
 	    var submit = function submit(e) {
 	        e.preventDefault();
 
@@ -33717,7 +33501,12 @@
 	    var tournaments = _ref.tournaments;
 	    var dispatch = _ref.dispatch;
 
-	    // TODO tournament is set as INT or object with ID
+	    // Order teams by name
+	    teams.data.sort(function (a, b) {
+	        return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+	    });
+
+	    // NOTE tournament is set as INT or object with ID
 	    var bet = user.data.special_bets.filter(function (b) {
 	        return b.tournament == tournament || b.tournament.id == tournament;
 	    }).reduce(function (a, b) {
@@ -34114,6 +33903,146 @@
 	exports.modal = _modal3.default;
 	exports.notification = _notification3.default;
 	exports.toplists = _toplists3.default;
+
+/***/ },
+/* 319 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(196);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var user = function user(u, i) {
+	    return _react2.default.createElement(
+	        'div',
+	        { key: i, className: 'toplist-row' },
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'pos' },
+	            i + 1
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'name' },
+	            _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/s/profile/' + u.id },
+	                u.username
+	            )
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'sum' },
+	            u.topBets
+	        )
+	    );
+	};
+
+	var sortByPoints = function sortByPoints(a, b) {
+	    return b.topBets - a.topBets;
+	};
+	var getUserWithPoints = function getUserWithPoints(u) {
+	    return {
+	        id: u.id,
+	        username: u.username,
+	        topBets: u.points.filter(function (pts) {
+	            return pts.points == 10;
+	        }).length
+	    };
+	};
+
+	var UserTopBets = function UserTopBets(_ref) {
+	    var users = _ref.users;
+
+
+	    if (users.isFetching || users.data.length == 0) {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'toplist-container' },
+	            _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Flest 10:or'
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'toplist user-total' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'toplist-headers' },
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        '#'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'Användare'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'Poäng'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Laddar...'
+	                )
+	            )
+	        );
+	    }
+
+	    var orderedUsers = users.data.map(getUserWithPoints).sort(sortByPoints);
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'toplist-container' },
+	        _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Flest 10:or'
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'toplist user-total' },
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'toplist-headers' },
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'pos' },
+	                    '#'
+	                ),
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'name' },
+	                    'Användare'
+	                ),
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'sum' },
+	                    'Antal'
+	                )
+	            ),
+	            orderedUsers.map(user)
+	        )
+	    );
+	};
+
+	exports.default = UserTopBets;
 
 /***/ }
 /******/ ]);

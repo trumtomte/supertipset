@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { successNotification } from './notification'
+import { successNotification, errorNotification } from './notification'
 import { baseURL, assign, preparePost, preparePut } from './utils'
 
 const INVALIDATE = 'supertipset/group/INVALIDATE'
@@ -87,8 +87,8 @@ export function fetchGroup(id, tournament) {
                 if (res.ok ) {
                     res.json().then(json => dispatch(receiveGroup(json)))
                 } else {
-                    // TODO error handling
-                    console.log('could not fetch group')
+                    // console.log('could not fetch group')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }
@@ -119,12 +119,11 @@ export function editGroupDescription(user, group, name, description) {
                 if (res.ok) {
                     res.json().then(json => {
                         dispatch(receiveEditGroupDescription(json))
-                        // TODO change notification message?
-                        dispatch(successNotification('Gruppen har redigerats!'))
+                        dispatch(successNotification('Gruppens beskrivning har redigerats!'))
                     })
                 } else {
-                    // TODO error handling
-                    console.log('request edit group description not ok')
+                    // console.log('request edit group description not ok')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }
@@ -155,12 +154,11 @@ export function editGroupPassword(user, group, name, password) {
                 if (res.ok) {
                     res.json().then(json => {
                         dispatch(receiveEditGroupPassword(json))
-                        // TODO change notification message?
-                        dispatch(successNotification('Gruppen har redigerats!'))
+                        dispatch(successNotification('Gruppens lösenord har redigerats!'))
                     })
                 } else {
-                    // TODO error handling
-                    console.log('request edit group password not ok')
+                    // console.log('request edit group password not ok')
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
                 }
             })
     }

@@ -8,9 +8,8 @@ import {
 
 import {
     UserTotalTopList,
-    UserTopBets,
+    UserTopBetsTopList,
     GroupAverageTopList,
-    GroupTotalTopList,
     GroupMembersTopList
 } from '../components'
 
@@ -21,7 +20,6 @@ class TopList extends Component {
 
     componentDidMount() {
         const { dispatch, user, tournament } = this.props
-
         dispatch(fetchUsersForTopLists(tournament))
         dispatch(fetchGroupsForTopLists(tournament))
     }
@@ -33,7 +31,7 @@ class TopList extends Component {
             <div>
                 <div className='toplists-container'>
                     <UserTotalTopList users={toplists.users} />
-                    <UserTopBets users={toplists.users} />
+                    <UserTopBetsTopList users={toplists.users} />
                 </div>
                 <div className='toplists-container'>
                     <GroupAverageTopList groups={toplists.groups} />

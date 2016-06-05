@@ -34,7 +34,6 @@ const rootReducer = combineReducers(
 )
 
 const store = createStore(
-    // reducer,
     rootReducer,
     applyMiddleware(
         thunk,

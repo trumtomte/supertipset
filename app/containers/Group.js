@@ -12,19 +12,11 @@ class Group extends Component {
 
     componentDidMount() {
         const { dispatch, params, tournament } = this.props
-
-        if (params.hasOwnProperty('id')) {
-            dispatch(fetchGroup(params.id, tournament))
-        }
+        dispatch(fetchGroup(params.id, tournament))
     }
 
     render() {
         const { params, group, user, dispatch } = this.props
-
-        // TODO wont need this?
-        if (!params.hasOwnProperty('id')) {
-            return <p>Det finns ingen liga med detta ID.</p>
-        }
 
         if (group.isFetching || group.data.length === 0) {
             return <p>Ligan laddas.</p>
@@ -36,9 +28,11 @@ class Group extends Component {
             <GroupMembers group={group.data}>
                 <BackButton />
                 {isAdmin ? <EditGroupPasswordButton group={group.data} /> : ''}
+
                 <h2 className='group-title'>
                     {group.data.name} {isAdmin ? <small>(admin)</small> : ''}
                 </h2>
+
                 <p className='group-description'>
                     {group.data.description}
                     {isAdmin ? <EditGroupDescriptionButton group={group.data} /> : ''}

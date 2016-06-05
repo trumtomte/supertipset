@@ -30,7 +30,7 @@ class App extends Component {
             color: 'white'
         }
 
-        // Change tournament button
+        // NOTE: Change tournament button
         // {!tournaments.isFetching && tournaments.data.length > 1
         //     ? <ChangeTournamentButton />
         //     : ''}

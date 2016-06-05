@@ -10,7 +10,6 @@ class VisitorProfile extends Component {
 
     componentDidMount() {
         const { profile, dispatch, params, tournament } = this.props
-
         dispatch(fetchProfile(params.id, tournament))
     }
 

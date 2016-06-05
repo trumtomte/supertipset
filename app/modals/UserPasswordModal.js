@@ -16,7 +16,6 @@ const UserPasswordModal = ({ user, dispatch }) => {
         e.preventDefault()
 
         if (data.passwordOne == '' || data.passwordOne !== data.passwordTwo) {
-            // TODO error notification
             dispatch(closeModal())
             dispatch(errorNotification('Lösenorden stämde inte - försök igen!'))
             return false

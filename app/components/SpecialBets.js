@@ -2,7 +2,6 @@ import React from 'react'
 import { PlaceSpecialBetButton } from '../containers'
 
 const SpecialBets = ({ user, tournamentHasStarted, bettable }) => {
-
     // No special bets available yet
     if (user.isFetching || !user.data.hasOwnProperty('id')) {
         return (

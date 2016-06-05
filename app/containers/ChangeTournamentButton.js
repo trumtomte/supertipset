@@ -3,10 +3,9 @@ import { connect } from 'react-redux'
 import { openChangeTournamentModal } from '../ducks/modal'
 
 const ChangeTournamentButton = ({ tournament, tournaments, openModal }) => {
-    const name = tournaments.data.filter(t => t.id == tournament)[0].name
+    const t = tournaments.data.filter(t => t.id == tournament).reduce((a, b) => b, {})
 
-    // TODO what should be the display text?
-    return <button onClick={openModal} className='change-tournament' type='button'>{name}</button>
+    return <button onClick={openModal} className='change-tournament' type='button'>{t.name}</button>
 }
 
 export default connect(

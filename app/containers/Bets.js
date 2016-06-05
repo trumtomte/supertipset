@@ -12,7 +12,6 @@ class Bets extends Component {
 
     componentDidMount() {
         const { dispatch, user, tournament } = this.props
-        // TODO do i need to re-fetch user here?
         dispatch(fetchRounds(tournament))
     }
 
