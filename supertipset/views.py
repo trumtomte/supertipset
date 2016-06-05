@@ -134,3 +134,7 @@ def app(request):
 # 404 page
 def page_not_found(request):
     return render(request, 'supertipset/404.html')
+
+# 500 page
+def internal_server_error(request):
+    return render(request, 'supertipset/500.html')

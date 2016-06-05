@@ -29,3 +29,4 @@ urlpatterns = [
 ]
 
 handler404 = 'supertipset.views.page_not_found'
+handler500 = 'supertipset.views.internal_server_error'
