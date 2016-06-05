@@ -36,6 +36,7 @@ class BetSerializer(serializers.ModelSerializer):
 
 # Point
 class PointSerializer(serializers.ModelSerializer):
+    result = ResultSerializer(read_only=True)
 
     class Meta:
         model = Point

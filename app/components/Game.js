@@ -22,13 +22,14 @@ const formatDate = gameStart => {
     return `${d}/${m} ${hh}:${mm}`
 }
 
+// TODO rewrite with reduce
 const getBetsForGame = (id, user) => {
-    const foundBet = user.data.bets.filter(bet => bet.game.id === id)
+    const foundBet = user.data.bets.filter(bet => bet.game.id == id)
     return foundBet.length ? foundBet[0] : false
 }
 
 const getPointsForGame = (id, user) => {
-    return user.data.points.filter(pts => pts.game === id).reduce((a, n) => n.points, 0)
+    return user.data.points.filter(pts => pts.result.game == id).reduce((a, n) => n.points, 0)
 }
 
 const Game = ({ game, user }) => {

@@ -28,8 +28,8 @@ class ResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Result
-        # fields = ('id', 'game', 'team_1_goals', 'team_2_goals', 'created_at')
-        fields = ('id', 'result', 'team_1_goals', 'team_2_goals', 'created_at')
+        fields = ('id', 'game', 'team_1_goals', 'team_2_goals', 'created_at')
+        # fields = ('id', 'result', 'team_1_goals', 'team_2_goals', 'created_at')
 
 # Game
 class GameSerializer(serializers.ModelSerializer):

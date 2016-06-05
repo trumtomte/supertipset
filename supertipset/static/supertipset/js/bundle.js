@@ -29957,16 +29957,17 @@
 	    return d + '/' + m + ' ' + hh + ':' + mm;
 	};
 
+	// TODO rewrite with reduce
 	var getBetsForGame = function getBetsForGame(id, user) {
 	    var foundBet = user.data.bets.filter(function (bet) {
-	        return bet.game.id === id;
+	        return bet.game.id == id;
 	    });
 	    return foundBet.length ? foundBet[0] : false;
 	};
 
 	var getPointsForGame = function getPointsForGame(id, user) {
 	    return user.data.points.filter(function (pts) {
-	        return pts.game === id;
+	        return pts.result.game == id;
 	    }).reduce(function (a, n) {
 	        return n.points;
 	    }, 0);
