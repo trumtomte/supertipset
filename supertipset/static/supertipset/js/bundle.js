@@ -29593,7 +29593,7 @@
 	                    _react2.default.createElement(
 	                        'h6',
 	                        null,
-	                        'VINNARE'
+	                        'Vinnare'
 	                    ),
 	                    _react2.default.createElement(
 	                        'span',
@@ -29607,7 +29607,7 @@
 	                    _react2.default.createElement(
 	                        'h6',
 	                        null,
-	                        'SKYTTEKUNG'
+	                        'Skyttekung'
 	                    ),
 	                    _react2.default.createElement(
 	                        'span',
@@ -29621,7 +29621,7 @@
 	                    _react2.default.createElement(
 	                        'h6',
 	                        null,
-	                        'MÅL'
+	                        'Antal mål'
 	                    ),
 	                    _react2.default.createElement(
 	                        'span',
@@ -29653,7 +29653,7 @@
 	                    _react2.default.createElement(
 	                        'h6',
 	                        null,
-	                        'VINNARE'
+	                        'Vinnare'
 	                    ),
 	                    _react2.default.createElement(
 	                        'span',
@@ -29667,7 +29667,7 @@
 	                    _react2.default.createElement(
 	                        'h6',
 	                        null,
-	                        'SKYTTEKUNG'
+	                        'Skyttekung'
 	                    ),
 	                    _react2.default.createElement(
 	                        'span',
@@ -29681,7 +29681,7 @@
 	                    _react2.default.createElement(
 	                        'h6',
 	                        null,
-	                        'MÅL'
+	                        'Antal mål'
 	                    ),
 	                    _react2.default.createElement(
 	                        'span',
@@ -29714,7 +29714,7 @@
 	                _react2.default.createElement(
 	                    'h6',
 	                    null,
-	                    'VINNARE'
+	                    'Vinnare'
 	                ),
 	                _react2.default.createElement(
 	                    'span',
@@ -29728,7 +29728,7 @@
 	                _react2.default.createElement(
 	                    'h6',
 	                    null,
-	                    'SKYTTEKUNG'
+	                    'Skyttekung'
 	                ),
 	                _react2.default.createElement(
 	                    'span',
@@ -29744,7 +29744,7 @@
 	                _react2.default.createElement(
 	                    'h6',
 	                    null,
-	                    'MÅL'
+	                    'Antal mål'
 	                ),
 	                _react2.default.createElement(
 	                    'span',

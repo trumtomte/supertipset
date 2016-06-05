@@ -851,8 +851,7 @@ header nav button:hover {
  * {{{
  **/
 .special-bets-container {
-    width: 75%;
-    margin: 0 auto;
+    margin: 0 auto 60px auto;
     position: relative;
     text-align: center;
 }
@@ -884,24 +883,17 @@ header nav button:hover {
 
 .special-bets {
     display: flex;
-    border: 1px solid #17A588;
-    border-radius: 4px;
+    border-bottom: 1px solid #ddd;
 }
 
 .special-bets h6 {
     margin: 0;
     font-weight: 300;
     font-size: 12px;
-    padding: 5px 15px;
+    padding: 10px 15px;
     border-bottom: 1px solid #17A588;
     color: white;
     background: #1ABC9C;
-}
-
-
-.special-bets .winner,
-.special-bets .goal-scorer {
-    border-right: 1px solid #17A588;
 }
 
 .special-bets span {
@@ -911,16 +903,13 @@ header nav button:hover {
     letter-spacing: 1px;
 }
 
-.special-bets .winner {
-    flex: 2 1 0;
-}
-.special-bets .goal-scorer {
-    flex: 3 1 0;
-}
-
+.special-bets .winner,
 .special-bets .goals,
 .special-bets .points {
     flex: 1 1 0;
+}
+.special-bets .goal-scorer {
+    flex: 2 1 0;
 }
 
 /* }}} */
@@ -1477,8 +1466,8 @@ header nav button:hover {
         margin: 0 0 50px 0;
     }
 
-    .special-bets-container {
-        width: 85%;
+    .special-bets span {
+        font-size: 16px;
     }
 }
 
@@ -1495,15 +1484,6 @@ header nav button:hover {
 
     .special-bets span {
         font-size: 16px;
-    }
-
-    .special-bets .winner,
-    .special-bets .goal-scorer {
-        flex: 3 1 0;
-    }
-
-    .special-bets-container {
-        width: 90%;
     }
 
     .game-row {
@@ -1625,6 +1605,7 @@ header nav button:hover {
 
     .special-bets span {
         padding: 15px 5px;
+        font-size: 12px;
     }
 
     .modal-content {

@@ -15,15 +15,15 @@ const SpecialBets = ({ user, tournamentHasStarted, bettable }) => {
                 <h5>Specialtips (Laddar...)</h5>
                 <div className='special-bets'>
                     <div className='winner'>
-                        <h6>VINNARE</h6>
+                        <h6>Vinnare</h6>
                         <span>-</span>
                     </div>
                     <div className='goal-scorer'>
-                        <h6>SKYTTEKUNG</h6>
+                        <h6>Skyttekung</h6>
                         <span>-</span>
                     </div>
                     <div className='goals'>
-                        <h6>MÅL</h6>
+                        <h6>Antal mål</h6>
                         <span>-</span>
                     </div>
                 </div>
@@ -41,15 +41,15 @@ const SpecialBets = ({ user, tournamentHasStarted, bettable }) => {
                 </h5>
                 <div className='special-bets'>
                     <div className='winner'>
-                        <h6>VINNARE</h6>
+                        <h6>Vinnare</h6>
                         <span>-</span>
                     </div>
                     <div className='goal-scorer'>
-                        <h6>SKYTTEKUNG</h6>
+                        <h6>Skyttekung</h6>
                         <span>-</span>
                     </div>
                     <div className='goals'>
-                        <h6>MÅL</h6>
+                        <h6>Antal mål</h6>
                         <span>-</span>
                     </div>
                 </div>
@@ -69,15 +69,15 @@ const SpecialBets = ({ user, tournamentHasStarted, bettable }) => {
             </h5>
             <div className='special-bets'>
                 <div className='winner'>
-                    <h6>VINNARE</h6>
+                    <h6>Vinnare</h6>
                     <span>{bets.team.name}</span>
                 </div>
                 <div className='goal-scorer'>
-                    <h6>SKYTTEKUNG</h6>
+                    <h6>Skyttekung</h6>
                     <span>{bets.player.firstname} {bets.player.lastname}</span>
                 </div>
                 <div className='goals'>
-                    <h6>MÅL</h6>
+                    <h6>Antal mål</h6>
                     <span>{bets.player_goals}</span>
                 </div>
             </div>
