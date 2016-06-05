@@ -1,7 +1,8 @@
 from django.contrib import admin
+from collections import defaultdict
 
 from .models import User, Group, Tournament, Round, Team, Game, Player, Bet, \
-        SpecialBet, SpecialBetResult, Point, Result, Goal
+        SpecialBet, SpecialBetResult, Point, Result, Goal, SpecialBetFinal
 
 # TODO: admin classes for all models? custom listing for all models?
 
@@ -42,7 +43,6 @@ def calculate_points(t1, t2, b1, b2):
 
 class ResultAdmin(admin.ModelAdmin):
     actions = ['calculate_points_action']
-    # list_display = ['game', 'team_1_goals', 'team_2_goals']
 
     def calculate_points_action(self, request, queryset):
         # All results from games 
@@ -62,7 +62,6 @@ class ResultAdmin(admin.ModelAdmin):
 
                 # TODO: possible bottleneck
                 try:
-                    # p = Point(user=user, points=points, game=game)
                     p = Point(user=user, points=points, result=result)
                     p.save()
                 except Exception:
@@ -78,11 +77,40 @@ class TournamentAdmin(admin.ModelAdmin):
 
     def calculate_points_action(self, request, queryset):
         for tournament in queryset:
-            
+            # special bets from users
             special_bets = SpecialBet.objects.filter(tournament=tournament.id)
+            correct_bets = SpecialBetFinal.objects.prefetch_related('players') \
+                                          .filter(tournament=tournament.id)
+
+            if len(correct_bets) == 0:
+                self.message_user(request, 'There are no final special bet results available!')
+                return False
+
+            correct_bet = correct_bets[0]
 
             for special_bet in special_bets:
-                 print(special_bet)
+                player_points = 0
+                goals_points = 0
+                team_points = 0
+
+                if special_bet.player in correct_bet.players.all():
+                    player_points = 25
+
+                if special_bet.player_goals == correct_bet.goals:
+                    goals_points = 25
+
+                if special_bet.team.id == correct_bet.team.id:
+                    team_points = 50
+
+                try:
+                    result = SpecialBetResult(user=special_bet.user,
+                                              tournament=tournament,
+                                              player=player_points,
+                                              goals=goals_points,
+                                              team=team_points)
+                    result.save()
+                except Exception:
+                    print("<SpecialBetResult> object already exists for user.")
 
 
         self.message_user(request, 'Points has been calculated!')
@@ -101,6 +129,7 @@ admin.site.register(Player)
 admin.site.register(Bet)
 admin.site.register(SpecialBet)
 admin.site.register(SpecialBetResult)
+admin.site.register(SpecialBetFinal)
 admin.site.register(Point)
 admin.site.register(Goal)
 admin.site.register(Result, ResultAdmin)

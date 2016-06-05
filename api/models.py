@@ -142,12 +142,28 @@ class SpecialBetResult(models.Model):
     tournament = models.ForeignKey(Tournament)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ("user", "tournament")
+
     def __str__(self):
         return "{}s {}m {}l - {} ({})".format(str(self.player),
                                               str(self.goals),
                                               str(self.team),
                                               str(self.user),
                                               str(self.tournament))
+class SpecialBetFinal(models.Model):
+    """
+    Represents the final results of a tournament
+    """
+    tournament = models.ForeignKey(Tournament)
+    players = models.ManyToManyField(Player)
+    goals = models.IntegerField()
+    team = models.ForeignKey(Team)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.tournament.name
+
 
 class Result(models.Model):
     """
@@ -170,20 +186,16 @@ class Point(models.Model):
     user = models.ForeignKey(User, related_name='points',
                              on_delete=models.CASCADE)
     points = models.IntegerField()
-    # game = models.ForeignKey(Game)
     result = models.ForeignKey(Result)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ("user", "result")
-        # unique_together = ("user", "game")
 
     def __str__(self):
-        return "{} till {} i matchen:".format(str(self.points),
-                                                 str(self.user))
-        # return "{} till {} i matchen: {}".format(str(self.points),
-        #                                          str(self.user),
-        #                                          str(self.result))
+        return "{} till {} för matchen: {}".format(str(self.points),
+                                                   str(self.user),
+                                                   str(self.result.game))
 
 class Goal(models.Model):
     """
@@ -199,6 +211,7 @@ class Goal(models.Model):
                                                    str(self.player),
                                                    str(self.game))
 
+# Import players from a CSV file
 def import_players(filename):
 
     with open(filename, 'r') as f:

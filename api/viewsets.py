@@ -5,7 +5,8 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.db.models import Prefetch
 
 from .models import User, Bet, Game, Round, Team, Player, Group, SpecialBet, \
-                    Goal, SpecialBetResult, Result, Point, Tournament
+                    Goal, SpecialBetResult, Result, Point, Tournament, \
+                    SpecialBetFinal
 
 from .filters import GameFilter, BetFilter, ResultFilter, GoalFilter, \
                      PointFilter
@@ -14,7 +15,8 @@ from .serializers import UserSerializer, BetSerializer, GameSerializer, \
                          RoundSerializer, TeamSerializer, PlayerSerializer, \
                          GroupSerializer, SpecialBetSerializer, \
                          GoalSerializer, PointSerializer, ResultSerializer, \
-                         SpecialBetResultSerializer, TournamentSerializer
+                         SpecialBetResultSerializer, TournamentSerializer, \
+                         SpecialBetFinalSerializer
 
 from .serializer_user_detail import DetailUserSerializer, DeepUserSerializer
 from .serializer_group_detail import DetailGroupSerializer
@@ -27,9 +29,6 @@ class UserViewSet(viewsets.ModelViewSet):
     @list_route()
     def deep(self, request):
         tournament_id = request.GET.get('tournament')
-
-        # OLD
-        # Prefetch('points', queryset=Point.objects.filter(game__round__tournament=tournament_id)) 
 
         if tournament_id:
             user = User.objects.prefetch_related(
@@ -51,10 +50,6 @@ class UserViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'])
     def detail(self, request, pk=None):
         tournament_id = request.GET.get('tournament')
-
-        # OLD
-        # Prefetch('points', queryset=Point.objects.filter(game__round__tournament=tournament_id)) 
-        # Prefetch('groups__users__points', queryset=Point.objects.filter(game__round__tournament=tournament_id)) 
 
         # NOTE: possible bottleneck? cache?
         if tournament_id:
@@ -182,9 +177,6 @@ class GroupViewSet(viewsets.ModelViewSet):
         users = request.GET.get('users')
         admin = request.GET.get('admin')
 
-        # OLD
-        # Prefetch('users__points', queryset=Point.objects.filter(resultgame__round__tournament=tournament_id)) 
-
         if tournament_id:
             groups = Group.objects.prefetch_related(
                         Prefetch('users__points', queryset=Point.objects.filter(result__game__round__tournament=tournament_id)) 
@@ -212,9 +204,6 @@ class GroupViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'])
     def detail(self, request, pk=None):
         tournament_id = request.GET.get('tournament')
-
-        # OLD
-        # Prefetch('users__points', queryset=Point.objects.filter(game__round__tournament=tournament_id)) 
 
         if tournament_id:
             group = Group.objects.prefetch_related(
@@ -270,7 +259,6 @@ class GroupViewSet(viewsets.ModelViewSet):
 
     # TODO: check that user actually is admin when updating group desc
 
-
 # SpecialBet
 class SpecialBetViewSet(viewsets.ModelViewSet):
     queryset = SpecialBet.objects.select_related('user') \
@@ -319,7 +307,6 @@ class PointViewSet(viewsets.ModelViewSet):
     queryset = Point.objects.select_related('user') \
                             .select_related('result') \
                             .all()
-                            # .select_related('game') \
     serializer_class = PointSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = PointFilter
@@ -347,3 +334,9 @@ class TournamentViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('name', 'start_date', 'stop_date')
 
+# Special Bet final
+class SpecialBetFinalViewSet(viewsets.ModelViewSet):
+    queryset = SpecialBetFinal.objects.all()
+    serializer_class = SpecialBetFinalSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('tournament', 'team', 'player', 'created_at')

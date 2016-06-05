@@ -13,7 +13,6 @@ class PointSerializer(serializers.ModelSerializer):
     class Meta:
         model = Point
         fields = ('id', 'points', 'result')
-        # fields = ('id', 'points', 'game')
 
 # SpecialBet
 class SpecialBetSerializer(serializers.ModelSerializer):

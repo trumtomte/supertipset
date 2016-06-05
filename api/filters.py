@@ -51,11 +51,8 @@ class GoalFilter(filters.FilterSet):
 class PointFilter(filters.FilterSet):
     round = django_filters.NumberFilter(name="result__game__round")
     tournament = django_filters.NumberFilter(name="result__game__round__tournament")
-    # round = django_filters.NumberFilter(name="game__round")
-    # tournament = django_filters.NumberFilter(name="game__round__tournament")
     users = ListFilter(name="user")
 
     class Meta:
         model = Point
         fields = ('user', 'users', 'result', 'round', 'tournament')
-        # fields = ('user', 'users', 'game', 'round', 'tournament')

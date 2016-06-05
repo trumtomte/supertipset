@@ -29514,6 +29514,16 @@
 	    }, 0);
 	};
 
+	var getSumOfPoints = function getSumOfPoints(user) {
+	    var pointsSum = user.data.points.reduce(function (a, n) {
+	        return a + n.points;
+	    }, 0);
+	    var specialBetsPointsSum = user.data.special_bet_results.reduce(function (a, n) {
+	        return a + (n.goals + n.player + n.team);
+	    }, 0);
+	    return pointsSum + specialBetsPointsSum;
+	};
+
 	var Points = function Points(_ref) {
 	    var user = _ref.user;
 
@@ -29528,7 +29538,7 @@
 	        _react2.default.createElement(
 	            'p',
 	            null,
-	            !user.isFetching && user.data.hasOwnProperty('id') ? sum(user.data.points) : '-'
+	            !user.isFetching && user.data.hasOwnProperty('id') ? getSumOfPoints(user) : '-'
 	        )
 	    );
 	};

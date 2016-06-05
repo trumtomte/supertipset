@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from .models import User, Bet, Game, Round, Team, Player, Group, SpecialBet, \
-                    Goal, SpecialBetResult, Result, Point, Tournament
+                    Goal, SpecialBetResult, Result, Point, Tournament, \
+                    SpecialBetFinal
 
 # User
 class UserSerializer(serializers.ModelSerializer):
@@ -23,20 +24,13 @@ class TeamSerializer(serializers.ModelSerializer):
 
 # Result
 class ResultSerializer(serializers.ModelSerializer):
-    # game = serializers.PrimaryKeyRelatedField(read_only=True)
-    # game = GameSerializer(read_only=True)
 
     class Meta:
         model = Result
         fields = ('id', 'game', 'team_1_goals', 'team_2_goals', 'created_at')
-        # fields = ('id', 'result', 'team_1_goals', 'team_2_goals', 'created_at')
 
 # Game
 class GameSerializer(serializers.ModelSerializer):
-    # team_1 = serializers.PrimaryKeyRelatedField(read_only=True)
-    # team_2 = serializers.PrimaryKeyRelatedField(read_only=True)
-    # round = serializers.PrimaryKeyRelatedField(read_only=True)
-    # round = RoundSerializer(read_only=True)
     team_1 = TeamSerializer(read_only=True)
     team_2 = TeamSerializer(read_only=True)
     result = ResultSerializer(many=True, read_only=True)
@@ -48,7 +42,6 @@ class GameSerializer(serializers.ModelSerializer):
 
 # Round
 class RoundSerializer(serializers.ModelSerializer):
-    # tournament = serializers.PrimaryKeyRelatedField(read_only=True)
     tournament = TournamentSerializer(read_only=True)
     games = GameSerializer(many=True, read_only=True)
 
@@ -68,7 +61,6 @@ class BetSerializer(serializers.ModelSerializer):
 
 # Player
 class PlayerSerializer(serializers.ModelSerializer):
-    # team = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     teams = TeamSerializer(many=True, read_only=True)
 
     class Meta:
@@ -77,8 +69,6 @@ class PlayerSerializer(serializers.ModelSerializer):
 
 # Group
 class GroupSerializer(serializers.ModelSerializer):
-    # admin = serializers.PrimaryKeyRelatedField(read_only=True)
-    # users = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     admin = UserSerializer(read_only=True)
     users = UserSerializer(many=True, read_only=True)
 
@@ -95,10 +85,6 @@ class GroupSerializer(serializers.ModelSerializer):
 
 # SpecialBet
 class SpecialBetSerializer(serializers.ModelSerializer):
-    # user = serializers.PrimaryKeyRelatedField(read_only=True)
-    # player = serializers.PrimaryKeyRelatedField(read_only=True)
-    # team = serializers.PrimaryKeyRelatedField(read_only=True)
-    # tournament = serializers.PrimaryKeyRelatedField(read_only=True)
     user = UserSerializer(read_only=True)
     player = PlayerSerializer(read_only=True)
     team = TeamSerializer(read_only=True)
@@ -110,8 +96,6 @@ class SpecialBetSerializer(serializers.ModelSerializer):
 
 # Goal
 class GoalSerializer(serializers.ModelSerializer):
-    # player = serializers.PrimaryKeyRelatedField(read_only=True)
-    # game = serializers.PrimaryKeyRelatedField(read_only=True)
     player = PlayerSerializer(read_only=True)
     game = GameSerializer(read_only=True)
 
@@ -121,23 +105,15 @@ class GoalSerializer(serializers.ModelSerializer):
 
 # Point
 class PointSerializer(serializers.ModelSerializer):
-    # user = serializers.PrimaryKeyRelatedField(read_only=True)
-    # game = serializers.PrimaryKeyRelatedField(read_only=True)
     user = UserSerializer(read_only=True)
     result = ResultSerializer(read_only=True)
-    # game = GameSerializer(read_only=True)
 
     class Meta:
         model = Point
         fields = ('id', 'user', 'points', 'result')
-        # fields = ('id', 'user', 'points', 'game')
 
 # Special Bet Result
 class SpecialBetResultSerializer(serializers.ModelSerializer):
-    # user = serializers.PrimaryKeyRelatedField(read_only=True)
-    # player = serializers.PrimaryKeyRelatedField(read_only=True)
-    # team = serializers.PrimaryKeyRelatedField(read_only=True)
-    # tournament = serializers.PrimaryKeyRelatedField(read_only=True)
     user = UserSerializer(read_only=True)
 
     class Meta:
@@ -145,3 +121,8 @@ class SpecialBetResultSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'player', 'goals',
                   'team', 'tournament', 'created_at')
 
+# Special Bet Final
+class SpecialBetFinalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpecialBetFinal
+        fields = ('id', 'tournament', 'player', 'goals', 'team', 'created_at')
