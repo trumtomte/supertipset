@@ -70,7 +70,7 @@
 
 	var _containers = __webpack_require__(253);
 
-	var _index = __webpack_require__(318);
+	var _index = __webpack_require__(317);
 
 	var reducers = _interopRequireWildcard(_index);
 
@@ -27235,39 +27235,39 @@
 
 	var _Bets3 = _interopRequireDefault(_Bets2);
 
-	var _Group2 = __webpack_require__(289);
+	var _Group2 = __webpack_require__(288);
 
 	var _Group3 = _interopRequireDefault(_Group2);
 
-	var _Groups2 = __webpack_require__(293);
+	var _Groups2 = __webpack_require__(292);
 
 	var _Groups3 = _interopRequireDefault(_Groups2);
 
-	var _TopLists2 = __webpack_require__(296);
+	var _TopLists2 = __webpack_require__(295);
 
 	var _TopLists3 = _interopRequireDefault(_TopLists2);
 
-	var _UserProfile2 = __webpack_require__(298);
+	var _UserProfile2 = __webpack_require__(297);
 
 	var _UserProfile3 = _interopRequireDefault(_UserProfile2);
 
-	var _VisitorProfile2 = __webpack_require__(300);
+	var _VisitorProfile2 = __webpack_require__(299);
 
 	var _VisitorProfile3 = _interopRequireDefault(_VisitorProfile2);
 
-	var _Modals2 = __webpack_require__(301);
+	var _Modals2 = __webpack_require__(300);
 
 	var _Modals3 = _interopRequireDefault(_Modals2);
 
-	var _Notifications2 = __webpack_require__(314);
+	var _Notifications2 = __webpack_require__(313);
 
 	var _Notifications3 = _interopRequireDefault(_Notifications2);
 
-	var _PlaceBetButton2 = __webpack_require__(315);
+	var _PlaceBetButton2 = __webpack_require__(314);
 
 	var _PlaceBetButton3 = _interopRequireDefault(_PlaceBetButton2);
 
-	var _PlaceSpecialBetButton2 = __webpack_require__(288);
+	var _PlaceSpecialBetButton2 = __webpack_require__(287);
 
 	var _PlaceSpecialBetButton3 = _interopRequireDefault(_PlaceSpecialBetButton2);
 
@@ -27275,27 +27275,27 @@
 
 	var _ChangeTournamentButton3 = _interopRequireDefault(_ChangeTournamentButton2);
 
-	var _CreateGroupButton2 = __webpack_require__(295);
+	var _CreateGroupButton2 = __webpack_require__(294);
 
 	var _CreateGroupButton3 = _interopRequireDefault(_CreateGroupButton2);
 
-	var _JoinGroupButton2 = __webpack_require__(294);
+	var _JoinGroupButton2 = __webpack_require__(293);
 
 	var _JoinGroupButton3 = _interopRequireDefault(_JoinGroupButton2);
 
-	var _LeaveGroupButton2 = __webpack_require__(316);
+	var _LeaveGroupButton2 = __webpack_require__(315);
 
 	var _LeaveGroupButton3 = _interopRequireDefault(_LeaveGroupButton2);
 
-	var _EditGroupDescriptionButton2 = __webpack_require__(291);
+	var _EditGroupDescriptionButton2 = __webpack_require__(290);
 
 	var _EditGroupDescriptionButton3 = _interopRequireDefault(_EditGroupDescriptionButton2);
 
-	var _EditGroupPasswordButton2 = __webpack_require__(292);
+	var _EditGroupPasswordButton2 = __webpack_require__(291);
 
 	var _EditGroupPasswordButton3 = _interopRequireDefault(_EditGroupPasswordButton2);
 
-	var _EditUserPasswordButton2 = __webpack_require__(317);
+	var _EditUserPasswordButton2 = __webpack_require__(316);
 
 	var _EditUserPasswordButton3 = _interopRequireDefault(_EditUserPasswordButton2);
 
@@ -27342,7 +27342,7 @@
 
 	var _tournaments = __webpack_require__(255);
 
-	var _user = __webpack_require__(259);
+	var _user = __webpack_require__(260);
 
 	var _teams = __webpack_require__(262);
 
@@ -27503,9 +27503,9 @@
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _utils = __webpack_require__(258);
+	var _utils = __webpack_require__(259);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27989,6 +27989,80 @@
 
 /***/ },
 /* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = reducer;
+	exports.hideNotification = hideNotification;
+	exports.showNotification = showNotification;
+	exports.publishNotification = publishNotification;
+	exports.successNotification = successNotification;
+	exports.errorNotification = errorNotification;
+
+	var _utils = __webpack_require__(259);
+
+	var HIDE = 'supertipset/notification/HIDE';
+	var SHOW = 'supertipset/notification/SHOW';
+
+	var SUCCESS = 'supertipset/notification/SUCCESS';
+	var ERROR = 'supertipset/notification/ERROR';
+
+	var initialState = {
+	    notificationType: undefined,
+	    notificationProps: {}
+	};
+
+	function reducer() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case SHOW:
+	            return (0, _utils.assign)(state, {
+	                notificationType: action.notificationType,
+	                notificationProps: action.notificationProps
+	            });
+	        case HIDE:
+	            return (0, _utils.assign)(state, initialState);
+	        default:
+	            return state;
+	    }
+	}
+
+	function hideNotification() {
+	    return { type: HIDE };
+	}
+
+	function showNotification(notificationType, notificationProps) {
+	    return { type: SHOW, notificationType: notificationType, notificationProps: notificationProps };
+	}
+
+	function publishNotification(type, props) {
+	    return function (dispatch, getState) {
+	        setTimeout(function () {
+	            if (getState().notification.notificationType) {
+	                dispatch(hideNotification());
+	            }
+	        }, 3000);
+
+	        dispatch(showNotification(type, props));
+	    };
+	}
+
+	function successNotification(message) {
+	    return publishNotification(SUCCESS, { message: message });
+	}
+
+	function errorNotification(message) {
+	    return publishNotification(ERROR, { message: message });
+	}
+
+/***/ },
+/* 259 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -28024,7 +28098,7 @@
 	}
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28056,9 +28130,9 @@
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _utils = __webpack_require__(258);
+	var _utils = __webpack_require__(259);
 
 	var _groups = __webpack_require__(261);
 
@@ -28371,80 +28445,6 @@
 	}
 
 /***/ },
-/* 260 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = reducer;
-	exports.hideNotification = hideNotification;
-	exports.showNotification = showNotification;
-	exports.publishNotification = publishNotification;
-	exports.successNotification = successNotification;
-	exports.errorNotification = errorNotification;
-
-	var _utils = __webpack_require__(258);
-
-	var HIDE = 'supertipset/notification/HIDE';
-	var SHOW = 'supertipset/notification/SHOW';
-
-	var SUCCESS = 'supertipset/notification/SUCCESS';
-	var ERROR = 'supertipset/notification/ERROR';
-
-	var initialState = {
-	    notificationType: undefined,
-	    notificationProps: {}
-	};
-
-	function reducer() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	    var action = arguments[1];
-
-	    switch (action.type) {
-	        case SHOW:
-	            return (0, _utils.assign)(state, {
-	                notificationType: action.notificationType,
-	                notificationProps: action.notificationProps
-	            });
-	        case HIDE:
-	            return (0, _utils.assign)(state, initialState);
-	        default:
-	            return state;
-	    }
-	}
-
-	function hideNotification() {
-	    return { type: HIDE };
-	}
-
-	function showNotification(notificationType, notificationProps) {
-	    return { type: SHOW, notificationType: notificationType, notificationProps: notificationProps };
-	}
-
-	function publishNotification(type, props) {
-	    return function (dispatch, getState) {
-	        setTimeout(function () {
-	            if (getState().notification.notificationType) {
-	                dispatch(hideNotification());
-	            }
-	        }, 3000);
-
-	        dispatch(showNotification(type, props));
-	    };
-	}
-
-	function successNotification(message) {
-	    return publishNotification(SUCCESS, { message: message });
-	}
-
-	function errorNotification(message) {
-	    return publishNotification(ERROR, { message: message });
-	}
-
-/***/ },
 /* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -28478,9 +28478,9 @@
 
 	var _reactRouter = __webpack_require__(196);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _utils = __webpack_require__(258);
+	var _utils = __webpack_require__(259);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28742,9 +28742,9 @@
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _utils = __webpack_require__(258);
+	var _utils = __webpack_require__(259);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28837,9 +28837,9 @@
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _utils = __webpack_require__(258);
+	var _utils = __webpack_require__(259);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28990,7 +28990,7 @@
 	exports.openEditUserPasswordModal = openEditUserPasswordModal;
 	exports.openChangeTournamentModal = openChangeTournamentModal;
 
-	var _utils = __webpack_require__(258);
+	var _utils = __webpack_require__(259);
 
 	// open / close
 	var OPEN = 'supertipset/modal/OPEN';
@@ -29126,7 +29126,7 @@
 
 	var _components = __webpack_require__(268);
 
-	var _PlaceSpecialBetButton = __webpack_require__(288);
+	var _PlaceSpecialBetButton = __webpack_require__(287);
 
 	var _PlaceSpecialBetButton2 = _interopRequireDefault(_PlaceSpecialBetButton);
 
@@ -29223,9 +29223,9 @@
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _utils = __webpack_require__(258);
+	var _utils = __webpack_require__(259);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29377,23 +29377,23 @@
 
 	var _GroupAverageTopList3 = _interopRequireDefault(_GroupAverageTopList2);
 
-	var _GroupMembersTopList2 = __webpack_require__(283);
+	var _GroupMembersTopList2 = __webpack_require__(282);
 
 	var _GroupMembersTopList3 = _interopRequireDefault(_GroupMembersTopList2);
 
-	var _UserTotalTopList2 = __webpack_require__(284);
+	var _UserTotalTopList2 = __webpack_require__(283);
 
 	var _UserTotalTopList3 = _interopRequireDefault(_UserTotalTopList2);
 
-	var _UserTopBetsTopList2 = __webpack_require__(319);
+	var _UserTopBetsTopList2 = __webpack_require__(284);
 
 	var _UserTopBetsTopList3 = _interopRequireDefault(_UserTopBetsTopList2);
 
-	var _SuccessNotification2 = __webpack_require__(286);
+	var _SuccessNotification2 = __webpack_require__(285);
 
 	var _SuccessNotification3 = _interopRequireDefault(_SuccessNotification2);
 
-	var _ErrorNotification2 = __webpack_require__(287);
+	var _ErrorNotification2 = __webpack_require__(286);
 
 	var _ErrorNotification3 = _interopRequireDefault(_ErrorNotification2);
 
@@ -29558,6 +29558,12 @@
 	    var tournamentHasStarted = _ref.tournamentHasStarted;
 	    var bettable = _ref.bettable;
 
+
+	    // <div className='points'>
+	    //     <h6>POÄNG</h6>
+	    //     <span>0</span>
+	    // </div>
+
 	    // No special bets available yet
 	    if (user.isFetching || !user.data.hasOwnProperty('id')) {
 	        return _react2.default.createElement(
@@ -29611,20 +29617,6 @@
 	                        'span',
 	                        null,
 	                        '-'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'points' },
-	                    _react2.default.createElement(
-	                        'h6',
-	                        null,
-	                        'POÄNG'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '0'
 	                    )
 	                )
 	            )
@@ -29685,20 +29677,6 @@
 	                        'span',
 	                        null,
 	                        '-'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'points' },
-	                    _react2.default.createElement(
-	                        'h6',
-	                        null,
-	                        'POÄNG'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '0'
 	                    )
 	                )
 	            )
@@ -29762,20 +29740,6 @@
 	                    'span',
 	                    null,
 	                    bets.player_goals
-	                )
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'points' },
-	                _react2.default.createElement(
-	                    'h6',
-	                    null,
-	                    'POÄNG'
-	                ),
-	                _react2.default.createElement(
-	                    'span',
-	                    null,
-	                    '0'
 	                )
 	            )
 	        )
@@ -30686,8 +30650,7 @@
 	exports.default = GroupAverageTopList;
 
 /***/ },
-/* 282 */,
-/* 283 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30825,7 +30788,7 @@
 	exports.default = GroupMembersTopList;
 
 /***/ },
-/* 284 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30969,8 +30932,147 @@
 	exports.default = UserTotalTopList;
 
 /***/ },
-/* 285 */,
-/* 286 */
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(196);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var user = function user(u, i) {
+	    return _react2.default.createElement(
+	        'div',
+	        { key: i, className: 'toplist-row' },
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'pos' },
+	            i + 1
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'name' },
+	            _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/s/profile/' + u.id },
+	                u.username
+	            )
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            { className: 'sum' },
+	            u.topBets
+	        )
+	    );
+	};
+
+	var sortByPoints = function sortByPoints(a, b) {
+	    return b.topBets - a.topBets;
+	};
+	var getUserWithPoints = function getUserWithPoints(u) {
+	    return {
+	        id: u.id,
+	        username: u.username,
+	        topBets: u.points.filter(function (pts) {
+	            return pts.points == 10;
+	        }).length
+	    };
+	};
+
+	var UserTopBets = function UserTopBets(_ref) {
+	    var users = _ref.users;
+
+
+	    if (users.isFetching || users.data.length == 0) {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'toplist-container' },
+	            _react2.default.createElement(
+	                'h2',
+	                null,
+	                'Flest 10:or'
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'toplist user-total' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'toplist-headers' },
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        '#'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'Användare'
+	                    ),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'Poäng'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Laddar...'
+	                )
+	            )
+	        );
+	    }
+
+	    var orderedUsers = users.data.map(getUserWithPoints).sort(sortByPoints);
+
+	    return _react2.default.createElement(
+	        'div',
+	        { className: 'toplist-container' },
+	        _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Flest 10:or'
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: 'toplist user-total' },
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'toplist-headers' },
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'pos' },
+	                    '#'
+	                ),
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'name' },
+	                    'Användare'
+	                ),
+	                _react2.default.createElement(
+	                    'h6',
+	                    { className: 'sum' },
+	                    'Antal'
+	                )
+	            ),
+	            orderedUsers.map(user)
+	        )
+	    );
+	};
+
+	exports.default = UserTopBets;
+
+/***/ },
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30985,7 +31087,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31013,7 +31115,7 @@
 	})(SuccessNotification);
 
 /***/ },
-/* 287 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31028,7 +31130,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31056,7 +31158,7 @@
 	})(ErrorNotification);
 
 /***/ },
-/* 288 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31104,7 +31206,7 @@
 	})(PlaceSpecialBetButton);
 
 /***/ },
-/* 289 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31121,15 +31223,15 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _group = __webpack_require__(290);
+	var _group = __webpack_require__(289);
 
 	var _components = __webpack_require__(268);
 
-	var _EditGroupDescriptionButton = __webpack_require__(291);
+	var _EditGroupDescriptionButton = __webpack_require__(290);
 
 	var _EditGroupDescriptionButton2 = _interopRequireDefault(_EditGroupDescriptionButton);
 
-	var _EditGroupPasswordButton = __webpack_require__(292);
+	var _EditGroupPasswordButton = __webpack_require__(291);
 
 	var _EditGroupPasswordButton2 = _interopRequireDefault(_EditGroupPasswordButton);
 
@@ -31220,7 +31322,7 @@
 	})(Group);
 
 /***/ },
-/* 290 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31244,9 +31346,9 @@
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _utils = __webpack_require__(258);
+	var _utils = __webpack_require__(259);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31418,7 +31520,7 @@
 	}
 
 /***/ },
-/* 291 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31473,7 +31575,7 @@
 	})(EditGroupDescriptionButton);
 
 /***/ },
-/* 292 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31528,7 +31630,7 @@
 	})(EditGroupPasswordButton);
 
 /***/ },
-/* 293 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31549,11 +31651,11 @@
 
 	var _components = __webpack_require__(268);
 
-	var _JoinGroupButton = __webpack_require__(294);
+	var _JoinGroupButton = __webpack_require__(293);
 
 	var _JoinGroupButton2 = _interopRequireDefault(_JoinGroupButton);
 
-	var _CreateGroupButton = __webpack_require__(295);
+	var _CreateGroupButton = __webpack_require__(294);
 
 	var _CreateGroupButton2 = _interopRequireDefault(_CreateGroupButton);
 
@@ -31623,7 +31725,7 @@
 	})(Groups);
 
 /***/ },
-/* 294 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31669,7 +31771,7 @@
 	})(JoinGroupButton);
 
 /***/ },
-/* 295 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31716,7 +31818,7 @@
 	})(CreateGroup);
 
 /***/ },
-/* 296 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31733,7 +31835,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _toplists = __webpack_require__(297);
+	var _toplists = __webpack_require__(296);
 
 	var _components = __webpack_require__(268);
 
@@ -31804,7 +31906,7 @@
 	})(TopList);
 
 /***/ },
-/* 297 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31825,9 +31927,9 @@
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _utils = __webpack_require__(258);
+	var _utils = __webpack_require__(259);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31992,7 +32094,7 @@
 	}
 
 /***/ },
-/* 298 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32009,7 +32111,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _profile = __webpack_require__(299);
+	var _profile = __webpack_require__(298);
 
 	var _components = __webpack_require__(268);
 
@@ -32094,7 +32196,7 @@
 	})(UserProfile);
 
 /***/ },
-/* 299 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32112,13 +32214,13 @@
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _utils = __webpack_require__(258);
+	var _utils = __webpack_require__(259);
 
 	var _groups = __webpack_require__(261);
 
-	var _user = __webpack_require__(259);
+	var _user = __webpack_require__(260);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32264,7 +32366,7 @@
 	}
 
 /***/ },
-/* 300 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32281,7 +32383,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _profile = __webpack_require__(299);
+	var _profile = __webpack_require__(298);
 
 	var _components = __webpack_require__(268);
 
@@ -32370,7 +32472,7 @@
 	})(VisitorProfile);
 
 /***/ },
-/* 301 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32385,7 +32487,7 @@
 
 	var _reactRedux = __webpack_require__(177);
 
-	var _modals = __webpack_require__(302);
+	var _modals = __webpack_require__(301);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32424,7 +32526,7 @@
 	})(Modals);
 
 /***/ },
-/* 302 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32434,43 +32536,43 @@
 	});
 	exports.PlaceSpecialBetModal = exports.PlaceBetModal = exports.UserPasswordModal = exports.GroupPasswordModal = exports.GroupDescriptionModal = exports.LeaveGroupModal = exports.JoinGroupModal = exports.CreateGroupModal = exports.ChangeTournamentModal = exports.Modal = undefined;
 
-	var _Modal2 = __webpack_require__(303);
+	var _Modal2 = __webpack_require__(302);
 
 	var _Modal3 = _interopRequireDefault(_Modal2);
 
-	var _ChangeTournamentModal2 = __webpack_require__(304);
+	var _ChangeTournamentModal2 = __webpack_require__(303);
 
 	var _ChangeTournamentModal3 = _interopRequireDefault(_ChangeTournamentModal2);
 
-	var _CreateGroupModal2 = __webpack_require__(306);
+	var _CreateGroupModal2 = __webpack_require__(305);
 
 	var _CreateGroupModal3 = _interopRequireDefault(_CreateGroupModal2);
 
-	var _JoinGroupModal2 = __webpack_require__(307);
+	var _JoinGroupModal2 = __webpack_require__(306);
 
 	var _JoinGroupModal3 = _interopRequireDefault(_JoinGroupModal2);
 
-	var _LeaveGroupModal2 = __webpack_require__(308);
+	var _LeaveGroupModal2 = __webpack_require__(307);
 
 	var _LeaveGroupModal3 = _interopRequireDefault(_LeaveGroupModal2);
 
-	var _GroupDescriptionModal2 = __webpack_require__(309);
+	var _GroupDescriptionModal2 = __webpack_require__(308);
 
 	var _GroupDescriptionModal3 = _interopRequireDefault(_GroupDescriptionModal2);
 
-	var _GroupPasswordModal2 = __webpack_require__(310);
+	var _GroupPasswordModal2 = __webpack_require__(309);
 
 	var _GroupPasswordModal3 = _interopRequireDefault(_GroupPasswordModal2);
 
-	var _UserPasswordModal2 = __webpack_require__(311);
+	var _UserPasswordModal2 = __webpack_require__(310);
 
 	var _UserPasswordModal3 = _interopRequireDefault(_UserPasswordModal2);
 
-	var _PlaceBetModal2 = __webpack_require__(312);
+	var _PlaceBetModal2 = __webpack_require__(311);
 
 	var _PlaceBetModal3 = _interopRequireDefault(_PlaceBetModal2);
 
-	var _PlaceSpecialBetModal2 = __webpack_require__(313);
+	var _PlaceSpecialBetModal2 = __webpack_require__(312);
 
 	var _PlaceSpecialBetModal3 = _interopRequireDefault(_PlaceSpecialBetModal2);
 
@@ -32488,7 +32590,7 @@
 	exports.PlaceSpecialBetModal = _PlaceSpecialBetModal3.default;
 
 /***/ },
-/* 303 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32555,7 +32657,7 @@
 	})(Modal);
 
 /***/ },
-/* 304 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32572,9 +32674,9 @@
 
 	var _modal = __webpack_require__(265);
 
-	var _tournament = __webpack_require__(305);
+	var _tournament = __webpack_require__(304);
 
-	var _Modal = __webpack_require__(303);
+	var _Modal = __webpack_require__(302);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -32644,7 +32746,7 @@
 	})(ChangeTournamentModal);
 
 /***/ },
-/* 305 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32658,15 +32760,15 @@
 
 	var _reactRouter = __webpack_require__(196);
 
-	var _group = __webpack_require__(290);
+	var _group = __webpack_require__(289);
 
 	var _groups = __webpack_require__(261);
 
-	var _profile = __webpack_require__(299);
+	var _profile = __webpack_require__(298);
 
-	var _toplists = __webpack_require__(297);
+	var _toplists = __webpack_require__(296);
 
-	var _user = __webpack_require__(259);
+	var _user = __webpack_require__(260);
 
 	var _rounds = __webpack_require__(267);
 
@@ -32712,7 +32814,7 @@
 	}
 
 /***/ },
-/* 306 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32731,9 +32833,9 @@
 
 	var _groups = __webpack_require__(261);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _Modal = __webpack_require__(303);
+	var _Modal = __webpack_require__(302);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -32814,7 +32916,7 @@
 	})(CreateGroupModal);
 
 /***/ },
-/* 307 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32833,9 +32935,9 @@
 
 	var _groups = __webpack_require__(261);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _Modal = __webpack_require__(303);
+	var _Modal = __webpack_require__(302);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -32921,7 +33023,7 @@
 	})(JoinGroupModal);
 
 /***/ },
-/* 308 */
+/* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32940,7 +33042,7 @@
 
 	var _groups = __webpack_require__(261);
 
-	var _Modal = __webpack_require__(303);
+	var _Modal = __webpack_require__(302);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -33057,7 +33159,7 @@
 	})(LeaveGroupModal);
 
 /***/ },
-/* 309 */
+/* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33074,9 +33176,9 @@
 
 	var _modal = __webpack_require__(265);
 
-	var _group = __webpack_require__(290);
+	var _group = __webpack_require__(289);
 
-	var _Modal = __webpack_require__(303);
+	var _Modal = __webpack_require__(302);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -33131,7 +33233,7 @@
 	})(GroupDescriptionModal);
 
 /***/ },
-/* 310 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33148,11 +33250,11 @@
 
 	var _modal = __webpack_require__(265);
 
-	var _group = __webpack_require__(290);
+	var _group = __webpack_require__(289);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _Modal = __webpack_require__(303);
+	var _Modal = __webpack_require__(302);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -33225,7 +33327,7 @@
 	})(GroupPasswordModal);
 
 /***/ },
-/* 311 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33242,11 +33344,11 @@
 
 	var _modal = __webpack_require__(265);
 
-	var _user = __webpack_require__(259);
+	var _user = __webpack_require__(260);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _Modal = __webpack_require__(303);
+	var _Modal = __webpack_require__(302);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -33316,7 +33418,7 @@
 	})(UserPasswordModal);
 
 /***/ },
-/* 312 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33333,11 +33435,11 @@
 
 	var _modal = __webpack_require__(265);
 
-	var _user = __webpack_require__(259);
+	var _user = __webpack_require__(260);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _Modal = __webpack_require__(303);
+	var _Modal = __webpack_require__(302);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -33437,7 +33539,7 @@
 	})(PlaceBetModal);
 
 /***/ },
-/* 313 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33454,11 +33556,11 @@
 
 	var _modal = __webpack_require__(265);
 
-	var _user = __webpack_require__(259);
+	var _user = __webpack_require__(260);
 
-	var _notification = __webpack_require__(260);
+	var _notification = __webpack_require__(258);
 
-	var _Modal = __webpack_require__(303);
+	var _Modal = __webpack_require__(302);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -33629,7 +33731,7 @@
 	})(PlaceSpecialBetModal);
 
 /***/ },
-/* 314 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33675,7 +33777,7 @@
 	})(Notifications);
 
 /***/ },
-/* 315 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33730,7 +33832,7 @@
 	})(PlaceBetButton);
 
 /***/ },
-/* 316 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33785,7 +33887,7 @@
 	})(LeaveGroupButton);
 
 /***/ },
-/* 317 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33831,7 +33933,7 @@
 	})(EditUserPasswordButton);
 
 /***/ },
-/* 318 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33841,7 +33943,7 @@
 	});
 	exports.toplists = exports.notification = exports.modal = exports.players = exports.teams = exports.tournaments = exports.tournament = exports.rounds = exports.profile = exports.user = exports.groups = exports.group = undefined;
 
-	var _group2 = __webpack_require__(290);
+	var _group2 = __webpack_require__(289);
 
 	var _group3 = _interopRequireDefault(_group2);
 
@@ -33849,11 +33951,11 @@
 
 	var _groups3 = _interopRequireDefault(_groups2);
 
-	var _user2 = __webpack_require__(259);
+	var _user2 = __webpack_require__(260);
 
 	var _user3 = _interopRequireDefault(_user2);
 
-	var _profile2 = __webpack_require__(299);
+	var _profile2 = __webpack_require__(298);
 
 	var _profile3 = _interopRequireDefault(_profile2);
 
@@ -33861,7 +33963,7 @@
 
 	var _rounds3 = _interopRequireDefault(_rounds2);
 
-	var _tournament2 = __webpack_require__(305);
+	var _tournament2 = __webpack_require__(304);
 
 	var _tournament3 = _interopRequireDefault(_tournament2);
 
@@ -33881,11 +33983,11 @@
 
 	var _modal3 = _interopRequireDefault(_modal2);
 
-	var _notification2 = __webpack_require__(260);
+	var _notification2 = __webpack_require__(258);
 
 	var _notification3 = _interopRequireDefault(_notification2);
 
-	var _toplists2 = __webpack_require__(297);
+	var _toplists2 = __webpack_require__(296);
 
 	var _toplists3 = _interopRequireDefault(_toplists2);
 
@@ -33903,146 +34005,6 @@
 	exports.modal = _modal3.default;
 	exports.notification = _notification3.default;
 	exports.toplists = _toplists3.default;
-
-/***/ },
-/* 319 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(196);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var user = function user(u, i) {
-	    return _react2.default.createElement(
-	        'div',
-	        { key: i, className: 'toplist-row' },
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'pos' },
-	            i + 1
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'name' },
-	            _react2.default.createElement(
-	                _reactRouter.Link,
-	                { to: '/s/profile/' + u.id },
-	                u.username
-	            )
-	        ),
-	        _react2.default.createElement(
-	            'span',
-	            { className: 'sum' },
-	            u.topBets
-	        )
-	    );
-	};
-
-	var sortByPoints = function sortByPoints(a, b) {
-	    return b.topBets - a.topBets;
-	};
-	var getUserWithPoints = function getUserWithPoints(u) {
-	    return {
-	        id: u.id,
-	        username: u.username,
-	        topBets: u.points.filter(function (pts) {
-	            return pts.points == 10;
-	        }).length
-	    };
-	};
-
-	var UserTopBets = function UserTopBets(_ref) {
-	    var users = _ref.users;
-
-
-	    if (users.isFetching || users.data.length == 0) {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'toplist-container' },
-	            _react2.default.createElement(
-	                'h2',
-	                null,
-	                'Flest 10:or'
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'toplist user-total' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'toplist-headers' },
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        '#'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        'Användare'
-	                    ),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        'Poäng'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'Laddar...'
-	                )
-	            )
-	        );
-	    }
-
-	    var orderedUsers = users.data.map(getUserWithPoints).sort(sortByPoints);
-
-	    return _react2.default.createElement(
-	        'div',
-	        { className: 'toplist-container' },
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Flest 10:or'
-	        ),
-	        _react2.default.createElement(
-	            'div',
-	            { className: 'toplist user-total' },
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'toplist-headers' },
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'pos' },
-	                    '#'
-	                ),
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'name' },
-	                    'Användare'
-	                ),
-	                _react2.default.createElement(
-	                    'h6',
-	                    { className: 'sum' },
-	                    'Antal'
-	                )
-	            ),
-	            orderedUsers.map(user)
-	        )
-	    );
-	};
-
-	exports.default = UserTopBets;
 
 /***/ }
 /******/ ]);

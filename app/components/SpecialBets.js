@@ -2,6 +2,12 @@ import React from 'react'
 import { PlaceSpecialBetButton } from '../containers'
 
 const SpecialBets = ({ user, tournamentHasStarted, bettable }) => {
+
+    // <div className='points'>
+    //     <h6>POÄNG</h6>
+    //     <span>0</span>
+    // </div>
+
     // No special bets available yet
     if (user.isFetching || !user.data.hasOwnProperty('id')) {
         return (
@@ -19,10 +25,6 @@ const SpecialBets = ({ user, tournamentHasStarted, bettable }) => {
                     <div className='goals'>
                         <h6>MÅL</h6>
                         <span>-</span>
-                    </div>
-                    <div className='points'>
-                        <h6>POÄNG</h6>
-                        <span>0</span>
                     </div>
                 </div>
             </div>
@@ -49,10 +51,6 @@ const SpecialBets = ({ user, tournamentHasStarted, bettable }) => {
                     <div className='goals'>
                         <h6>MÅL</h6>
                         <span>-</span>
-                    </div>
-                    <div className='points'>
-                        <h6>POÄNG</h6>
-                        <span>0</span>
                     </div>
                 </div>
             </div>
@@ -81,10 +79,6 @@ const SpecialBets = ({ user, tournamentHasStarted, bettable }) => {
                 <div className='goals'>
                     <h6>MÅL</h6>
                     <span>{bets.player_goals}</span>
-                </div>
-                <div className='points'>
-                    <h6>POÄNG</h6>
-                    <span>0</span>
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=Bangers);
+@import url(https://fonts.googleapis.com/css?family=Russo+One);
 
 /**
  * Normalize
@@ -795,6 +796,27 @@ header nav button:hover {
  * =================
  * {{{
  **/
+
+.user-points {
+    text-align: center;
+}
+
+.user-points h6 {
+    margin: 0;
+    font-weight: 300;
+    font-size: 12px;
+    padding: 5px 15px;
+    color: #4c697a;
+}
+
+.user-points p {
+    margin: 0 0 50px 0;
+    font-size: 100px;
+    line-height: 100%;
+    font-weight: 300;
+    font-family: "Russo One", "Helvetica Neue", Helvetica;
+}
+/*
 .user-points {
     border: 1px solid #1ABC9C;
     border-radius: 4px;
@@ -819,6 +841,7 @@ header nav button:hover {
     font-size: 24px;
     letter-spacing: 1px;
 }
+*/
 
 /* }}} */
 
@@ -877,8 +900,7 @@ header nav button:hover {
 
 
 .special-bets .winner,
-.special-bets .goal-scorer,
-.special-bets .goals {
+.special-bets .goal-scorer {
     border-right: 1px solid #17A588;
 }
 
@@ -889,9 +911,11 @@ header nav button:hover {
     letter-spacing: 1px;
 }
 
-.special-bets .winner,
-.special-bets .goal-scorer {
+.special-bets .winner {
     flex: 2 1 0;
+}
+.special-bets .goal-scorer {
+    flex: 3 1 0;
 }
 
 .special-bets .goals,
@@ -1483,7 +1507,7 @@ header nav button:hover {
     }
 
     .game-row {
-        font-size: 14px;
+        font-size: 12px;
     }
 }
 
@@ -1542,7 +1566,12 @@ header nav button:hover {
         display: none;
     }
 
-    body {
+    body,
+    header nav .link,
+    .round-headers h6,
+    .special-bets h6,
+    .group-headers h6,
+    .toplist-headers h6 {
         font-weight: 400;
     }
 }
