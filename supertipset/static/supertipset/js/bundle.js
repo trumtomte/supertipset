@@ -30752,7 +30752,7 @@
 	                _react2.default.createElement(
 	                    'p',
 	                    null,
-	                    'Laddar...'
+	                    groups.isFetching ? 'Laddar...' : ''
 	                )
 	            )
 	        );

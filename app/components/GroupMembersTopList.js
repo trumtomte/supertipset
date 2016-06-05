@@ -32,7 +32,9 @@ const GroupMembersTopList = ({ groups }) => {
                         <h6 className='name'>Liga</h6>
                         <h6 className='sum'>Antal</h6>
                     </div>
-                    <p>Laddar...</p>
+                    <p>
+                        {groups.isFetching ? 'Laddar...' : ''}
+                    </p>
                 </div>
             </div>
         )
