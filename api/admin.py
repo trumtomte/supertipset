@@ -94,13 +94,13 @@ class TournamentAdmin(admin.ModelAdmin):
                 team_points = 0
 
                 if special_bet.player in correct_bet.players.all():
-                    player_points = 25
+                    player_points = 20
 
-                if special_bet.player_goals == correct_bet.goals:
-                    goals_points = 25
+                    if special_bet.player_goals == correct_bet.goals:
+                        goals_points = 20
 
                 if special_bet.team.id == correct_bet.team.id:
-                    team_points = 50
+                    team_points = 30
 
                 try:
                     result = SpecialBetResult(user=special_bet.user,
