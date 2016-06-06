@@ -799,6 +799,7 @@ header nav button:hover {
 
 .user-points {
     text-align: center;
+    margin-bottom: 50px;
 }
 
 .user-points h6 {
@@ -810,12 +811,18 @@ header nav button:hover {
 }
 
 .user-points p {
-    margin: 0 0 50px 0;
+    margin: 0;
     font-size: 100px;
     line-height: 100%;
     font-weight: 300;
     font-family: "Russo One", "Helvetica Neue", Helvetica;
 }
+
+.user-points span {
+    font-size: 14px;
+    font-weight: 400;
+}
+
 /*
 .user-points {
     border: 1px solid #1ABC9C;
@@ -857,7 +864,7 @@ header nav button:hover {
 }
 
 .special-bets-container h5 {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 200;
     letter-spacing: 1px;
     margin-bottom: 20px;
@@ -889,17 +896,18 @@ header nav button:hover {
 .special-bets h6 {
     margin: 0;
     font-weight: 300;
-    font-size: 12px;
+    font-size: 14px;
     padding: 10px 15px;
     border-bottom: 1px solid #17A588;
     color: white;
     background: #1ABC9C;
+    letter-spacing: 2px;
 }
 
 .special-bets span {
     display: inline-block;
     padding: 15px;
-    font-size: 18px;
+    font-size: 16px;
     letter-spacing: 1px;
 }
 
@@ -1458,6 +1466,12 @@ header nav button:hover {
  * {{{
  **/
 
+@media (min-width: 800px) {
+    .user-points p {
+        font-size: 150px;
+    }
+}
+
 @media (max-width: 800px) {
     .toplists-container {
         display: block;
@@ -1468,6 +1482,17 @@ header nav button:hover {
 
     .special-bets span {
         font-size: 16px;
+    }
+}
+
+@media (max-width: 750px) {
+    body,
+    header nav .link,
+    .round-headers h6,
+    .special-bets h6,
+    .group-headers h6,
+    .toplist-headers h6 {
+        font-weight: 400;
     }
 }
 
@@ -1526,6 +1551,9 @@ header nav button:hover {
     .round-headers h6 {
         font-size: 12px;
     }
+    .user-points span {
+        font-size: 12px;
+    }
 }
 
 @media (max-width: 600px) {
@@ -1546,14 +1574,6 @@ header nav button:hover {
         display: none;
     }
 
-    body,
-    header nav .link,
-    .round-headers h6,
-    .special-bets h6,
-    .group-headers h6,
-    .toplist-headers h6 {
-        font-weight: 400;
-    }
 }
 
 @media (max-width: 550px) {

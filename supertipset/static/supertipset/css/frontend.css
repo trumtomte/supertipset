@@ -524,7 +524,7 @@ body{
     color: #4C697A;
     font-family: 'helvetica neue';
     font-weight: 200;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 150%;
 }
 
@@ -554,7 +554,8 @@ h2{
     font-size: 22px;
     font-weight: 400;
     letter-spacing: 0.05em;
-    margin-bottom: 0em
+    margin-bottom: 0em;
+    margin-top: 35px;
 }
 ul {
     list-style-type: square;
@@ -768,7 +769,7 @@ textarea {
 footer p{
     text-align: center;
     font-size: 0.8em;
-    letter-spacing: 4px;
+    letter-spacing: 2px;
 }
 .error-reg, .error-login{
     font-size: 1.2em;
@@ -858,7 +859,7 @@ Modify as content requires.
 
 @media only screen and (max-width: 600px) {
     body{
-        font-size: 18px;
+        font-size: 16px;
     }
     h1, h2{
         line-height: 120%;
@@ -906,7 +907,7 @@ Modify as content requires.
 
 @media only screen and (max-width: 320px) {
     body{
-        font-size: 16px;
+        font-size: 14px;
     }
     h1, h2{
         line-height: 120%;

@@ -29524,8 +29524,43 @@
 	    return pointsSum + specialBetsPointsSum;
 	};
 
+	var getSumOfSpecialBet = function getSumOfSpecialBet(user, type) {
+	    return user.data.special_bet_results.reduce(function (a, n) {
+	        return a + n[type];
+	    }, 0);
+	};
+
 	var Points = function Points(_ref) {
 	    var user = _ref.user;
+
+
+	    if (user.isFetching || !user.data.hasOwnProperty('id')) {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'user-points' },
+	            _react2.default.createElement(
+	                'h6',
+	                null,
+	                'POÄNG'
+	            ),
+	            _react2.default.createElement(
+	                'p',
+	                null,
+	                '-'
+	            ),
+	            _react2.default.createElement(
+	                'span',
+	                null,
+	                'Specialtips - / - / -'
+	            )
+	        );
+	    }
+
+	    var specialBetExists = user.data.special_bet_results.length > 0;
+
+	    var pointsForTeam = specialBetExists ? getSumOfSpecialBet(user, 'team') : '-';
+	    var pointsForPlayer = specialBetExists ? getSumOfSpecialBet(user, 'player') : '-';
+	    var pointsForGoals = specialBetExists ? getSumOfSpecialBet(user, 'goals') : '-';
 
 	    return _react2.default.createElement(
 	        'div',
@@ -29538,7 +29573,17 @@
 	        _react2.default.createElement(
 	            'p',
 	            null,
-	            !user.isFetching && user.data.hasOwnProperty('id') ? getSumOfPoints(user) : '-'
+	            getSumOfPoints(user)
+	        ),
+	        _react2.default.createElement(
+	            'span',
+	            null,
+	            'Specialtips ',
+	            pointsForTeam,
+	            ' / ',
+	            pointsForPlayer,
+	            ' / ',
+	            pointsForGoals
 	        )
 	    );
 	};
@@ -29719,7 +29764,7 @@
 	                _react2.default.createElement(
 	                    'span',
 	                    null,
-	                    bets.team.name
+	                    bettable ? bets.team.name : tournamentHasStarted ? bets.team.name : ''
 	                )
 	            ),
 	            _react2.default.createElement(
@@ -29733,9 +29778,7 @@
 	                _react2.default.createElement(
 	                    'span',
 	                    null,
-	                    bets.player.firstname,
-	                    ' ',
-	                    bets.player.lastname
+	                    bettable ? bets.player.firstname + ' ' + bets.player.lastname : tournamentHasStarted ? bets.player.firstname + ' ' + bets.player.lastname : ''
 	                )
 	            ),
 	            _react2.default.createElement(
@@ -29749,7 +29792,7 @@
 	                _react2.default.createElement(
 	                    'span',
 	                    null,
-	                    bets.player_goals
+	                    bettable ? bets.player_goals : tournamentHasStarted ? bets.player_goals : ''
 	                )
 	            )
 	        )
