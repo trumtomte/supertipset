@@ -33489,21 +33489,22 @@
 
 	    var submit = function submit(e) {
 	        e.preventDefault();
+	        var now = new Date();
+	        var gameStart = new Date(game.start_date);
+
+	        // Game has already started
+	        if (now > gameStart) {
+	            dispatch((0, _notification.errorNotification)('Ouch! Deadline har passerat.'));
+	            dispatch((0, _modal.closeModal)());
+	            return false;
+	        }
 
 	        if (betExists) {
 	            // Update a current bet
 	            dispatch((0, _user.replaceBet)(bet.id, data.teamOne, data.teamTwo));
 	        } else {
-	            var now = new Date();
-	            var gameStart = new Date(game.start_date);
-
-	            // Game has already started
-	            if (now > gameStart) {
-	                dispatch((0, _notification.errorNotification)('Ouch! Deadline har passerat.'));
-	            } else {
-	                // Place a new bet
-	                dispatch((0, _user.placeBet)(user.id, game.id, data.teamOne, data.teamTwo));
-	            }
+	            // Place a new bet
+	            dispatch((0, _user.placeBet)(user.id, game.id, data.teamOne, data.teamTwo));
 	        }
 
 	        dispatch((0, _modal.closeModal)());
@@ -33659,26 +33660,27 @@
 
 	    var submit = function submit(e) {
 	        e.preventDefault();
+	        var t = tournaments.data.filter(function (t) {
+	            return t.id == tournament;
+	        }).reduce(function (a, b) {
+	            return b;
+	        }, {});
+	        var now = new Date();
+	        var tournamentStart = new Date(t.start_date);
+
+	        // Tournament has already started
+	        if (now > tournamentStart) {
+	            dispatch((0, _notification.errorNotification)('Ouch! Deadline har passerat.'));
+	            dispatch((0, _modal.closeModal)());
+	            return false;
+	        }
 
 	        if (betExists) {
 	            // Update a current special bet
 	            dispatch((0, _user.replaceSpecialBet)(bet.id, data.player, data.goals, data.team));
 	        } else {
-	            var t = tournaments.data.filter(function (t) {
-	                return t.id == tournament;
-	            }).reduce(function (a, b) {
-	                return b;
-	            }, {});
-	            var now = new Date();
-	            var tournamentStart = new Date(t.start_date);
-
-	            // Tournament has already started
-	            if (now > tournamentStart) {
-	                dispatch((0, _notification.errorNotification)('Ouch! Deadline har passerat.'));
-	            } else {
-	                // Place a new special bet
-	                dispatch((0, _user.placeSpecialBet)(user.id, data.player, data.goals, data.team, tournament));
-	            }
+	            // Place a new special bet
+	            dispatch((0, _user.placeSpecialBet)(user.id, data.player, data.goals, data.team, tournament));
 	        }
 
 	        dispatch((0, _modal.closeModal)());

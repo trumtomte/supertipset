@@ -22,6 +22,15 @@ const PlaceBetModal = ({ user, game, dispatch }) => {
 
     const submit = (e) => {
         e.preventDefault()
+        const now = new Date()
+        const gameStart = new Date(game.start_date)
+
+        // Game has already started
+        if (now > gameStart) {
+            dispatch(errorNotification('Ouch! Deadline har passerat.'))
+            dispatch(closeModal())
+            return false
+        }
 
         if (betExists) {
             // Update a current bet
@@ -31,21 +40,13 @@ const PlaceBetModal = ({ user, game, dispatch }) => {
                 data.teamTwo
             ))
         } else {
-            const now = new Date()
-            const gameStart = new Date(game.start_date)
-
-            // Game has already started
-            if (now > gameStart) {
-                dispatch(errorNotification('Ouch! Deadline har passerat.'))
-            } else {
-                // Place a new bet
-                dispatch(placeBet(
-                    user.id,
-                    game.id,
-                    data.teamOne,
-                    data.teamTwo
-                ))
-            }
+            // Place a new bet
+            dispatch(placeBet(
+                user.id,
+                game.id,
+                data.teamOne,
+                data.teamTwo
+            ))
         }
 
         dispatch(closeModal())

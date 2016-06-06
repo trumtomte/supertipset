@@ -56,6 +56,16 @@ const PlaceSpecialBetModal = ({ user, teams, players, tournament, tournaments, d
 
     const submit = (e) => {
         e.preventDefault()
+        const t = tournaments.data.filter(t => t.id == tournament).reduce((a, b) => b, {})
+        const now = new Date()
+        const tournamentStart = new Date(t.start_date)
+
+        // Tournament has already started
+        if (now > tournamentStart) {
+            dispatch(errorNotification('Ouch! Deadline har passerat.'))
+            dispatch(closeModal())
+            return false
+        }
 
         if (betExists) {
             // Update a current special bet
@@ -66,23 +76,14 @@ const PlaceSpecialBetModal = ({ user, teams, players, tournament, tournaments, d
                 data.team
             ))
         } else {
-            const t = tournaments.data.filter(t => t.id == tournament).reduce((a, b) => b, {})
-            const now = new Date()
-            const tournamentStart = new Date(t.start_date)
-
-            // Tournament has already started
-            if (now > tournamentStart) {
-                dispatch(errorNotification('Ouch! Deadline har passerat.'))
-            } else {
-                // Place a new special bet
-                dispatch(placeSpecialBet(
-                    user.id,
-                    data.player,
-                    data.goals,
-                    data.team,
-                    tournament
-                ))
-            }
+            // Place a new special bet
+            dispatch(placeSpecialBet(
+                user.id,
+                data.player,
+                data.goals,
+                data.team,
+                tournament
+            ))
         }
 
         dispatch(closeModal())
