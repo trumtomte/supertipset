@@ -33,12 +33,11 @@ const rootReducer = combineReducers(
     Object.assign({}, reducers, { routing: routerReducer })
 )
 
+const mw = process.env.NODE_ENV === 'production' ? applyMiddleware(thunk) : applyMiddleware(thunk, createLogger())
+
 const store = createStore(
     rootReducer,
-    applyMiddleware(
-        thunk,
-        // createLogger()
-    )
+    mw
 )
 
 const history = syncHistoryWithStore(browserHistory, store)

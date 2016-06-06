@@ -4,7 +4,9 @@
   "description": "webapp for betting",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "NODE_ENV=production webpack -p --config webpack.config.prod.js",
+    "watch": "webpack --watch"
   },
   "author": "Sebastian Bengtegård",
   "license": "ISC",
