@@ -29834,10 +29834,19 @@
 	    return start < now && end > now;
 	};
 
+	var sortByDate = function sortByDate(a, b) {
+	    var tA = new Date(a.start_date);
+	    var tB = new Date(b.start_date);
+	    return tA > tB ? 1 : -1;
+	};
+
 	var Round = function Round(_ref) {
 	    var round = _ref.round;
 
 	    var active = isActive(round.start_date, round.stop_date);
+
+	    // sort game by time
+	    round.games.sort(sortByDate);
 
 	    return _react2.default.createElement(
 	        'div',
