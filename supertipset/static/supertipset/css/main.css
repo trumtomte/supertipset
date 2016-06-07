@@ -460,11 +460,11 @@ body {
 }
 
 .brand {
-    font-size: 26px;
+    font-size: 35px;
     font-family: Bangers, "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #4C697A;
     margin: 0;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     flex: 1 1 0;
 }
 
@@ -1456,7 +1456,7 @@ header nav button:hover {
     margin: 0;
 }
 .notification.success {
-    
+
 }
 /* }}} */
 
