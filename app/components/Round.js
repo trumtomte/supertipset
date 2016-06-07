@@ -11,7 +11,7 @@ const isActive = (roundStart, roundEnd) => {
     return start < now && end > now
 }
 
-const sortByDate = (a, b) => new Date(b.start_date) - new Date(a.start_date)
+const sortByDate = (a, b) => new Date(a.start_date) - new Date(b.start_date)
 
 const Round = ({ round }) => {
     const active = isActive(round.start_date, round.stop_date)
