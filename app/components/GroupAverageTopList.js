@@ -57,7 +57,7 @@ const GroupAverageTopList = ({ groups }) => {
                     <h6 className='name'>Liga</h6>
                     <h6 className='sum'>Poäng</h6>
                 </div>
-                {orderedGroups.map(group)}
+                {orderedGroups.slice(0, 10).map(group)}
             </div>
         </div>
     )

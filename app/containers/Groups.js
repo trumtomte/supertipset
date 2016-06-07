@@ -16,7 +16,13 @@ class Groups extends Component {
     }
 
     render() {
-        const { groups } = this.props
+        const { groups, tournament, tournaments } = this.props
+
+        // If we should continue to show the special bets button
+        const now = new Date()
+        const currTournament = tournaments.data.filter(t => t.id == tournament)[0]
+        const currTournamentDate = currTournament ? new Date(currTournament.start_date) : false
+        const tournamentHasStarted = now > currTournamentDate
 
         return (
             <div className='groups-container'>
@@ -25,7 +31,9 @@ class Groups extends Component {
                     <span className='div'>|</span>
                     <CreateGroupButton />
                 </div>
-                <GroupList groups={groups} />
+                <GroupList
+                    tournamentHasStarted={tournamentHasStarted}
+                    groups={groups} />
             </div>
         )
     }
@@ -36,6 +44,7 @@ export default connect(
     state => ({
         user: state.user,
         groups: state.groups,
-        tournament: state.tournament
+        tournament: state.tournament,
+        tournaments: state.tournaments
     })
 )(Groups)

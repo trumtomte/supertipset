@@ -1,14 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router'
 
-const member = (m, i) => {
+const member = tournamentHasStarted => (m, i) => {
     return (
         <div key={i} className='group-row'>
             <span className='pos'>{i + 1}</span>
             <span className='member'>
                 <Link to={`/s/profile/${m.id}`}>{m.username}</Link>
             </span>
-            <span className='team'>{m.team}</span>
+            <span className='team'>{tournamentHasStarted ? m.team : '-'}</span>
             <span className='points'>{m.totalPoints}</span>
         </div>
     )
@@ -25,7 +25,7 @@ const getUser = u => ({
     totalPoints: u.points.reduce(reducePoints, 0) + u.special_bet_results.reduce(reduceBetResults, 0)
 })
 
-const GroupMembers = ({ group, children }) => {
+const GroupMembers = ({ group, tournamentHasStarted, children }) => {
 
     const orderedMembers = group.users.map(getUser).sort(sortByPoints)
 
@@ -38,7 +38,7 @@ const GroupMembers = ({ group, children }) => {
                 <h6 className='team'>Lag</h6>
                 <h6 className='points'>Poäng</h6>
             </div>
-            {orderedMembers.map(member)} 
+            {orderedMembers.map(member(tournamentHasStarted))} 
         </div>
     )
 }

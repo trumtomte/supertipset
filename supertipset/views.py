@@ -18,7 +18,6 @@ def login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        # TODO error message
         if username == '' or password == '':
             ctx = {
                 "error_login": True,
@@ -26,14 +25,19 @@ def login(request):
             }
             return render(request, 'supertipset/index.html', ctx) 
 
-        # No user exists
         users = User.objects.filter(username=username)
+
+        # Username does not exist
         if len(users) == 0:
-            ctx = {
-                "error_login": True,
-                "tournaments": tournaments
-            }
-            return render(request, 'supertipset/index.html', ctx) 
+
+            # Try with the email as well
+            users = User.objects.filter(email=username)
+            if len(users) == 0:
+                ctx = {
+                    "error_login": True,
+                    "tournaments": tournaments
+                }
+                return render(request, 'supertipset/index.html', ctx) 
 
         user = users[0]
 

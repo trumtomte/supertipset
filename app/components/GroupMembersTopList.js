@@ -4,11 +4,15 @@ import { Link } from 'react-router'
 const group = (g, i) => {
     return (
         <div key={i} className='toplist-row'>
-            <span className='pos'>{i + 1}</span>
+            <span className='pos'>
+                {i + 1}
+            </span>
             <span className='name'>
                 <Link to={`/s/groups/${g.id}`}>{g.name}</Link>
             </span>
-            <span className='sum'>{g.members}</span>
+            <span className='sum'>
+                {g.members}
+            </span>
         </div>
     )
 }
@@ -51,7 +55,7 @@ const GroupMembersTopList = ({ groups }) => {
                     <h6 className='name'>Liga</h6>
                     <h6 className='sum'>Antal</h6>
                 </div>
-                {orderedGroups.map(group)}
+                {orderedGroups.slice(0, 10).map(group)}
             </div>
         </div>
     )

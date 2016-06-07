@@ -3,9 +3,9 @@ import { Link } from 'react-router'
 import { LeaveGroupButton } from '../containers'
 import GroupMembers from './GroupMembers'
 
-const group = (g, i) => {
+const group = tournamentHasStarted => (g, i) => {
     return (
-        <GroupMembers key={i} group={g}>
+        <GroupMembers key={i} group={g} tournamentHasStarted={tournamentHasStarted}>
             <div className='group-name'>
                 <Link to={`/s/groups/${g.id}`}>{g.name}</Link>
                 <LeaveGroupButton group={g} />
@@ -16,7 +16,7 @@ const group = (g, i) => {
 
 const sortByGroupName = (a, b) => a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1
 
-const GroupList = ({ groups }) => {
+const GroupList = ({ groups, tournamentHasStarted }) => {
     if (groups.isFetching) {
         return <div className='groups'><p>Laddar...</p></div>
     }
@@ -27,7 +27,7 @@ const GroupList = ({ groups }) => {
 
     return (
         <div className='groups'>
-            {groups.data.sort(sortByGroupName).map(group)} 
+            {groups.data.sort(sortByGroupName).map(group(tournamentHasStarted))} 
         </div>
     )
 }

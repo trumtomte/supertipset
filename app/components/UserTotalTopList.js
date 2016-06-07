@@ -51,7 +51,7 @@ const UserTotalTopList = ({ users }) => {
                     <h6 className='name'>Användare</h6>
                     <h6 className='sum'>Poäng</h6>
                 </div>
-                {orderedUsers.map(user)}
+                {orderedUsers.slice(0, 10).map(user)}
             </div>
         </div>
     )
