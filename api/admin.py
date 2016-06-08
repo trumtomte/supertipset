@@ -1,10 +1,102 @@
-from django.contrib import admin
+import string
+import random
 from collections import defaultdict
+from django.contrib import admin
+from django.contrib.auth.hashers import make_password
 
 from .models import User, Group, Tournament, Round, Team, Game, Player, Bet, \
         SpecialBet, SpecialBetResult, Point, Result, Goal, SpecialBetFinal
 
-# TODO: admin classes for all models? custom listing for all models?
+class GroupAdmin(admin.ModelAdmin):
+    """
+    Group
+    """
+    list_display = ('name', 'admin', 'created_at')
+
+class RoundAdmin(admin.ModelAdmin):
+    """
+    Round
+    """
+    list_display = ('name', 'tournament', 'start_date', 'stop_date')
+
+class TeamAdmin(admin.ModelAdmin):
+    """
+    Team
+    """
+    list_display = ('name', 'country', 'created_at')
+
+class GameAdmin(admin.ModelAdmin):
+    """
+    Game
+    """
+    list_display = ('team_1', 'team_2', 'group_name', 'round',
+                    'start_date')
+
+class PlayerAdmin(admin.ModelAdmin):
+    """
+    Player
+    """
+    list_display = ('firstname', 'lastname', 'created_at')
+
+class BetAdmin(admin.ModelAdmin):
+    """
+    Bet
+    """
+    list_display = ('user', 'game', 'team_1_bet', 'team_2_bet', 'created_at')
+
+class SpecialBetAdmin(admin.ModelAdmin):
+    """
+    Special bet
+    """
+    list_display = ('user', 'team', 'player', 'player_goals',
+                    'tournament')
+
+class SpecialBetResultAdmin(admin.ModelAdmin):
+    """
+    Special bet result
+    """
+    list_display = ('user', 'team', 'player', 'goals', 'tournament')
+
+class SpecialBetFinalAdmin(admin.ModelAdmin):
+    """
+    Special bet final
+    """
+    list_display = ('tournament', 'team', 'created_at')
+
+class PointAdmin(admin.ModelAdmin):
+    """
+    Point
+    """
+    list_display = ('user', 'points', 'result')
+
+class GoalAdmin(admin.ModelAdmin):
+    """
+    Goal
+    """
+    list_display = ('player', 'game', 'goals')
+
+class UserAdmin(admin.ModelAdmin):
+    """
+    User
+    """
+    list_display = ('username', 'email', 'firstname', 'lastname', 'created_at')
+    actions = ['reset_password_action']
+
+    def reset_password_action(self, request, queryset):
+        # Only extract first user
+        user = queryset[0]
+
+        try:
+            new_temp_pass = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(6))
+            user.password = make_password(new_temp_pass)
+            user.save()
+        except Exception:
+            print("Unable to make a new temp password for a user")
+
+        self.message_user(request, 'New password generated! -> {}'.format(new_temp_pass))
+
+
+    reset_password_action.short_description = 'Reset password for a user'
 
 def calculate_points(t1, t2, b1, b2):
     """
@@ -42,6 +134,7 @@ def calculate_points(t1, t2, b1, b2):
 # @transaction.atomic
 
 class ResultAdmin(admin.ModelAdmin):
+    list_display = ('game', 'team_1_goals', 'team_2_goals')
     actions = ['calculate_points_action']
 
     def calculate_points_action(self, request, queryset):
@@ -73,6 +166,7 @@ class ResultAdmin(admin.ModelAdmin):
     calculate_points_action.short_description = 'Calculate points'
 
 class TournamentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'start_date', 'stop_date')
     actions = ['calculate_points_action']
 
     def calculate_points_action(self, request, queryset):
@@ -119,17 +213,18 @@ class TournamentAdmin(admin.ModelAdmin):
     calculate_points_action.short_description = 'Calculate points (special bets)'
 
 
-admin.site.register(User)
-admin.site.register(Group)
+# Register models and admin models
+admin.site.register(User, UserAdmin)
+admin.site.register(Group, GroupAdmin)
 admin.site.register(Tournament, TournamentAdmin)
-admin.site.register(Round)
-admin.site.register(Team)
-admin.site.register(Game)
-admin.site.register(Player)
-admin.site.register(Bet)
-admin.site.register(SpecialBet)
-admin.site.register(SpecialBetResult)
+admin.site.register(Round, RoundAdmin)
+admin.site.register(Team, TeamAdmin)
+admin.site.register(Game, GameAdmin)
+admin.site.register(Player, PlayerAdmin)
+admin.site.register(Bet, BetAdmin)
+admin.site.register(SpecialBet, SpecialBetAdmin)
+admin.site.register(SpecialBetResult, SpecialBetResultAdmin)
 admin.site.register(SpecialBetFinal)
-admin.site.register(Point)
-admin.site.register(Goal)
+admin.site.register(Point, PointAdmin)
+admin.site.register(Goal, GoalAdmin)
 admin.site.register(Result, ResultAdmin)

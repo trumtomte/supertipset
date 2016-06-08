@@ -12,9 +12,10 @@ class User(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{} ({} {})".format(self.username,
-                                   self.firstname,
-                                   self.lastname)
+        return "{} ({} {}, {})".format(self.username,
+                                       self.firstname,
+                                       self.lastname,
+                                       self.email)
 
 class Group(models.Model):
     """
