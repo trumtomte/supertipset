@@ -6,7 +6,10 @@ from api.models import User, Tournament
 # Front page
 def index(request):
     tournaments = Tournament.objects.all()
-    ctx = {"tournaments": tournaments}
+    ctx = {
+        "registered": request.GET.get('registered', False),
+        "tournaments": tournaments
+    }
     return render(request, 'supertipset/index.html', ctx)
 
 # Login page
@@ -31,7 +34,7 @@ def login(request):
         if len(users) == 0:
 
             # Try with the email as well
-            users = User.objects.filter(email=username)
+            users = User.objects.filter(email=username.lower())
             if len(users) == 0:
                 ctx = {
                     "error_login": True,
@@ -81,33 +84,46 @@ def register(request):
         # Passwords are not equal
         if password_1 != password_2:
             ctx = {
-                "error_register": True,
+                "error_register_pass": True,
                 "tournaments": tournaments
             }
             return render(request, 'supertipset/index.html', ctx)
 
-        # NOTE: should we check for email as well?
+        email = email.lower()
+
         # Username already exists
         users = User.objects.filter(username=username)
+
         if len(users) > 0:
             ctx = {
-                "error_register": True,
+                "error_register_name": True,
                 "tournaments": tournaments
             }
             return render(request, 'supertipset/index.html', ctx)
 
-        # TODO: salt
+        # Try with the email as well
+        users = User.objects.filter(email=email)
+
+        if len(users) > 0:
+            ctx = {
+                "error_register_mail": True,
+                "tournaments": tournaments
+            }
+            return render(request, 'supertipset/index.html', ctx)
+
         # Create password hash
         password_hash = make_password(password_1)
 
-        # Create a new user
-        user = User(email=email, username=username, firstname=firstname,
-                    lastname=lastname, password=password_hash)
-        # TODO: error handling?
-        user.save()
-        request.session['user_id'] = user.id
+        try:
+            # Create a new user
+            user = User(email=email, username=username, firstname=firstname,
+                        lastname=lastname, password=password_hash)
+            user.save()
+        except Exception:
+            print("Unable to register a new user")
 
-        return redirect('/')
+        request.session['user_id'] = user.id
+        return redirect('/?registered=1')
     else:
         return redirect('/')
 
