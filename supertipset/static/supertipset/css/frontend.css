@@ -522,23 +522,23 @@ Author's custom styles
 body{
     background-color: #FFFFFF;
     color: #4C697A;
-    font-family: 'helvetica neue';
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 200;
     font-size: 16px;
     line-height: 150%;
 }
 
 h1, h2{
-    font-family: 'helvetica neue';
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     text-transform: uppercase;
 }
 .logo{
-    font-family: 'bangers', 'helvetica neue', sans-serif;
+    font-family: 'Bangers', 'Helvetica neue', Helvetica, Arial, sans-serif;
     font-size: 90px;
 }
 .logo-small{
     font-size: 16px;
-    font-family: 'bangers', 'helvetica neue', sans-serif;
+    font-family: 'Bangers', 'Helvetica neue', Helvetica, Arial, sans-serif;
 }
 
 h1 {
