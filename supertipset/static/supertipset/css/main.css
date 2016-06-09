@@ -1660,9 +1660,11 @@ header nav button:hover {
     }
 
     .game-row .matchup {
-        flex: 0 1 100%;
-        -webkit-flex: 0 1 100%;
         order: 1;
+        flex: 1 1 100%;
+        -webkit-flex: 1 1 100%;
+        flex-basis: 100%;
+        -webkit-flex-basis: 100%;
         padding: 5px 0;
         border-bottom: 1px solid #ccc;
         background: #4c697a;
@@ -1680,9 +1682,11 @@ header nav button:hover {
     }
 
     .game-row .pts {
-        flex: 0 1 100%;
-        -webkit-flex: 0 1 100%;
         order: 5;
+        flex: 1 1 100%;
+        -webkit-flex: 1 1 100%;
+        flex-basis: 100%;
+        -webkit-flex-basis: 100%;
         font-size: 14px;
         background: #eee;
         margin: 5px 0 0 0;
