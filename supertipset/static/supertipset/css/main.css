@@ -1657,6 +1657,8 @@ header nav button:hover {
     .game-row .deadline {
         order: 2;
         padding: 5px 0;
+        flex: auto;
+        -webkit-flex: auto;
     }
 
     .game-row .matchup {
@@ -1674,11 +1676,13 @@ header nav button:hover {
     .game-row .res {
         order: 3;
         padding: 5px 0;
+        -webkit-flex: auto;
     }
 
     .game-row .bet {
         order: 4;
         padding: 5px 0;
+        -webkit-flex: auto;
     }
 
     .game-row .pts {
