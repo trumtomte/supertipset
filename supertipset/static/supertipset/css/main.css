@@ -455,6 +455,7 @@ body {
 
 .top {
     display: flex;
+    display: -webkit-flex;
     margin-bottom: 20px;
     padding: 0 12px;
 }
@@ -466,6 +467,7 @@ body {
     margin: 0;
     letter-spacing: 1px;
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
 }
 
 .logout {
@@ -515,6 +517,7 @@ header nav .link:last-child {
 header nav a,
 header nav button {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     display: inline-block;
     cursor: pointer;
     padding: 16px 0;
@@ -743,10 +746,12 @@ header nav button:hover {
     text-align: center;
     margin-top: 20px;
     display: flex;
+    display: -webkit-flex;
 }
 
 .modal-actions button {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     margin: 0;
     padding: 10px 0;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -782,6 +787,7 @@ header nav button:hover {
 
 .modal-content .game-bets {
     display: flex;
+    display: -webkit-flex;
 }
 
 .modal-content .game-bets input {
@@ -890,6 +896,7 @@ header nav button:hover {
 
 .special-bets {
     display: flex;
+    display: -webkit-flex;
     border-bottom: 1px solid #ddd;
 }
 
@@ -913,10 +920,10 @@ header nav button:hover {
 .special-bets .winner,
 .special-bets .goals,
 .special-bets .points {
-    flex: 1 1 0;
+    -webkit-flex: 1 1 0;
 }
 .special-bets .goal-scorer {
-    flex: 2 1 0;
+    -webkit-flex: 2 1 0;
 }
 
 /* }}} */
@@ -928,11 +935,13 @@ header nav button:hover {
  **/
 .toplists-container {
     display: flex;
+    display: -webkit-flex;
     justify-content: space-between;
 }
 
 .toplist-container {
     flex: 0 1 48%;
+    -webkit-flex: 0 1 48%;
 }
 
 .toplist-container h2 {
@@ -949,6 +958,7 @@ header nav button:hover {
 
 .toplist .toplist-headers {
     display: flex;
+    display: -webkit-flex;
     background: #4c697a;
     padding: 10px 0;
 }
@@ -963,12 +973,14 @@ header nav button:hover {
 .toplist-headers .pos,
 .toplist-row .pos {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 
 .toplist-row .name,
 .toplist-headers .name {
     flex: 3 1 0;
+    -webkit-flex: 3 1 0;
 }
 
 .toplist-headers .name {
@@ -978,11 +990,13 @@ header nav button:hover {
 .toplist-row .sum,
 .toplist-headers .sum {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 
 .toplist .toplist-row {
     display: flex;
+    display: -webkit-flex;
     padding: 10px 0;
 }
 
@@ -1093,6 +1107,7 @@ header nav button:hover {
 
 .group-headers {
     display: flex;
+    display: -webkit-flex;
     background: #4c697a;
     padding: 10px 0;
 }
@@ -1107,33 +1122,39 @@ header nav button:hover {
 
 .group-row {
     display: flex;
+    display: -webkit-flex;
     padding: 10px 0;
 }
 
 .group-container .group-headers .pos,
 .group-row .pos {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 
 .group-container .group-headers .member {
     flex: 3 1 0;
+    -webkit-flex: 3 1 0;
     text-align: center;
 }
 
 .group-row .member {
     flex: 3 1 0;
+    -webkit-flex: 3 1 0;
 }
 
 .group-container .group-headers .team,
 .group-row .team {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 
 .group-container .group-headers .points,
 .group-row .points {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 
@@ -1220,34 +1241,41 @@ header nav button:hover {
 
 .group-summary-row {
     display: flex;
+    display: -webkit-flex;
     padding: 10px 0;
 }
 
 .group-summary-row .pos,
 .groups-summary .group-headers .pos {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 .group-summary-row .name {
     flex: 3 1 0;
+    -webkit-flex: 3 1 0;
 }
 .groups-summary .group-headers .name {
     flex: 3 1 0;
+    -webkit-flex: 3 1 0;
     text-align: center;
 }
 .group-summary-row .members,
 .groups-summary .group-headers .members {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 .group-summary-row .admin,
 .groups-summary .group-headers .admin {
     flex: 2 1 0;
+    -webkit-flex: 2 1 0;
     text-align: center;
 }
 .group-summary-row .leave,
 .groups-summary .group-headers .leave {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 
@@ -1289,6 +1317,7 @@ header nav button:hover {
 
 .profile-bets-headers {
     display: flex;
+    display: -webkit-flex;
     border-bottom: 1px solid #17a689;
     background: #1ABC9C;
     padding: 10px 0;
@@ -1304,27 +1333,32 @@ header nav button:hover {
 
 .profile-bet {
     display: flex;
+    display: -webkit-flex;
     padding: 10px 0;
 }
 
 .profile-bet .game,
 .profile-bets-headers .game {
     flex: 2 1 0;
+    -webkit-flex: 2 1 0;
     text-align: center;
 }
 .profile-bet .res,
 .profile-bets-headers .res {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 .profile-bet .bets,
 .profile-bets-headers .bets {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 .profile-bet .points,
 .profile-bets-headers .points {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 
@@ -1359,6 +1393,7 @@ header nav button:hover {
 
 .round-headers {
     display: flex;
+    display: -webkit-flex;
     background: #4c697a;
     padding: 10px 0;
 }
@@ -1373,27 +1408,32 @@ header nav button:hover {
 
 .game-row {
     display: flex;
+    display: -webkit-flex;
     padding: 10px 0;
 }
 
 .game-row .deadline,
 .round-headers .deadline {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 .game-row .matchup,
 .round-headers .matchup {
     flex: 3 1 0;
+    -webkit-flex: 3 1 0;
     text-align: center;
 }
 .game-row .res,
 .round-headers .res {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 .game-row .bet,
 .round-headers .bet {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 .game-row .pts {
@@ -1402,11 +1442,13 @@ header nav button:hover {
 .game-row .pts,
 .round-headers .pts {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 .game-row .place-bet,
 .round-headers .place-bet {
     flex: 1 1 0;
+    -webkit-flex: 1 1 0;
     text-align: center;
 }
 
@@ -1608,6 +1650,7 @@ header nav button:hover {
         margin: 0 0 35px 0;
         border: 1px solid #ddd;
         flex-wrap: wrap;
+        -webkit-flex-wrap: wrap;
         box-shadow: 0px 0px 6px -2px rgba(0, 0, 0, 0.60);
     }
 
@@ -1618,6 +1661,7 @@ header nav button:hover {
 
     .game-row .matchup {
         flex: 0 1 100%;
+        -webkit-flex: 0 1 100%;
         order: 1;
         padding: 5px 0;
         border-bottom: 1px solid #ccc;
@@ -1637,6 +1681,7 @@ header nav button:hover {
 
     .game-row .pts {
         flex: 0 1 100%;
+        -webkit-flex: 0 1 100%;
         order: 5;
         font-size: 14px;
         background: #eee;
