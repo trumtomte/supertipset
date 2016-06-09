@@ -788,11 +788,18 @@ header nav button:hover {
 .modal-content .game-bets {
     display: flex;
     display: -webkit-flex;
+    justify-content: center;
+    -webkit-justify-content: center;
 }
 
 .modal-content .game-bets input {
     max-width: 140px;
     text-align: center;
+}
+
+.modal-content .game-bets select {
+    margin: 0 20px;
+    width: 70px;
 }
 
 /* }}} */
