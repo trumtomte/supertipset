@@ -898,9 +898,8 @@ header nav button:hover {
     font-weight: 300;
     font-size: 14px;
     padding: 10px 15px;
-    border-bottom: 1px solid #17A588;
     color: white;
-    background: #1ABC9C;
+    background: #4c697a;
     letter-spacing: 2px;
 }
 
@@ -950,8 +949,7 @@ header nav button:hover {
 
 .toplist .toplist-headers {
     display: flex;
-    border-bottom: 1px solid #17a689;
-    background: #1ABC9C;
+    background: #4c697a;
     padding: 10px 0;
 }
 .toplist-headers h6 {
@@ -1095,8 +1093,7 @@ header nav button:hover {
 
 .group-headers {
     display: flex;
-    border-bottom: 1px solid #17a689;
-    background: #1ABC9C;
+    background: #4c697a;
     padding: 10px 0;
 }
 
@@ -1362,8 +1359,7 @@ header nav button:hover {
 
 .round-headers {
     display: flex;
-    border-bottom: 1px solid #17a689;
-    background: #1ABC9C;
+    background: #4c697a;
     padding: 10px 0;
 }
 
@@ -1418,6 +1414,7 @@ header nav button:hover {
     background: #eee;
 }
 
+/* OLD
 .game-row .place-bet-button {
     outline: none;
     border: 0;
@@ -1427,8 +1424,31 @@ header nav button:hover {
     letter-spacing: 1px;
     cursor: pointer;
 }
+*/
+
 .game-row .place-bet-button:hover {
     text-decoration: underline;
+}
+
+.game-row .place-bet-button {
+    color: #fff;
+    background: #3498DB;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 2px;
+    border: 0;
+}
+
+.game-row .pts p {
+    margin: 0;
+}
+
+.game-row .pts span {
+    display: none;
+}
+
+.game-row .bet span span {
+    display: none;
 }
 /* }}} */
 
@@ -1574,6 +1594,72 @@ header nav button:hover {
         display: none;
     }
 
+    /** All Games **/
+    .round .game-row:nth-child(even) {
+        background: #fff;
+    }
+
+    .round-headers {
+        display: none;
+    }
+
+    .game-row {
+        padding: 0;
+        margin: 0 0 35px 0;
+        border: 1px solid #ddd;
+        flex-wrap: wrap;
+        box-shadow: 0px 0px 6px -2px rgba(0, 0, 0, 0.60);
+    }
+
+    .game-row .deadline {
+        order: 2;
+        padding: 5px 0;
+    }
+
+    .game-row .matchup {
+        flex: 0 1 100%;
+        order: 1;
+        padding: 5px 0;
+        border-bottom: 1px solid #ccc;
+        background: #4c697a;
+        color: #fff;
+    }
+
+    .game-row .res {
+        order: 3;
+        padding: 5px 0;
+    }
+
+    .game-row .bet {
+        order: 4;
+        padding: 5px 0;
+    }
+
+    .game-row .pts {
+        flex: 0 1 100%;
+        order: 5;
+        font-size: 14px;
+        background: #eee;
+        margin: 5px 0 0 0;
+    }
+
+    .game-row .pts p {
+        padding: 5px 0;
+    }
+
+    .game-row .bet span span,
+    .game-row .pts span {
+        display: inline;
+    }
+
+    .game-row .pts .place-bet-button {
+        color: #fff;
+        background: #3498DB;
+        width: 100%;
+        padding: 5px 0;
+        font-size: 12px;
+        border-radius: 0;
+    }
 }
 
 @media (max-width: 550px) {

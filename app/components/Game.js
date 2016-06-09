@@ -55,10 +55,12 @@ const Game = ({ game, user }) => {
                     {matchup}
                 </span>
                 <span className='res'>
-                    -
+                    x - x
                 </span>
                 <span className='bet'>
-                    {betExists ? `${bet.team_1_bet} - ${bet.team_2_bet}` : 'x - x'}
+                    {betExists
+                        ? <span><span>Tips: </span>{bet.team_1_bet} - {bet.team_2_bet}</span>
+                        : <span><span>Tips: </span>x - x</span>}
                 </span>
                 <span className='pts'>
                     <PlaceBetButton game={game} />
@@ -70,7 +72,7 @@ const Game = ({ game, user }) => {
     // check if the end date of game has passed
     // const done = started && game.result.length > 0
     const done = hasEnded(game.stop_date)
-    const result = game.result.length === 0 ? '-' : `${game.result[0].team_1_goals} - ${game.result[0].team_2_goals}`
+    const result = game.result.length === 0 ? 'x - x' : `${game.result[0].team_1_goals} - ${game.result[0].team_2_goals}`
 
     return (
         <div className='game-row'>
@@ -84,10 +86,12 @@ const Game = ({ game, user }) => {
                 {result}
             </span>
             <span className='bet'>
-                {betExists ? `${bet.team_1_bet} - ${bet.team_2_bet}` : 'x - x'}
+                {betExists
+                    ? <span><span>Tips: </span>{bet.team_1_bet} - {bet.team_2_bet}</span>
+                    : <span><span>Tips: </span>x - x</span>}
             </span>
             <span className='pts'>
-                {betExists ? getPointsForGame(game.id, user) : 0}
+                <p>{betExists ? getPointsForGame(game.id, user) : 0}<span>p</span></p>
             </span>
         </div>
     )
