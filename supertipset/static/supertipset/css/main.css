@@ -490,6 +490,16 @@ footer {
     border-top: 1px solid #17a689;
     font-size: 14px;
     margin: 25px 10px 0 10px;
+    letter-spacing: 2px;
+}
+
+.fb-link {
+    color: #3498DB;
+    text-decoration: none;
+}
+
+.fb-link:hover {
+    text-decoration: underline;
 }
 
 /**

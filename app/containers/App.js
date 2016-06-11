@@ -70,7 +70,9 @@ class App extends Component {
                     </nav>
                 </header>
                 <div className='content'>{children}</div>
-                <footer>&copy; Supertipset</footer>
+                <footer>
+                    <a className='fb-link' href="http://www.facebook.com/supertipset.nu">Följ oss på Facebook</a> | Kontakt: hej@supertipset.nu
+                </footer>
             </div>
         )
     }
