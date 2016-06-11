@@ -1571,6 +1571,8 @@ header nav button:hover {
     .round-headers h6,
     .special-bets h6,
     .group-headers h6,
+    .group-headers h6,
+    .profile-bets-headers h6,
     .toplist-headers h6 {
         font-weight: 400;
     }
