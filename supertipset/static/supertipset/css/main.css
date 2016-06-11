@@ -1573,7 +1573,9 @@ header nav button:hover {
     .group-headers h6,
     .group-headers h6,
     .profile-bets-headers h6,
-    .toplist-headers h6 {
+    .toplist-headers h6,
+    .modal-actions button,
+    .modal-title {
         font-weight: 400;
     }
 }
