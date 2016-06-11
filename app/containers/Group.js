@@ -16,7 +16,7 @@ class Group extends Component {
     }
 
     render() {
-        const { params, group, user, dispatch } = this.props
+        const { params, group, user, dispatch, tournament, tournaments } = this.props
 
         if (group.isFetching || group.data.length === 0) {
             return <p>Ligan laddas.</p>
@@ -24,8 +24,13 @@ class Group extends Component {
 
         const isAdmin = user.id === group.data.admin.id
 
+        const now = new Date()
+        const currTournament = tournaments.data.filter(t => t.id == tournament)[0]
+        const currTournamentDate = currTournament ? new Date(currTournament.start_date) : false
+        const tournamentHasStarted = now > currTournamentDate
+
         return (
-            <GroupMembers group={group.data}>
+            <GroupMembers group={group.data} tournamentHasStarted={tournamentHasStarted}>
                 <BackButton />
                 {isAdmin ? <EditGroupPasswordButton group={group.data} /> : ''}
 
@@ -48,6 +53,7 @@ export default connect(
     state => ({
         user: state.user,
         group: state.group,
-        tournament: state.tournament
+        tournament: state.tournament,
+        tournaments: state.tournaments
     })
 )(Group)
