@@ -7,8 +7,11 @@ const hasStarted = gameStart => {
     return now > start
 }
 
+const sortByDate = (a, b) => new Date(a.game.start_date) - new Date(b.game.start_date)
+
 const showBet = points => (bet, i) => {
-    const p = points.filter(point => point.game === bet.game.id)
+    const point = points.filter(point => point.result.game === bet.game.id).reduce((a, b) => b, {})
+    const pointExists = point.hasOwnProperty('id')
 
     // if we should show profile bets or not
     const showBet = hasStarted(bet.game.start_date)
@@ -29,7 +32,7 @@ const showBet = points => (bet, i) => {
                 {`${bet.team_1_bet} - ${bet.team_2_bet}`}
             </span>
             <span className='points'>
-                {p.length ? p[0].points : '-'}
+                {pointExists ? point.points : '-'}
             </span>
         </div>
     )
@@ -45,7 +48,7 @@ const ProfileBets = ({ bets, points }) => {
                 <h6 className='bet'>Tips</h6>
                 <h6 className='points'>Poäng</h6>
             </div>
-            {bets.map(showBet(points))}
+            {bets.sort(sortByDate).map(showBet(points))}
         </div>
     )
 }
