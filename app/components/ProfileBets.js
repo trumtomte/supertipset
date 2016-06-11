@@ -26,7 +26,7 @@ const showBet = points => (bet, i) => {
                 {bet.game.result.length ? `${bet.game.result[0].team_1_goals} - ${bet.game.result[0].team_2_goals}` : '-'}
             </span>
             <span className='bet'>
-                {`${bet.team_1_bet} - ${bet.team_1_bet}`}
+                {`${bet.team_1_bet} - ${bet.team_2_bet}`}
             </span>
             <span className='points'>
                 {p.length ? p[0].points : '-'}
