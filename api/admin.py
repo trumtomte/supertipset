@@ -12,18 +12,21 @@ class GroupAdmin(admin.ModelAdmin):
     Group
     """
     list_display = ('name', 'admin', 'created_at')
+    search_fields = ('name', 'admin__username')
 
 class RoundAdmin(admin.ModelAdmin):
     """
     Round
     """
     list_display = ('name', 'tournament', 'start_date', 'stop_date')
+    search_fields = ('name', 'tournament__name')
 
 class TeamAdmin(admin.ModelAdmin):
     """
     Team
     """
     list_display = ('name', 'country', 'created_at')
+    search_fields = ('name', 'country')
 
 class GameAdmin(admin.ModelAdmin):
     """
@@ -31,18 +34,33 @@ class GameAdmin(admin.ModelAdmin):
     """
     list_display = ('team_1', 'team_2', 'group_name', 'round',
                     'start_date')
+    search_fields = ('team_1__name', 'team_2__name', 'group_name',
+                     'round__name')
 
 class PlayerAdmin(admin.ModelAdmin):
     """
     Player
     """
     list_display = ('firstname', 'lastname', 'created_at')
+    search_fields = ('firstname', 'lastname')
 
 class BetAdmin(admin.ModelAdmin):
     """
     Bet
     """
-    list_display = ('user', 'game', 'team_1_bet', 'team_2_bet', 'created_at')
+    list_display = ('username', 'fullname', 'game', 'team_1_bet',
+                    'team_2_bet', 'created_at')
+
+    search_fields = ('user__username', 'user__firstname', 'user__lastname')
+
+    def username(self, obj):
+        return obj.user.username
+
+    def fullname(self, obj):
+        return '{} {}'.format(obj.user.firstname, obj.user.lastname)
+
+    username.short_description = 'Username'
+    fullname.short_description = 'Fullname'
 
 class SpecialBetAdmin(admin.ModelAdmin):
     """
@@ -50,12 +68,14 @@ class SpecialBetAdmin(admin.ModelAdmin):
     """
     list_display = ('user', 'team', 'player', 'player_goals',
                     'tournament')
+    search_fields = ('user__username', 'team__name')
 
 class SpecialBetResultAdmin(admin.ModelAdmin):
     """
     Special bet result
     """
     list_display = ('user', 'team', 'player', 'goals', 'tournament')
+    search_fields = ('user__username', 'user__firstname', 'user__lastname')
 
 class SpecialBetFinalAdmin(admin.ModelAdmin):
     """
@@ -67,19 +87,32 @@ class PointAdmin(admin.ModelAdmin):
     """
     Point
     """
-    list_display = ('user', 'points', 'result')
+    list_display = ('username', 'fullname', 'points', 'result')
+    search_fields = ('user__username', 'user__firstname', 'user__lastname')
+
+    def username(self, obj):
+        return obj.user.username
+
+    def fullname(self, obj):
+        return '{} {}'.format(obj.user.firstname, obj.user.lastname)
+
+    username.short_description = 'Username'
+    fullname.short_description = 'Fullname'
 
 class GoalAdmin(admin.ModelAdmin):
     """
     Goal
     """
     list_display = ('player', 'game', 'goals')
+    search_fields = ('player__firstname', 'player__lastname',
+                     'game__team_1__name', 'game__team_2__name')
 
 class UserAdmin(admin.ModelAdmin):
     """
     User
     """
     list_display = ('username', 'email', 'firstname', 'lastname', 'created_at')
+    search_fields = ('user__username', 'user__firstname', 'user__lastname')
     actions = ['reset_password_action']
 
     def reset_password_action(self, request, queryset):
@@ -135,6 +168,7 @@ def calculate_points(t1, t2, b1, b2):
 
 class ResultAdmin(admin.ModelAdmin):
     list_display = ('game', 'team_1_goals', 'team_2_goals')
+    search_fields = ('game__team_1__name', 'game__team_2__name')
     actions = ['calculate_points_action']
 
     def calculate_points_action(self, request, queryset):
