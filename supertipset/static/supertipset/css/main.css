@@ -1880,7 +1880,7 @@ header nav button:hover {
     border-top-color: #555555;
     -webkit-animation: spin 1s infinite linear;
     animation: spin 1s infinite linear;
-    margin: 0 auto;
+    margin: 20px auto;
 }
 
 /* }}} */
