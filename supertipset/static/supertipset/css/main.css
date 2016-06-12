@@ -1338,7 +1338,6 @@ header nav button:hover {
 .profile-bets-headers {
     display: flex;
     display: -webkit-flex;
-    border-bottom: 1px solid #17a689;
     background: #4c697a;
     color: white;
     padding: 10px 0;
