@@ -17,7 +17,7 @@ class UserProfile extends Component {
         const { user, profile, tournament, tournaments } = this.props
 
         if (profile.isFetching || !profile.data.hasOwnProperty('id')) {
-            return <div className='profile-container'><p>Laddar...</p></div>
+            return <div className='profile-container'><div className='loading'></div></div>
         }
 
         const isCurrentUser = user.id === profile.data.id
