@@ -8,7 +8,7 @@ import Modal from './Modal'
 const PlaceBetModal = ({ user, game, dispatch }) => {
     const bet = user.data.bets
         .filter(b => b.game.id == game.id)
-        .reduce((a, b) => b, {})
+        .reduce((_, b) => b, {})
 
     const betExists = bet.hasOwnProperty('id')
     
@@ -54,20 +54,6 @@ const PlaceBetModal = ({ user, game, dispatch }) => {
 
     const setData = e => data[e.target.name] = Number(e.target.value)
     const focus = r => r ? r.focus() : false
-
-    // <input
-    //     onChange={setData}
-    //     ref={focus}
-    //     defaultValue={betExists ? bet.team_1_bet : 0}
-    //     min='0'
-    //     type='number'
-    //     name='teamOne' />
-    // <input
-    //     onChange={setData}
-    //     defaultValue={betExists ? bet.team_2_bet : 0}
-    //     min='0'
-    //     type='number'
-    //     name='teamTwo' />
 
     return (
         <Modal submit={submit}>

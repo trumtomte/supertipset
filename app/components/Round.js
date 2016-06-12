@@ -1,8 +1,6 @@
 import React from 'react'
 import Game from './Game'
 
-const game = (g, i) => <Game key={i} game={g} />
-
 const isActive = (roundStart, roundEnd) => {
     const now = new Date()
     const start = new Date(Date.parse(roundStart))
@@ -16,7 +14,7 @@ const sortByDate = (a, b) => new Date(a.start_date) - new Date(b.start_date)
 const Round = ({ round }) => {
     const active = isActive(round.start_date, round.stop_date)
 
-    // sort game by time
+    // sort game by date
     round.games.sort(sortByDate)
 
     return (
@@ -29,7 +27,7 @@ const Round = ({ round }) => {
                 <h6 className='bet'>Tips</h6>
                 <h6 className='pts'>Poäng</h6>
             </div>
-            {round.games.map(game)} 
+            {round.games.map((g, i) => <Game key={i} game={g} />)} 
         </div>
     )
 }

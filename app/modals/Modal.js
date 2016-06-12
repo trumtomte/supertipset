@@ -13,8 +13,16 @@ const Modal = ({ dispatch, submit, children }) => {
                 <form onSubmit={submit}>
                     {children}
                     <div className='modal-actions'>
-                        <button onClick={close} className='modal-cancel' type='button'>Avbryt</button>
-                        <button className='modal-ok'>OK</button>
+                        <button
+                            onClick={close}
+                            className='modal-cancel'
+                            type='button'>
+                            Avbryt
+                        </button>
+                        <button
+                            className='modal-ok'>
+                            OK
+                        </button>
                     </div>
                 </form>
                 <div onClick={close} className='modal-close'></div>

@@ -18,6 +18,7 @@ const group = (g, i) => {
 }
 
 const sortByMembers = (a, b) => b.members - a.members
+
 const getGroupWithMembers = g => ({
     id: g.id,
     name: g.name,
@@ -36,9 +37,9 @@ const GroupMembersTopList = ({ groups }) => {
                         <h6 className='name'>Liga</h6>
                         <h6 className='sum'>Antal</h6>
                     </div>
-                    <p>
-                        {groups.isFetching ? 'Laddar...' : ''}
-                    </p>
+                    {groups.isFetching
+                        ? <div className='loading'></div>
+                        : <p></p>}
                 </div>
             </div>
         )

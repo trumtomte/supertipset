@@ -18,7 +18,7 @@ const sortByGroupName = (a, b) => a.name.toUpperCase() < b.name.toUpperCase() ? 
 
 const GroupList = ({ groups, tournamentHasStarted }) => {
     if (groups.isFetching) {
-        return <div className='groups'><p>Laddar...</p></div>
+        return <div className='groups'><div className='loading'></div></div>
     }
 
     if (groups.data.length === 0) {
@@ -33,4 +33,3 @@ const GroupList = ({ groups, tournamentHasStarted }) => {
 }
 
 export default GroupList
-

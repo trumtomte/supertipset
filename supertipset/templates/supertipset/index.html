@@ -26,7 +26,11 @@
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="msapplication-TileImage" content="{% static 'supertipset/mstile-144x144.png' %}">
         <meta name="theme-color" content="#ffffff">
-        <link rel="stylesheet" href="{% static 'supertipset/css/frontend.css' %}">
+        {% if debug %}
+            <link rel="stylesheet" href="{% static 'supertipset/css/frontend.css' %}">
+        {% else %}
+            <link rel="stylesheet" href="{% static 'supertipset/css/frontend.min.css' %}">
+        {% endif %}
     </head>
     <body>
         <!--[if lt IE 8]>

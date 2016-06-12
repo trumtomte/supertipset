@@ -12,16 +12,20 @@ class ListFilter(django_filters.Filter):
         self.lookup_type = 'in'
         return super(ListFilter, self).filter(qs, value.split(','))
 
-# Game
 class GameFilter(filters.FilterSet):
+    """
+    Available filters for a game
+    """
     tournament = django_filters.NumberFilter(name="round__tournament")
     
     class Meta:
         model = Game
         fields = ('team_1', 'team_2', 'round', 'group_name', 'tournament')
 
-# Bet
 class BetFilter(filters.FilterSet):
+    """
+    Available filters for a bet
+    """
     round = django_filters.NumberFilter(name="game__round")
     tournament = django_filters.NumberFilter(name="game__round__tournament")
     
@@ -29,8 +33,10 @@ class BetFilter(filters.FilterSet):
         model = Bet
         fields = ('user', 'game', 'round', 'tournament')
 
-# Result
 class ResultFilter(filters.FilterSet):
+    """
+    Available filters for a result
+    """
     round = django_filters.NumberFilter(name="game__round")
     tournament = django_filters.NumberFilter(name="game__round__tournament")
     
@@ -38,8 +44,10 @@ class ResultFilter(filters.FilterSet):
         model = Result
         fields = ('game', 'created_at', 'round', 'tournament')
 
-# Goal
 class GoalFilter(filters.FilterSet):
+    """
+    Available filters for a goal
+    """
     round = django_filters.NumberFilter(name="game__round")
     tournament = django_filters.NumberFilter(name="game__round__tournament")
 
@@ -47,8 +55,10 @@ class GoalFilter(filters.FilterSet):
         model = Goal
         fields = ('player', 'game', 'round', 'tournament')
 
-# Point
 class PointFilter(filters.FilterSet):
+    """
+    Available filters for points
+    """
     round = django_filters.NumberFilter(name="result__game__round")
     tournament = django_filters.NumberFilter(name="result__game__round__tournament")
     users = ListFilter(name="user")

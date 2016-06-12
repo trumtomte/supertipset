@@ -14,10 +14,13 @@ const member = tournamentHasStarted => (m, i) => {
     )
 }
 
+// Various reducers
 const reduceTeamName = (p, c) => c.team.name
 const reducePoints = (p, c) => p += c.points
 const reduceBetResults = (p, c) => c.player + c.goals + c.team
+
 const sortByPoints = (a, b) => b.totalPoints - a.totalPoints
+
 const getUser = u => ({
     id: u.id,
     username: u.username,
@@ -26,7 +29,6 @@ const getUser = u => ({
 })
 
 const GroupMembers = ({ group, tournamentHasStarted, children }) => {
-
     const orderedMembers = group.users.map(getUser).sort(sortByPoints)
 
     return (

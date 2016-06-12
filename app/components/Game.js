@@ -2,15 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { PlaceBetButton } from '../containers'
 
-const hasStarted = gameStart => {
-    const now = new Date()
-    const start = new Date(Date.parse(gameStart))
-
-    return now > start
-}
-
-const hasEnded = gameEnd => hasStarted(gameEnd)
-
 const formatDate = gameStart => {
     const date = new Date(Date.parse(gameStart))
 
@@ -24,17 +15,22 @@ const formatDate = gameStart => {
     return `${d}/${m} ${hh}:${mm}`
 }
 
+const hasStarted = start => new Date() > new Date(Date.parse(start))
+const hasEnded = end => hasStarted(end)
+
 const getBetsForGame = (id, user) => {
-    return user.data.bets.filter(b => b.game.id == id).reduce((a, b) => b, {})
+    // filter by game id and reduce to a single object
+    return user.data.bets.filter(b => b.game.id == id).reduce((_, b) => b, {})
 }
 
 const getPointsForGame = (id, user) => {
-    return user.data.points.filter(pts => pts.result.game == id).reduce((a, n) => n.points, 0)
+    // filter by game id and reduce points to an integer
+    return user.data.points.filter(p => p.result.game == id).reduce((_, n) => n.points, 0)
 }
 
 const Game = ({ game, user }) => {
     if (user.isFetching || !user.data.hasOwnProperty('id')) {
-        return false
+        return null
     }
 
     const started = hasStarted(game.start_date)
@@ -70,9 +66,10 @@ const Game = ({ game, user }) => {
     }
 
     // check if the end date of game has passed
-    // const done = started && game.result.length > 0
     const done = hasEnded(game.stop_date)
-    const result = game.result.length === 0 ? 'x - x' : `${game.result[0].team_1_goals} - ${game.result[0].team_2_goals}`
+    const result = game.result.length === 0
+        ? 'x - x'
+        : `${game.result[0].team_1_goals} - ${game.result[0].team_2_goals}`
 
     return (
         <div className='game-row'>

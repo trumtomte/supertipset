@@ -5,7 +5,7 @@ const round = (r, i) => <Round key={i} round={r} />
 
 const Rounds = ({ rounds }) => {
     if (rounds.isFetching || rounds.data.length === 0) {
-        return <div className='rounds'>Laddar...</div>
+        return <div className='rounds'><div className='loading'></div></div>
     }
 
     return (

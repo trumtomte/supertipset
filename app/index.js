@@ -2,11 +2,11 @@ import React from 'react'
 import { render } from 'react-dom'
 import { applyMiddleware, createStore } from 'redux'
 import { Provider } from 'react-redux'
-import thunk from 'redux-thunk'
-import createLogger from 'redux-logger'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
+import thunk from 'redux-thunk'
+import createLogger from 'redux-logger'
 
 import {
     Router,
@@ -33,12 +33,14 @@ const rootReducer = combineReducers(
     Object.assign({}, reducers, { routing: routerReducer })
 )
 
-const mw = process.env.NODE_ENV === 'production' ? applyMiddleware(thunk) : applyMiddleware(thunk, createLogger())
-
 const store = createStore(
     rootReducer,
-    mw
+    // Determines if we should log redux actions + state or not
+    process.env.NODE_ENV === 'production'
+        ? applyMiddleware(thunk)
+        : applyMiddleware(thunk, createLogger())
 )
+
 
 const history = syncHistoryWithStore(browserHistory, store)
 

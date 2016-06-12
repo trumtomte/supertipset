@@ -13,9 +13,12 @@ const user = (u, i) => {
     )
 }
 
+// Various reducers
 const reducePoints = (a, n) => a + n.points
 const reduceBetResults = (a, n) => a + (n.goals + n.player + n.team)
+
 const sortByPoints = (a, b) => b.totalPoints - a.totalPoints
+
 const getUserWithPoints = u => ({
     id: u.id,
     username: u.username,
@@ -34,7 +37,9 @@ const UserTotalTopList = ({ users }) => {
                         <span>Användare</span>
                         <span>Poäng</span>
                     </div>
-                    <p>Laddar...</p>
+                    {users.isFetching
+                        ? <div className='loading'></div>
+                        : <p></p>}
                 </div>
             </div>
         )

@@ -1,16 +1,11 @@
 import React from 'react'
 
-const hasStarted = gameStart => {
-    const now = new Date()
-    const start = new Date(Date.parse(gameStart))
-
-    return now > start
-}
+const hasStarted = start => new Date() > new Date(Date.parse(start))
 
 const sortByDate = (a, b) => new Date(a.game.start_date) - new Date(b.game.start_date)
 
-const showBet = points => (bet, i) => {
-    const point = points.filter(point => point.result.game === bet.game.id).reduce((a, b) => b, {})
+const getBet = points => (bet, i) => {
+    const point = points.filter(p => p.result.game === bet.game.id).reduce((_, b) => b, {})
     const pointExists = point.hasOwnProperty('id')
 
     // if we should show profile bets or not
@@ -48,7 +43,7 @@ const ProfileBets = ({ bets, points }) => {
                 <h6 className='bet'>Tips</h6>
                 <h6 className='points'>Poäng</h6>
             </div>
-            {bets.sort(sortByDate).map(showBet(points))}
+            {bets.sort(sortByDate).map(getBet(points))}
         </div>
     )
 }

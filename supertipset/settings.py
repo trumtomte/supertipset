@@ -29,12 +29,16 @@ except NameError:
         SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = False
 DEBUG = 'DJANGO_DEBUG' in os.environ
 
 # ALLOWED_HOSTS = []
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '188.166.39.124']
-ALLOWED_HOSTS = '*' # temporary
+
+# NOTE 
+ALLOWED_HOSTS = '*'
+
+# NOTE
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -49,9 +53,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders'
 ]
-
-# TODO needed?
-CORS_ORIGIN_ALLOW_ALL = True
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -151,7 +152,6 @@ STATICFILES_DIRS = [
 ]
 
 # Django Rest Framework
-
 # REST_FRAMEWORK = {
 #     'DEFAULT_AUTHENTICATION_CLASSES': {
 #         'rest_framework.authentication.TokenAuthentication'

@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "NODE_ENV=production webpack -p --config webpack.config.prod.js",
+    "build": "NODE_ENV=production webpack -p --config webpack.config.prod.js && cleancss -o ./supertipset/static/supertipset/css/main.min.css ./supertipset/static/supertipset/css/main.css && cleancss -o ./supertipset/static/supertipset/css/frontend.min.css ./supertipset/static/supertipset/css/frontend.css",
     "watch": "webpack --watch"
   },
   "author": "Sebastian Bengtegård",
   "license": "ISC",
   "dependencies": {
+    "clean-css": "^3.4.17",
     "isomorphic-fetch": "^2.2.1",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",

@@ -21,8 +21,13 @@ from .serializers import UserSerializer, BetSerializer, GameSerializer, \
 from .serializer_user_detail import DetailUserSerializer, DeepUserSerializer
 from .serializer_group_detail import DetailGroupSerializer
 
-# User
+# NOTE possible bottlenecks from the large prefetches?
+
 class UserViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for users
+    TODO general try/catch on .save()?
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -51,7 +56,6 @@ class UserViewSet(viewsets.ModelViewSet):
     def detail(self, request, pk=None):
         tournament_id = request.GET.get('tournament')
 
-        # NOTE: possible bottleneck? cache?
         if tournament_id:
             user = User.objects.prefetch_related(
                         Prefetch('bets', queryset=Bet.objects.filter(game__round__tournament=tournament_id)) 
@@ -91,14 +95,14 @@ class UserViewSet(viewsets.ModelViewSet):
         group = Group.objects.filter(name=group_name)
 
         if len(group) == 0:
-            return Response({'error': 'Group not found'},
-                            status=status.HTTP_404_NOT_FOUND)
+            err = {"error": 'Group not found'}
+            return Response(err, status=status.HTTP_404_NOT_FOUND)
 
         group = group[0]
 
         if not check_password(password, group.password):
-            return Response({'error': 'Unauthorized'},
-                            status=status.HTTP_401_UNAUTHORIZED)
+            err = {"error": 'Unauthorized'}
+            return Response(err, status=status.HTTP_401_UNAUTHORIZED)
 
         group.users.add(user)
         group.save()
@@ -109,6 +113,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['put'])
     def password(self, request, pk=None):
         p = self.request.data['password']
+
         user = self.get_object()
         user.password = make_password(p)
         user.save()
@@ -117,8 +122,10 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-# Bet
 class BetViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for bets
+    """
     queryset = Bet.objects.select_related('user') \
                           .select_related('game') \
                           .all()
@@ -131,8 +138,11 @@ class BetViewSet(viewsets.ModelViewSet):
         game = Game.objects.get(pk=self.request.data['game'])
         serializer.save(user=user, game=game)
 
-# Game
+
 class GameViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for games
+    """
     queryset = Game.objects.select_related('team_1') \
                            .select_related('team_2') \
                            .prefetch_related('result') \
@@ -141,8 +151,11 @@ class GameViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = GameFilter
 
-# Round
+
 class RoundViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for rounds
+    """
     queryset = Round.objects.select_related('tournament') \
                             .prefetch_related('games') \
                             .all()
@@ -150,20 +163,30 @@ class RoundViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('tournament',)
 
-# Team
+
 class TeamViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for teams
+    """
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
-# Player
+
 class PlayerViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for players
+    """
     queryset = Player.objects.prefetch_related('teams').all()
     serializer_class = PlayerSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('teams',)
 
-# Group
+
 class GroupViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for groups
+    TODO general try/catch on .save()?
+    """
     queryset = Group.objects.select_related('admin') \
                             .prefetch_related('users') \
                             .all()
@@ -257,10 +280,11 @@ class GroupViewSet(viewsets.ModelViewSet):
         user = User.objects.get(pk=self.request.data['user'])
         serializer.save(admin=user, users=[user], password=password)
 
-    # TODO: check that user actually is admin when updating group desc
 
-# SpecialBet
 class SpecialBetViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for special bets
+    """
     queryset = SpecialBet.objects.select_related('user') \
                                  .select_related('player') \
                                  .select_related('team') \
@@ -293,8 +317,11 @@ class SpecialBetViewSet(viewsets.ModelViewSet):
         serializer = SpecialBetSerializer(special_bet)
         return Response(serializer.data)
 
-# Goal
+
 class GoalViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for goals
+    """
     queryset = Goal.objects.select_related('player') \
                            .select_related('game') \
                            .all()
@@ -302,8 +329,11 @@ class GoalViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = GoalFilter
 
-# Point
+
 class PointViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for points
+    """
     queryset = Point.objects.select_related('user') \
                             .select_related('result') \
                             .all()
@@ -311,15 +341,21 @@ class PointViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = PointFilter
 
-# Result
+
 class ResultViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for results
+    """
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = ResultFilter
 
-# Special Bet result
+
 class SpecialBetResultViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for special bet results
+    """
     queryset = SpecialBetResult.objects.select_related('user') \
                                        .select_related('tournament') \
                                        .all()
@@ -327,15 +363,21 @@ class SpecialBetResultViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('user', 'tournament', 'created_at')
 
-# Tournament
+
 class TournamentViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for tournaments
+    """
     queryset = Tournament.objects.all()
     serializer_class = TournamentSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('name', 'start_date', 'stop_date')
 
-# Special Bet final
+
 class SpecialBetFinalViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for special bets (final results)
+    """
     queryset = SpecialBetFinal.objects.all()
     serializer_class = SpecialBetFinalSerializer
     filter_backends = (filters.DjangoFilterBackend,)

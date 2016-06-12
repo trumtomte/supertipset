@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { openChangeTournamentModal } from '../ducks/modal'
 
 const ChangeTournamentButton = ({ tournament, tournaments, openModal }) => {
-    const t = tournaments.data.filter(t => t.id == tournament).reduce((a, b) => b, {})
+    const t = tournaments.data.filter(t => t.id == tournament).reduce((_, b) => b, {})
 
     return <button onClick={openModal} className='change-tournament' type='button'>{t.name}</button>
 }

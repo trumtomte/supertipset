@@ -7,15 +7,18 @@ from .serializers import UserSerializer, TeamSerializer, PlayerSerializer, \
                          SpecialBetResultSerializer
 
 
-# Point
 class PointSerializer(serializers.ModelSerializer):
-
+    """
+    Serializer for points
+    """
     class Meta:
         model = Point
         fields = ('id', 'points', 'result')
 
-# SpecialBet
 class SpecialBetSerializer(serializers.ModelSerializer):
+    """
+    Serializer for special bets
+    """
     player = PlayerSerializer(read_only=True)
     team = TeamSerializer(read_only=True)
 
@@ -23,8 +26,10 @@ class SpecialBetSerializer(serializers.ModelSerializer):
         model = SpecialBet
         fields = ('id', 'player', 'player_goals', 'team', 'tournament')
 
-# Shallow serializer, doesnt fetch complete relationships
 class ShallowUserSerializer(serializers.ModelSerializer):
+    """
+    Shallow serializer for users, doesnt fetch complete relationships
+    """
     points = PointSerializer(many=True, read_only=True)
     special_bets = SpecialBetSerializer(many=True, read_only=True)
     special_bet_results = SpecialBetResultSerializer(many=True, read_only=True)
@@ -34,8 +39,10 @@ class ShallowUserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'firstname', 'lastname', 'email',
                   'points', 'special_bets', 'special_bet_results')
 
-# Detail serializer, fetches multiple relationships
 class DetailGroupSerializer(serializers.ModelSerializer):
+    """
+    Detailed serializer for groups
+    """
     admin = UserSerializer(read_only=True)
     users = ShallowUserSerializer(many=True, read_only=True)
 

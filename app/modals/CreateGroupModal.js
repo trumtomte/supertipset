@@ -24,7 +24,12 @@ const CreateGroupModal = ({ user, tournament, dispatch }) => {
             return false
         }
 
-        dispatch(createGroup(user.id, data.name, data.passwordOne, tournament))
+        dispatch(createGroup(
+            user.id,
+            data.name,
+            data.passwordOne,
+            tournament
+        ))
         dispatch(closeModal())
     }
 

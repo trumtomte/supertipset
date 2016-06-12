@@ -1,19 +1,39 @@
+import os
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import check_password, make_password
 
 from api.models import User, Tournament
 
-# Front page
+def page_not_found(request):
+    """
+    404 Page
+    """
+    ctx = { "debug": 'DJANGO_DEBUG' in os.environ }
+    return render(request, 'supertipset/404.html', ctx)
+
+def internal_server_error(request):
+    """
+    500 Page
+    """
+    ctx = { "debug": 'DJANGO_DEBUG' in os.environ }
+    return render(request, 'supertipset/500.html', ctx)
+
 def index(request):
+    """
+    Front page
+    """
     tournaments = Tournament.objects.all()
     ctx = {
         "registered": request.GET.get('registered', False),
-        "tournaments": tournaments
+        "tournaments": tournaments,
+        "debug": 'DJANGO_DEBUG' in os.environ
     }
     return render(request, 'supertipset/index.html', ctx)
 
-# Login page
 def login(request):
+    """
+    Login page
+    """
     tournaments = Tournament.objects.all()
 
     # POST
@@ -24,7 +44,8 @@ def login(request):
         if username == '' or password == '':
             ctx = {
                 "error_login": True,
-                "tournaments": tournaments
+                "tournaments": tournaments,
+                "debug": 'DJANGO_DEBUG' in os.environ
             }
             return render(request, 'supertipset/index.html', ctx) 
 
@@ -38,7 +59,8 @@ def login(request):
             if len(users) == 0:
                 ctx = {
                     "error_login": True,
-                    "tournaments": tournaments
+                    "tournaments": tournaments,
+                    "debug": 'DJANGO_DEBUG' in os.environ
                 }
                 return render(request, 'supertipset/index.html', ctx) 
 
@@ -48,7 +70,8 @@ def login(request):
         if not check_password(password, user.password):
             ctx = {
                 "error_login": True,
-                "tournaments": tournaments
+                "tournaments": tournaments,
+                "debug": 'DJANGO_DEBUG' in os.environ
             }
             return render(request, 'supertipset/index.html', ctx) 
 
@@ -59,7 +82,11 @@ def login(request):
     else:
         return redirect('/')
 
+
 def register(request):
+    """
+    Register page
+    """
     tournaments = Tournament.objects.all()
 
     if request.method == 'POST':
@@ -77,7 +104,8 @@ def register(request):
         if any(v == '' for v in args):
             ctx = {
                 "error_register": True,
-                "tournaments": tournaments
+                "tournaments": tournaments,
+                "debug": 'DJANGO_DEBUG' in os.environ
             }
             return render(request, 'supertipset/index.html', ctx)
 
@@ -85,7 +113,8 @@ def register(request):
         if password_1 != password_2:
             ctx = {
                 "error_register_pass": True,
-                "tournaments": tournaments
+                "tournaments": tournaments,
+                "debug": 'DJANGO_DEBUG' in os.environ
             }
             return render(request, 'supertipset/index.html', ctx)
 
@@ -97,7 +126,8 @@ def register(request):
         if len(users) > 0:
             ctx = {
                 "error_register_name": True,
-                "tournaments": tournaments
+                "tournaments": tournaments,
+                "debug": 'DJANGO_DEBUG' in os.environ
             }
             return render(request, 'supertipset/index.html', ctx)
 
@@ -107,7 +137,8 @@ def register(request):
         if len(users) > 0:
             ctx = {
                 "error_register_mail": True,
-                "tournaments": tournaments
+                "tournaments": tournaments,
+                "debug": 'DJANGO_DEBUG' in os.environ
             }
             return render(request, 'supertipset/index.html', ctx)
 
@@ -121,40 +152,43 @@ def register(request):
             user.save()
         except Exception:
             print("Unable to register a new user")
+            ctx = {
+                "error_register": True,
+                "tournaments": tournaments,
+                "debug": 'DJANGO_DEBUG' in os.environ
+            }
+            return render(request, 'supertipset/index.html', ctx)
 
         request.session['user_id'] = user.id
         return redirect('/?registered=1')
     else:
         return redirect('/')
 
-# Logout
 def logout(request):
+    """
+    Logout user and redirect back to the front page
+    """
     if request.session.get('user_id', False):
         del request.session['user_id']
 
     return redirect('/')
 
-# The App
 def app(request):
+    """
+    App page
+    """
     user_id = request.session.get('user_id', False)
     tournament = request.session.get('tournament', False)
 
     if not user_id or not tournament:
         return redirect('/login/')
 
-    # TODO: send initial data to server?
 
+    # NOTE send initial data to server?
     ctx = {
         "user_id": user_id,
-        "tournament": tournament
+        "tournament": tournament,
+        "debug": 'DJANGO_DEBUG' in os.environ
     }
 
     return render(request, 'supertipset/app.html', ctx)
-
-# 404 page
-def page_not_found(request):
-    return render(request, 'supertipset/404.html')
-
-# 500 page
-def internal_server_error(request):
-    return render(request, 'supertipset/500.html')

@@ -13,13 +13,16 @@ const group = (g, i) => {
     )
 }
 
+// Various reducers
 const reduceUserPoints = (a, n) => a + n.points
 const reduceUserBetResults = (a, n) => a + (n.goals + n.player + n.team)
 const reduceUserTotal = (a, n) => (
     a + n.points.reduce(reduceUserPoints, 0)
       + n.special_bet_results.reduce(reduceUserBetResults, 0)
 )
+
 const sortByPoints = (a, b) => b.averagePoints - a.averagePoints
+
 const getGroupWithPoints = g => ({
     id: g.id,
     name: g.name,
@@ -38,9 +41,9 @@ const GroupAverageTopList = ({ groups }) => {
                         <h6 className='name'>Liga</h6>
                         <h6 className='sum'>Poäng</h6>
                     </div>
-                    <p>
-                        {groups.isFetching ? 'Laddar...' : ''}
-                    </p>
+                    {groups.isFetching
+                        ? <div className='loading'></div>
+                        : <p></p>}
                 </div>
             </div>
         )
