@@ -125,6 +125,8 @@ class UserAdmin(admin.ModelAdmin):
             user.save()
         except Exception:
             print("Unable to make a new temp password for a user")
+            self.message_user(request, "Unable to make a new temp password for a user")
+            return False
 
         self.message_user(request, 'New password generated! -> {}'.format(new_temp_pass))
 
@@ -162,16 +164,14 @@ def calculate_points(t1, t2, b1, b2):
 
     return points
 
-# NOTE: Atomic batch update for better performance?
-# from django.db import transaction
-# @transaction.atomic
-
 class ResultAdmin(admin.ModelAdmin):
     list_display = ('game', 'team_1_goals', 'team_2_goals')
     search_fields = ('game__team_1__name', 'game__team_2__name')
     actions = ['calculate_points_action']
 
     def calculate_points_action(self, request, queryset):
+        bulk_points = []
+
         # All results from games 
         for result in queryset:
             t1 = result.team_1_goals
@@ -186,13 +186,22 @@ class ResultAdmin(admin.ModelAdmin):
                 b2 = bet.team_2_bet
                 user = bet.user
                 points = calculate_points(t1, t2, b1, b2)
+                p = Point(user=user, points=points, result=result)
+                bulk_points.append(p)
 
-                # TODO: possible bottleneck
-                try:
-                    p = Point(user=user, points=points, result=result)
-                    p.save()
-                except Exception:
-                    print("<Point> object already exists for user.")
+                # NOTE: old way
+                # try:
+                #     p = Point(user=user, points=points, result=result)
+                #     p.save()
+                # except Exception:
+                #     print("<Point> object already exists for user.")
+
+        try:
+            Point.objects.bulk_create(bulk_points)
+        except Exception:
+            print("Unable to perform a bulk_create on <Point>")
+            self.message_user(request, 'Unable to calculate points')
+            return False
 
         self.message_user(request, 'Points has been calculated!')
 
@@ -204,6 +213,8 @@ class TournamentAdmin(admin.ModelAdmin):
     actions = ['calculate_points_action']
 
     def calculate_points_action(self, request, queryset):
+        bulk_points = []
+
         for tournament in queryset:
             # special bets from users
             special_bets = SpecialBet.objects.filter(tournament=tournament.id)
@@ -211,7 +222,8 @@ class TournamentAdmin(admin.ModelAdmin):
                                           .filter(tournament=tournament.id)
 
             if len(correct_bets) == 0:
-                self.message_user(request, 'There are no final special bet results available!')
+                self.message_user(request, 'There are no final special bet ' \
+                                           'results available!')
                 return False
 
             correct_bet = correct_bets[0]
@@ -221,30 +233,47 @@ class TournamentAdmin(admin.ModelAdmin):
                 goals_points = 0
                 team_points = 0
 
+                # Correct player
                 if special_bet.player in correct_bet.players.all():
                     player_points = 20
 
+                    # Correct number of goals
                     if special_bet.player_goals == correct_bet.goals:
                         goals_points = 20
 
+                # Correct team
                 if special_bet.team.id == correct_bet.team.id:
                     team_points = 30
 
-                try:
-                    result = SpecialBetResult(user=special_bet.user,
-                                              tournament=tournament,
-                                              player=player_points,
-                                              goals=goals_points,
-                                              team=team_points)
-                    result.save()
-                except Exception:
-                    print("<SpecialBetResult> object already exists for user.")
+                result = SpecialBetResult(user=special_bet.user,
+                                          tournament=tournament,
+                                          player=player_points,
+                                          goals=goals_points,
+                                          team=team_points)
+                bulk_points.append(result)
 
+                # NOTE: old way
+                # try:
+                #     result = SpecialBetResult(user=special_bet.user,
+                #                               tournament=tournament,
+                #                               player=player_points,
+                #                               goals=goals_points,
+                #                               team=team_points)
+                #     result.save()
+                # except Exception:
+                #     print("<SpecialBetResult> object already exists for user.")
 
+        try:
+            SpecialBetResult.objects.bulk_create(bulk_points)
+        except Exception:
+            print("Unable to perform bulk_create on <SpecialBetResult>")
+            self.message_user(request, 'Unable to calculate points')
+            return False
+        
         self.message_user(request, 'Points has been calculated!')
 
     # Dropdown menu text
-    calculate_points_action.short_description = 'Calculate points (special bets)'
+    calculate_points_action.short_description = 'Calculate points'
 
 
 # Register models and admin models
