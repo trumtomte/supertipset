@@ -23,10 +23,12 @@ const Profile = ({ profile, tournamentHasStarted, isCurrentUser }) => {
                     tournamentHasStarted={tournamentHasStarted}
                     bettable={isCurrentUser} />
 
-                <GroupListSummary
-                    user={profile}
-                    groups={profile.data.groups}
-                    isCurrentUser={isCurrentUser} />
+                {profile.data.groups.length
+                    ? <GroupListSummary
+                        user={profile}
+                        groups={profile.data.groups}
+                        isCurrentUser={isCurrentUser} />
+                    : ''}
 
                 {!isCurrentUser && profile.data.bets.length
                     ? <ProfileBets
