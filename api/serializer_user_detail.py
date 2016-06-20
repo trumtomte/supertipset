@@ -48,6 +48,7 @@ class PointSerializer(serializers.ModelSerializer):
     """
     Serializer for points
     """
+    result = ResultSerializer(read_only=True)
     class Meta:
         model = Point
         fields = ('id', 'points', 'result')
