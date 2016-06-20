@@ -40,7 +40,7 @@ class UserViewSet(viewsets.ModelViewSet):
                                   hash(request.path)]))
 
 
-    @cache_response(6, key_func='calculate_cache_key')
+    @cache_response(8, key_func='calculate_cache_key')
     @list_route()
     def deep(self, request):
         tournament_id = request.GET.get('tournament')
@@ -62,7 +62,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     # Detail route that fetches lots of relationships
-    @cache_response(6, key_func='calculate_cache_key')
+    @cache_response(8, key_func='calculate_cache_key')
     @detail_route(methods=['get'])
     def detail(self, request, pk=None):
         tournament_id = request.GET.get('tournament')
@@ -150,7 +150,7 @@ class GroupViewSet(viewsets.ModelViewSet):
                                   hash(frozenset(request.GET.items())),
                                   hash(request.path)]))
 
-    @cache_response(6, key_func='calculate_cache_key')
+    @cache_response(8, key_func='calculate_cache_key')
     @list_route()
     def deep(self, request):
         tournament_id = request.GET.get('tournament')
@@ -181,7 +181,7 @@ class GroupViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     # Detail route that fetches lots of relationships
-    @cache_response(6, key_func='calculate_cache_key')
+    @cache_response(8, key_func='calculate_cache_key')
     @detail_route(methods=['get'])
     def detail(self, request, pk=None):
 
