@@ -73,8 +73,11 @@ export function fetchRounds(tournament) {
                 if (res.ok) {
                     res.json().then(json => dispatch(receiveRounds(json)))
                 } else {
-                    // console.log('unable to fetch rounds')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E110)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to fetch rounds', res)
+                    }
                 }
             })
     }

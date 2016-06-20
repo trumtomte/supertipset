@@ -59,8 +59,11 @@ export function fetchTournaments() {
                 if (res.ok) {
                     res.json().then(json => dispatch(receiveTournaments(json)))
                 } else {
-                    // console.log('unable to fetch tournaments')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E114)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to fetch tournaments', res)
+                    }
                 }
             })
     }

@@ -126,8 +126,11 @@ export function fetchProfile(id, tournament) {
                 if (res.ok) {
                     res.json().then(json => dispatch(receiveProfile(json)))
                 } else {
-                    // console.log('unable to fetch profile')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E109)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to fetch profile', res)
+                    }
                 }
             })
     }

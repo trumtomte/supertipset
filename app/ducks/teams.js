@@ -59,8 +59,11 @@ export function fetchTeams() {
                 if (res.ok) {
                     res.json().then(json => dispatch(receiveTeams(json)))
                 } else {
-                    // console.log('unable to fetch teams')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E111)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to fetch teams', res)
+                    }
                 }
             })
     }

@@ -87,8 +87,11 @@ export function fetchGroup(id, tournament) {
                 if (res.ok ) {
                     res.json().then(json => dispatch(receiveGroup(json)))
                 } else {
-                    // console.log('could not fetch group')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E100)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('could not fetch group', res)
+                    }
                 }
             })
     }
@@ -122,8 +125,11 @@ export function editGroupDescription(user, group, name, description) {
                         dispatch(successNotification('Gruppens beskrivning har redigerats!'))
                     })
                 } else {
-                    // console.log('request edit group description not ok')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E101)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('request edit group description not ok', res)
+                    }
                 }
             })
     }
@@ -157,8 +163,11 @@ export function editGroupPassword(user, group, name, password) {
                         dispatch(successNotification('Gruppens lösenord har redigerats!'))
                     })
                 } else {
-                    // console.log('request edit group password not ok')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E102)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('request edit group password not ok', res)
+                    }
                 }
             })
     }

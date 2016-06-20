@@ -92,8 +92,11 @@ export function fetchGroups(user, tournament) {
                 if (res.ok) {
                     res.json().then(json => dispatch(receiveGroups(json)))
                 } else {
-                    // console.log('unable to fetch groups')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E103)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to fetch groups', res)
+                    }
                 }
             })
     }
@@ -130,8 +133,11 @@ export function createGroup(user, name, password, tournament) {
                         dispatch(successNotification('Liga skapad!'))
                     })
                 } else {
-                    // console.log('unable to create group')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E104)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to create group', res)
+                    }
                 }
             })
     }
@@ -167,8 +173,11 @@ export function joinGroup(user, name, password) {
                         dispatch(successNotification('Du har gått med i ligan!'))
                     })
                 } else {
-                    // console.log('unable to join group')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E105)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to join group', res)
+                    }
                 }
             })
     }
@@ -202,8 +211,11 @@ export function leaveGroup(user, group, admin) {
                         dispatch(successNotification('Du har lämnat ligan!'))
                     })
                 } else {
-                    // console.log('unable to leave group')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E106)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to leave group', res)
+                    }
                 }
             })
     }
@@ -231,8 +243,11 @@ export function removeGroup(user, group) {
                     // NOTE remove from redux state tree
                     dispatch(receiveLeaveGroup({ id: group }))
                 } else {
-                    // console.log('unable to remove group')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E107)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to remove group', res)
+                    }
                 }
             })
     }

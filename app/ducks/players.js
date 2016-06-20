@@ -59,8 +59,11 @@ export function fetchPlayers() {
                 if (res.ok) {
                     res.json().then(json => dispatch(receivePlayers(json)))
                 } else {
-                    // console.log('unable to fetch players')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E108)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to fetch players', res)
+                    }
                 }
             })
     }

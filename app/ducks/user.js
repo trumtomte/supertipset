@@ -125,8 +125,11 @@ export function fetchUser(id, tournament) {
                 if (res.ok) {
                     res.json().then(json => dispatch(receiveUser(json)))
                 } else {
-                    // console.log('unable to fetch user')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E115)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('Unable to fetch user', res)
+                    }
                 }
             })
     }
@@ -160,8 +163,11 @@ export function editUserPassword(id, username, password) {
                         dispatch(successNotification('Lösenord redigerat!'))
                     })
                 } else {
-                    // console.log('unable to change user password')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E116)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to change user password', res)
+                    }
                 }
             })
     }
@@ -200,8 +206,11 @@ export function placeBet(user, game, betTeamOne, betTeamTwo) {
                         dispatch(successNotification('Tips sparat!'))
                     })
                 } else {
-                    // console.log('unable to place bet')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E117)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to place bet', res)
+                    }
                 }
             })
     }
@@ -226,8 +235,11 @@ export function replaceBet(bet, betTeamOne, betTeamTwo) {
                         dispatch(successNotification('Tips sparat!'))
                     })
                 } else {
-                    // console.log('unable to update bet')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E118)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to update bet', res)
+                    }
                 }
             })
     }
@@ -267,8 +279,11 @@ export function placeSpecialBet(user, player, goals, team, tournament) {
                         dispatch(successNotification('Specialtips sparat!'))
                     })
                 } else {
-                    // console.log('unable to place special bet')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E119)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to place special bet', res)
+                    }
                 }
             })
     }
@@ -294,8 +309,11 @@ export function replaceSpecialBet(bet, player, goals, team) {
                         dispatch(successNotification('Specialtips uppdaterat!'))
                     })
                 } else {
-                    // console.log('unable to update special bet')
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen.'))
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E120)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to update special bet', res)
+                    }
                 }
             })
     }
