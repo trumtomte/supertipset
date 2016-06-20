@@ -93,11 +93,20 @@ class DetailUserSerializer(serializers.ModelSerializer):
                   'points', 'special_bets', 'special_bet_results', 'groups')
 
 
+class ShallowPointSerializer(serializers.ModelSerializer):
+    """
+    Serializer for points (shallow)
+    """
+    class Meta:
+        model = Point
+        fields = ('id', 'points', 'result')
+
+
 class DeepUserSerializer(serializers.ModelSerializer):
     """
     Detailed serializer for users but omitting some fields
     """
-    points = PointSerializer(many=True, read_only=True)
+    points = ShallowPointSerializer(many=True, read_only=True)
     special_bet_results = SpecialBetResultSerializer(many=True, read_only=True)
 
     class Meta:
