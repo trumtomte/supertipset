@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { closeModal } from '../ducks/modal'
 import { editGroupDescription } from '../ducks/group'
+import { errorNotification } from '../ducks/notification'
 import Modal from './Modal'
 
 const GroupDescriptionModal = ({ group, user, dispatch }) => {
@@ -10,12 +11,18 @@ const GroupDescriptionModal = ({ group, user, dispatch }) => {
 
     const submit = e => {
         e.preventDefault()
-        dispatch(editGroupDescription(
-            user.id,
-            group.id,
-            group.name,
-            data.description
-        ))
+
+        if (data.description.length > 300) {
+            dispatch(errorNotification('Beskrivningen får inte överstiga 250 tecken!'))
+        } else {
+            dispatch(editGroupDescription(
+                user.id,
+                group.id,
+                group.name,
+                data.description
+            ))
+        }
+
         dispatch(closeModal())
     }
 
@@ -30,6 +37,7 @@ const GroupDescriptionModal = ({ group, user, dispatch }) => {
                 onChange={setData}
                 defaultValue={group.description}
                 ref={focus}
+                maxLength='300'
                 name='description'>
             </textarea>
         </Modal>

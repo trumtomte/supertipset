@@ -21,16 +21,26 @@ from .serializers import UserSerializer, BetSerializer, GameSerializer, \
 from .serializer_user_detail import DetailUserSerializer, DeepUserSerializer
 from .serializer_group_detail import DetailGroupSerializer
 
+from rest_framework_extensions.cache.decorators import cache_response
+
 # NOTE possible bottlenecks from the large prefetches?
 
 class UserViewSet(viewsets.ModelViewSet):
     """
     Viewset for users
-    TODO general try/catch on .save()?
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    # Cache key function
+    def calculate_cache_key(self, view_instance, view_method, request, args, kwargs):
+        return '.'.join(map(str, [len(args),
+                                  len(kwargs),
+                                  hash(frozenset(request.GET.items())),
+                                  hash(request.path)]))
+
+
+    @cache_response(6, key_func='calculate_cache_key')
     @list_route()
     def deep(self, request):
         tournament_id = request.GET.get('tournament')
@@ -52,6 +62,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     # Detail route that fetches lots of relationships
+    @cache_response(6, key_func='calculate_cache_key')
     @detail_route(methods=['get'])
     def detail(self, request, pk=None):
         tournament_id = request.GET.get('tournament')
@@ -121,6 +132,113 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
+class GroupViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for groups
+    """
+    queryset = Group.objects.select_related('admin') \
+                            .prefetch_related('users') \
+                            .all()
+    serializer_class = GroupSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('admin', 'users')
+
+    # Cache key function
+    def calculate_cache_key(self, view_instance, view_method, request, args, kwargs):
+        return '.'.join(map(str, [len(args),
+                                  len(kwargs),
+                                  hash(frozenset(request.GET.items())),
+                                  hash(request.path)]))
+
+    @cache_response(6, key_func='calculate_cache_key')
+    @list_route()
+    def deep(self, request):
+        tournament_id = request.GET.get('tournament')
+        users = request.GET.get('users')
+        admin = request.GET.get('admin')
+
+        if tournament_id:
+            groups = Group.objects.prefetch_related(
+                        Prefetch('users__points', queryset=Point.objects.filter(result__game__round__tournament=tournament_id)) 
+                    ) \
+                   .prefetch_related(
+                        Prefetch('users__special_bets', queryset=SpecialBet.objects.filter(tournament=tournament_id)) 
+                    ) \
+                   .prefetch_related(
+                        Prefetch('users__special_bet_results', queryset=SpecialBetResult.objects.filter(tournament=tournament_id)) 
+                    )
+
+            if users:
+                groups = groups.filter(users__in=users.split(','))
+            if admin:
+                groups = groups.filter(admin=admin)
+        else:
+            groups = Group.objects.select_related('admin') \
+                                  .prefetch_related('users') \
+                                  .all()
+
+        serializer = DetailGroupSerializer(groups, many=True)
+        return Response(serializer.data)
+
+    # Detail route that fetches lots of relationships
+    @cache_response(6, key_func='calculate_cache_key')
+    @detail_route(methods=['get'])
+    def detail(self, request, pk=None):
+
+        tournament_id = request.GET.get('tournament')
+
+        if tournament_id:
+            group = Group.objects.prefetch_related(
+                        Prefetch('users__points', queryset=Point.objects.filter(result__game__round__tournament=tournament_id)) 
+                    ) \
+                   .prefetch_related(
+                        Prefetch('users__special_bets', queryset=SpecialBet.objects.filter(tournament=tournament_id)) 
+                    ) \
+                   .prefetch_related(
+                        Prefetch('users__special_bet_results', queryset=SpecialBetResult.objects.filter(tournament=tournament_id)) 
+                    ) \
+                   .get(pk=pk)
+        else:
+            group = self.get_object()
+
+        serializer = DetailGroupSerializer(group)
+        return Response(serializer.data)
+
+    @detail_route(methods=['put'])
+    def password(self, request, pk=None):
+        p = self.request.data['password']
+        group = self.get_object()
+        group.password = make_password(p)
+        group.save()
+
+        serializer = GroupSerializer(group)
+        return Response(serializer.data)
+
+    @detail_route(methods=['put'])
+    def leave(self, request, pk=None):
+        admin_id = self.request.data['admin']
+        user_id = self.request.data['user']
+        group = self.get_object()
+
+        user = User.objects.get(pk=user_id)
+
+        group.users.remove(user)
+
+        if admin_id > 0:
+            admin = User.objects.get(pk=admin_id)
+            group.admin = admin
+
+        group.save()
+
+        serializer = GroupSerializer(group)
+        return Response(serializer.data)
+
+
+    def perform_create(self, serializer):
+        password = make_password(self.request.data['password'])
+        user = User.objects.get(pk=self.request.data['user'])
+        serializer.save(admin=user, users=[user], password=password)
+
 
 class BetViewSet(viewsets.ModelViewSet):
     """
@@ -180,105 +298,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
     serializer_class = PlayerSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('teams',)
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    Viewset for groups
-    TODO general try/catch on .save()?
-    """
-    queryset = Group.objects.select_related('admin') \
-                            .prefetch_related('users') \
-                            .all()
-    serializer_class = GroupSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('admin', 'users')
-
-    @list_route()
-    def deep(self, request):
-        tournament_id = request.GET.get('tournament')
-        users = request.GET.get('users')
-        admin = request.GET.get('admin')
-
-        if tournament_id:
-            groups = Group.objects.prefetch_related(
-                        Prefetch('users__points', queryset=Point.objects.filter(result__game__round__tournament=tournament_id)) 
-                    ) \
-                   .prefetch_related(
-                        Prefetch('users__special_bets', queryset=SpecialBet.objects.filter(tournament=tournament_id)) 
-                    ) \
-                   .prefetch_related(
-                        Prefetch('users__special_bet_results', queryset=SpecialBetResult.objects.filter(tournament=tournament_id)) 
-                    )
-
-            if users:
-                groups = groups.filter(users__in=users.split(','))
-            if admin:
-                groups = groups.filter(admin=admin)
-        else:
-            groups = Group.objects.select_related('admin') \
-                                  .prefetch_related('users') \
-                                  .all()
-
-        serializer = DetailGroupSerializer(groups, many=True)
-        return Response(serializer.data)
-
-    # Detail route that fetches lots of relationships
-    @detail_route(methods=['get'])
-    def detail(self, request, pk=None):
-        tournament_id = request.GET.get('tournament')
-
-        if tournament_id:
-            group = Group.objects.prefetch_related(
-                        Prefetch('users__points', queryset=Point.objects.filter(result__game__round__tournament=tournament_id)) 
-                    ) \
-                   .prefetch_related(
-                        Prefetch('users__special_bets', queryset=SpecialBet.objects.filter(tournament=tournament_id)) 
-                    ) \
-                   .prefetch_related(
-                        Prefetch('users__special_bet_results', queryset=SpecialBetResult.objects.filter(tournament=tournament_id)) 
-                    ) \
-                   .get(pk=pk)
-        else:
-            group = self.get_object()
-
-        serializer = DetailGroupSerializer(group)
-        return Response(serializer.data)
-
-    @detail_route(methods=['put'])
-    def password(self, request, pk=None):
-        p = self.request.data['password']
-        group = self.get_object()
-        group.password = make_password(p)
-        group.save()
-
-        serializer = GroupSerializer(group)
-        return Response(serializer.data)
-
-    @detail_route(methods=['put'])
-    def leave(self, request, pk=None):
-        admin_id = self.request.data['admin']
-        user_id = self.request.data['user']
-        group = self.get_object()
-
-        user = User.objects.get(pk=user_id)
-
-        group.users.remove(user)
-
-        if admin_id > 0:
-            admin = User.objects.get(pk=admin_id)
-            group.admin = admin
-
-        group.save()
-
-        serializer = GroupSerializer(group)
-        return Response(serializer.data)
-
-
-    def perform_create(self, serializer):
-        password = make_password(self.request.data['password'])
-        user = User.objects.get(pk=self.request.data['user'])
-        serializer.save(admin=user, users=[user], password=password)
 
 
 class SpecialBetViewSet(viewsets.ModelViewSet):
