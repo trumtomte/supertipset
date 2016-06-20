@@ -190,18 +190,18 @@ class ResultAdmin(admin.ModelAdmin):
                 bulk_points.append(p)
 
                 # NOTE: old way
-                # try:
-                #     p = Point(user=user, points=points, result=result)
-                #     p.save()
-                # except Exception:
-                #     print("<Point> object already exists for user.")
+                try:
+                    p = Point(user=user, points=points, result=result)
+                    p.save()
+                except Exception:
+                    print("<Point> object already exists for user.")
 
-        try:
-            Point.objects.bulk_create(bulk_points)
-        except Exception:
-            print("Unable to perform a bulk_create on <Point>")
-            self.message_user(request, 'Unable to calculate points')
-            return False
+        # try:
+        #     Point.objects.bulk_create(bulk_points)
+        # except Exception:
+        #     print("Unable to perform a bulk_create on <Point>")
+        #     self.message_user(request, 'Unable to calculate points')
+        #     return False
 
         self.message_user(request, 'Points has been calculated!')
 
@@ -253,22 +253,22 @@ class TournamentAdmin(admin.ModelAdmin):
                 bulk_points.append(result)
 
                 # NOTE: old way
-                # try:
-                #     result = SpecialBetResult(user=special_bet.user,
-                #                               tournament=tournament,
-                #                               player=player_points,
-                #                               goals=goals_points,
-                #                               team=team_points)
-                #     result.save()
-                # except Exception:
-                #     print("<SpecialBetResult> object already exists for user.")
+                try:
+                    result = SpecialBetResult(user=special_bet.user,
+                                              tournament=tournament,
+                                              player=player_points,
+                                              goals=goals_points,
+                                              team=team_points)
+                    result.save()
+                except Exception:
+                    print("<SpecialBetResult> object already exists for user.")
 
-        try:
-            SpecialBetResult.objects.bulk_create(bulk_points)
-        except Exception:
-            print("Unable to perform bulk_create on <SpecialBetResult>")
-            self.message_user(request, 'Unable to calculate points')
-            return False
+        # try:
+        #     SpecialBetResult.objects.bulk_create(bulk_points)
+        # except Exception:
+        #     print("Unable to perform bulk_create on <SpecialBetResult>")
+        #     self.message_user(request, 'Unable to calculate points')
+        #     return False
         
         self.message_user(request, 'Points has been calculated!')
 
