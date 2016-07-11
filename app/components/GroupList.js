@@ -3,18 +3,14 @@ import { Link } from 'react-router'
 import { LeaveGroupButton } from '../containers'
 import GroupMembers from './GroupMembers'
 
-const group = tournamentHasStarted => (g, i) => {
-    return (
-        <GroupMembers key={i} group={g} tournamentHasStarted={tournamentHasStarted}>
-            <div className='group-name'>
-                <Link to={`/s/groups/${g.id}`}>{g.name}</Link>
-                <LeaveGroupButton group={g} />
-            </div>
-        </GroupMembers>
-    )
-}
-
-const sortByGroupName = (a, b) => a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1
+const group = tournamentHasStarted => (g, i) => (
+    <GroupMembers key={i} group={g} tournamentHasStarted={tournamentHasStarted}>
+        <div className='group-name'>
+            <Link to={`/s/groups/${g.id}`}>{g.name}</Link>
+            <LeaveGroupButton group={g} />
+        </div>
+    </GroupMembers>
+)
 
 const GroupList = ({ groups, tournamentHasStarted }) => {
     if (groups.isFetching) {
@@ -27,7 +23,7 @@ const GroupList = ({ groups, tournamentHasStarted }) => {
 
     return (
         <div className='groups'>
-            {groups.data.sort(sortByGroupName).map(group(tournamentHasStarted))} 
+            {groups.data.map(group(tournamentHasStarted))}
         </div>
     )
 }

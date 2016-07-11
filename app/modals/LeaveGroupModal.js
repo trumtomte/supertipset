@@ -11,7 +11,7 @@ const LeaveGroupModal = ({ user, group, dispatch }) => {
     // Mutable form-data
     let data = { admin: 0 }
 
-    const isAdmin = user.id === group.admin.id
+    const isAdmin = user.id === group.admin
 
     const submit = e => {
         e.preventDefault()

@@ -3,18 +3,36 @@ import { errorNotification } from './notification'
 import { baseURL, assign } from './utils'
 
 const INVALIDATE = 'supsertipset/toplists/INVALIDATE'
-const REQUEST_USERS = 'supsertipset/toplists/REQUEST_USERS'
-const RECEIVE_USERS = 'supsertipset/toplists/RECEIVE_USERS'
-const REQUEST_GROUPS = 'supsertipset/toplists/REQUEST_GROUPS'
-const RECEIVE_GROUPS = 'supsertipset/toplists/RECEIVE_GROUPS'
+// Points
+const REQUEST_TOP_10_POINTS = 'supertipset/toplists/REQUEST_TOP_10_POINTS'
+const RECEIVE_TOP_10_POINTS = 'supertipset/toplists/RECEIVE_TOP_10_POINTS'
+// Bets
+const REQUEST_TOP_10_BETS = 'supertipset/toplists/REQUEST_TOP_10_BETS'
+const RECEIVE_TOP_10_BETS = 'supertipset/toplists/RECEIVE_TOP_10_BETS'
+// Average
+const REQUEST_TOP_10_AVERAGE = 'supertipset/toplists/REQUEST_TOP_10_AVERAGE'
+const RECEIVE_TOP_10_AVERAGE = 'supertipset/toplists/RECEIVE_TOP_10_AVERAGE'
+// Members
+const REQUEST_TOP_10_MEMBERS = 'supertipset/toplists/REQUEST_TOP_10_MEMBERS'
+const RECEIVE_TOP_10_MEMBERS = 'supertipset/toplists/RECEIVE_TOP_10_MEMBERS'
 
 const initialState = {
-    users: {
+    top10points: {
         isFetching: false,
         didInvalidate: false,
         data: []
     },
-    groups: {
+    top10bets: {
+        isFetching: false,
+        didInvalidate: false,
+        data: []
+    },
+    top10average: {
+        isFetching: false,
+        didInvalidate: false,
+        data: []
+    },
+    top10members: {
         isFetching: false,
         didInvalidate: false,
         data: []
@@ -25,37 +43,69 @@ export default function reducer(state = initialState, action) {
     switch (action.type) {
         case INVALIDATE:
             return assign(state, {
-                users: assign(state.users, { didInvalidate: true }),
-                groups: assign(state.groups, { didInvalidate: true })
+                top10points: assign(state.top10points, { didInvalidate: true }),
+                top10bets: assign(state.top10bets, { didInvalidate: true }),
+                top10average: assign(state.top10average, { didInvalidate: true }),
+                top10members: assign(state.top10members, { didInvalidate: true })
             })
-        case REQUEST_USERS:
+        case REQUEST_TOP_10_POINTS:
             return assign(state, {
-                users: assign(state.users, {
+                top10points: assign(state.top10points, {
                     isFetching: true,
                     didInvalidate: false
                 })
             })
-        case RECEIVE_USERS:
+        case RECEIVE_TOP_10_POINTS:
             return assign(state, {
-                users: assign(state.users, {
+                top10points: assign(state.top10points, {
                     isFetching: false,
                     didInvalidate: false,
-                    data: action.users
+                    data: action.top10points
                 })
             })
-        case REQUEST_GROUPS:
+        case REQUEST_TOP_10_BETS:
             return assign(state, {
-                groups: assign(state.groups, {
+                top10bets: assign(state.top10bets, {
                     isFetching: true,
                     didInvalidate: false
                 })
             })
-        case RECEIVE_GROUPS:
+        case RECEIVE_TOP_10_BETS:
             return assign(state, {
-                groups: assign(state.grous, {
+                top10bets: assign(state.top10bets, {
                     isFetching: false,
                     didInvalidate: false,
-                    data: action.groups
+                    data: action.top10bets
+                })
+            })
+        case REQUEST_TOP_10_AVERAGE:
+            return assign(state, {
+                top10average: assign(state.top10average, {
+                    isFetching: true,
+                    didInvalidate: false
+                })
+            })
+        case RECEIVE_TOP_10_AVERAGE:
+            return assign(state, {
+                top10average: assign(state.top10average, {
+                    isFetching: false,
+                    didInvalidate: false,
+                    data: action.top10average
+                })
+            })
+        case REQUEST_TOP_10_MEMBERS:
+            return assign(state, {
+                top10members: assign(state.top10members, {
+                    isFetching: true,
+                    didInvalidate: false
+                })
+            })
+        case RECEIVE_TOP_10_MEMBERS:
+            return assign(state, {
+                top10members: assign(state.top10members, {
+                    isFetching: false,
+                    didInvalidate: false,
+                    data: action.top10members
                 })
             })
         default:
@@ -67,90 +117,188 @@ export function invalidateTopLists() {
     return { type: INVALIDATE }
 }
 
-export function requestUsersForTopLists() {
-    return { type: REQUEST_USERS }
+// Points
+export function requestTop10Points() {
+    return { type: REQUEST_TOP_10_POINTS }
 }
 
-export function receiveUsersForTopLists(users) {
-    return { type: RECEIVE_USERS, users }
+export function receiveTop10Points(top10points) {
+    return { type: RECEIVE_TOP_10_POINTS, top10points }
 }
 
-function shouldFetchUsers(toplists) {
-    if (toplists.users.isFetching) {
+function shouldFetchTop10Points(toplists) {
+    if (toplists.top10points.isFetching) {
         return false
-    } else if (toplists.users.data.length == 0) {
+    } else if (toplists.top10points.data.length == 0) {
         return true
     } else {
-        return toplists.users.didInvalidate
+        return toplists.top10points.didInvalidate
     }
 }
 
-export function fetchUsersForTopLists(tournament) {
+export function fetchTop10Points(tournament) {
     return (dispatch, getState) => {
         const { toplists } = getState()
 
-        if (!shouldFetchUsers(toplists)) {
+        if (!shouldFetchTop10Points(toplists)) {
             return Promise.resolve()
         }
 
-        dispatch(requestUsersForTopLists())
+        dispatch(requestTop10Points())
 
-        const url = `${baseURL}/api/users/deep/?tournament=${tournament}`
+        const url = `${baseURL}/api/users/top_10_points/?tournament=${tournament}`
 
         return fetch(url)
             .then(res => {
                 if (res.ok) {
-                    res.json().then(json => dispatch(receiveUsersForTopLists(json)))
+                    res.json().then(json => dispatch(receiveTop10Points(json)))
                 } else {
+                    // TODO error code
                     dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E112)'))
 
                     if (process.env.NODE_ENV !== 'production') {
-                        console.log('unable to fetch users for top lists', res)
+                        console.log('unable to fetch top 10 points', res)
                     }
                 }
             })
     }
 }
 
-export function requestGroupsForTopLists() {
-    return { type: REQUEST_GROUPS }
+// Bets
+export function requestTop10Bets() {
+    return { type: REQUEST_TOP_10_BETS }
 }
 
-export function receiveGroupsForTopLists(groups) {
-    return { type: RECEIVE_GROUPS, groups }
+export function receiveTop10Bets(top10bets) {
+    return { type: RECEIVE_TOP_10_BETS, top10bets }
 }
 
-function shouldFetchGroups(toplists) {
-    if (toplists.groups.isFetching) {
+function shouldFetchTop10Bets(toplists) {
+    if (toplists.top10bets.isFetching) {
         return false
-    } else if (toplists.groups.data.length == 0) {
+    } else if (toplists.top10bets.data.length == 0) {
         return true
     } else {
-        return toplists.groups.didInvalidate
+        return toplists.top10bets.didInvalidate
     }
 }
 
-export function fetchGroupsForTopLists(tournament) {
+export function fetchTop10Bets(tournament) {
     return (dispatch, getState) => {
         const { toplists } = getState()
 
-        if (!shouldFetchGroups(toplists)) {
+        if (!shouldFetchTop10Bets(toplists)) {
             return Promise.resolve()
         }
 
-        dispatch(requestGroupsForTopLists())
+        dispatch(requestTop10Bets())
 
-        const url = `${baseURL}/api/groups/deep/?tournament=${tournament}`
+        const url = `${baseURL}/api/users/top_10_bets/?tournament=${tournament}`
 
         return fetch(url)
             .then(res => {
                 if (res.ok) {
-                    res.json().then(json => dispatch(receiveGroupsForTopLists(json)))
+                    res.json().then(json => dispatch(receiveTop10Bets(json)))
                 } else {
-                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E113)'))
+                    // TODO error code
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E112)'))
 
                     if (process.env.NODE_ENV !== 'production') {
-                        console.log('unable to fetch groups for top lists', res)
+                        console.log('unable to fetch top 10 bets', res)
+                    }
+                }
+            })
+    }
+}
+
+// Average
+export function requestTop10Average() {
+    return { type: REQUEST_TOP_10_AVERAGE }
+}
+
+export function receiveTop10Average(top10average) {
+    return { type: RECEIVE_TOP_10_AVERAGE, top10average }
+}
+
+function shouldFetchTop10Average(toplists) {
+    if (toplists.top10average.isFetching) {
+        return false
+    } else if (toplists.top10average.data.length == 0) {
+        return true
+    } else {
+        return toplists.top10average.didInvalidate
+    }
+}
+
+export function fetchTop10Average(tournament) {
+    return (dispatch, getState) => {
+        const { toplists } = getState()
+
+        if (!shouldFetchTop10Average(toplists)) {
+            return Promise.resolve()
+        }
+
+        dispatch(requestTop10Average())
+
+        const url = `${baseURL}/api/groups/top_10_average/?tournament=${tournament}`
+
+        return fetch(url)
+            .then(res => {
+                if (res.ok) {
+                    res.json().then(json => dispatch(receiveTop10Average(json)))
+                } else {
+                    // TODO error code
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E112)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to fetch top 10 average', res)
+                    }
+                }
+            })
+    }
+}
+
+// Members
+export function requestTop10Members() {
+    return { type: REQUEST_TOP_10_MEMBERS }
+}
+
+export function receiveTop10Members(top10members) {
+    return { type: RECEIVE_TOP_10_MEMBERS, top10members }
+}
+
+function shouldFetchTop10Members(toplists) {
+    if (toplists.top10members.isFetching) {
+        return false
+    } else if (toplists.top10members.data.length == 0) {
+        return true
+    } else {
+        return toplists.top10members.didInvalidate
+    }
+}
+
+export function fetchTop10Members() {
+    return (dispatch, getState) => {
+        const { toplists } = getState()
+
+        if (!shouldFetchTop10Members(toplists)) {
+            return Promise.resolve()
+        }
+
+        dispatch(requestTop10Members())
+
+        const url = `${baseURL}/api/groups/top_10_members/`
+
+        return fetch(url)
+            .then(res => {
+                if (res.ok) {
+                    res.json().then(json => dispatch(receiveTop10Members(json)))
+                } else {
+                    // TODO error code
+                    dispatch(errorNotification('Tekniskt fel! Vänligen försök igen. (E112)'))
+
+                    if (process.env.NODE_ENV !== 'production') {
+                        console.log('unable to fetch top 10 members', res)
                     }
                 }
             })

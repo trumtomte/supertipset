@@ -82,7 +82,7 @@ export function fetchGroup(id, tournament) {
 
         dispatch(requestGroup())
 
-        return fetch(`${baseURL}/api/groups/${id}/detail/?tournament=${tournament}`)
+        return fetch(`${baseURL}/api/groups/${id}/users/?tournament=${tournament}`)
             .then(res => {
                 if (res.ok ) {
                     res.json().then(json => dispatch(receiveGroup(json)))

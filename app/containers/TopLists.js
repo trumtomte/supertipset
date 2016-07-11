@@ -2,15 +2,17 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import {
-    fetchUsersForTopLists,
-    fetchGroupsForTopLists
-} from '../ducks/toplists'
+    fetchTop10Points,
+    fetchTop10Bets,
+    fetchTop10Average,
+    fetchTop10Members
+} from '../ducks/toplists'
 
 import {
-    UserTotalTopList,
-    UserTopBetsTopList,
-    GroupAverageTopList,
-    GroupMembersTopList
+    Top10Points,
+    Top10Bets,
+    Top10Average,
+    Top10Members
 } from '../components'
 
 class TopList extends Component {
@@ -19,9 +21,12 @@ class TopList extends Component {
     }
 
     componentDidMount() {
-        const { dispatch, user, tournament } = this.props
-        dispatch(fetchUsersForTopLists(tournament))
-        dispatch(fetchGroupsForTopLists(tournament))
+        const { dispatch, tournament } = this.props
+
+        dispatch(fetchTop10Points(tournament))
+        dispatch(fetchTop10Bets(tournament))
+        dispatch(fetchTop10Average(tournament))
+        dispatch(fetchTop10Members())
     }
 
     render() {
@@ -30,12 +35,12 @@ class TopList extends Component {
         return (
             <div>
                 <div className='toplists-container'>
-                    <UserTotalTopList users={toplists.users} />
-                    <UserTopBetsTopList users={toplists.users} />
+                    <Top10Points top10points={toplists.top10points} />
+                    <Top10Bets top10bets={toplists.top10bets} />
                 </div>
                 <div className='toplists-container'>
-                    <GroupAverageTopList groups={toplists.groups} />
-                    <GroupMembersTopList groups={toplists.groups} />
+                    <Top10Average top10average={toplists.top10average} />
+                    <Top10Members top10members={toplists.top10members} />
                 </div>
             </div>
         )

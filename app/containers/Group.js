@@ -22,7 +22,7 @@ class Group extends Component {
             return <p>Ligan laddas.</p>
         }
 
-        const isAdmin = user.id === group.data.admin.id
+        const isAdmin = user.id === group.data.admin
 
         const now = new Date()
         const currTournament = tournaments.data.filter(t => t.id == tournament)[0]

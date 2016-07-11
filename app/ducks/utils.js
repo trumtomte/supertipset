@@ -1,5 +1,4 @@
 export const baseURL = ''
-// export const baseURL = 'http://127.0.0.1:8001'
 
 export function assign(state, newState) {
     return Object.assign({}, state, newState)

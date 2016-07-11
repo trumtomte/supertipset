@@ -85,7 +85,7 @@ export function fetchGroups(user, tournament) {
 
         dispatch(requestGroups())
 
-        const url = `${baseURL}/api/groups/deep/?users=${user}&tournament=${tournament}`
+        const url = `${baseURL}/api/groups/list/?users=${user}&tournament=${tournament}`
 
         return fetch(url)
             .then(res => {
