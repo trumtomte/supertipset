@@ -29,8 +29,8 @@ class GameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Game
-        fields = ('id', 'team_1', 'team_2', 'round',
-                  'group_name', 'start_date', 'stop_date', 'result')
+        fields = ('id', 'team_1', 'team_2', 'round', 'group_name',
+                  'start_date', 'stop_date', 'result')
 
 
 class BetSerializer(serializers.ModelSerializer):
@@ -91,26 +91,4 @@ class DetailUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'firstname', 'lastname', 'email', 'bets',
                   'points', 'special_bets', 'special_bet_results', 'groups')
-
-
-class ShallowPointSerializer(serializers.ModelSerializer):
-    """
-    Serializer for points (shallow)
-    """
-    class Meta:
-        model = Point
-        fields = ('id', 'points', 'result')
-
-
-class DeepUserSerializer(serializers.ModelSerializer):
-    """
-    Detailed serializer for users but omitting some fields
-    """
-    points = ShallowPointSerializer(many=True, read_only=True)
-    special_bet_results = SpecialBetResultSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'firstname', 'lastname', 'email', 'points',
-                  'special_bet_results')
 

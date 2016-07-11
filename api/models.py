@@ -184,7 +184,7 @@ class Point(models.Model):
     """
     Represents points gained by a user betting on games
     """
-    user = models.ForeignKey(User, related_name='points',
+    user = models.ForeignKey(User, related_name='points', null=True, blank=True,
                              on_delete=models.CASCADE)
     points = models.IntegerField()
     result = models.ForeignKey(Result)

@@ -168,3 +168,80 @@ class SpecialBetFinalSerializer(serializers.ModelSerializer):
     class Meta:
         model = SpecialBetFinal
         fields = ('id', 'tournament', 'player', 'goals', 'team', 'created_at')
+
+class Top10BetsSerializer(serializers.ModelSerializer):
+    """
+    Serializer for top 10 of 10-pts bets
+    """
+    top_bet_count = serializers.IntegerField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'top_bet_count')
+
+
+class Top10PointsSerializer(serializers.ModelSerializer):
+    """
+    Serializer for top 10 total points for users
+    """
+    sum_points = serializers.IntegerField()
+    sum_special_bets = serializers.IntegerField()
+    total_points = serializers.IntegerField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'sum_points', 'sum_special_bets',
+                  'total_points')
+
+
+class Top10MembersSerializer(serializers.ModelSerializer):
+    """
+    Serializer for top 10 group member count
+    """
+    member_count = serializers.IntegerField()
+
+    class Meta:
+        model = Group
+        fields = ('id', 'name', 'member_count')
+
+
+class Top10AverageSerializer(serializers.ModelSerializer):
+    """
+    Serializer for top 10 average points from groups (users)
+    """
+    member_count = serializers.IntegerField()
+    sum_points = serializers.IntegerField()
+    sum_special_bets = serializers.IntegerField()
+    average = serializers.IntegerField()
+
+    class Meta:
+        model = Group
+        fields = ('id', 'name', 'member_count', 'sum_points',
+                  'sum_special_bets', 'average')
+
+
+class UserOverviewSerializer(serializers.ModelSerializer):
+    """
+    Serializer for a short summary of user info
+    """
+    sum_points = serializers.IntegerField()
+    sum_special_bets = serializers.IntegerField()
+    total_points = serializers.IntegerField()
+    country = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'sum_points', 'sum_special_bets',
+                  'total_points', 'country')
+
+
+class GroupOverviewSerializer(serializers.ModelSerializer):
+    """
+    Serializer for groups of users with a short summary
+    """
+    users = UserOverviewSerializer(many=True, read_only=True)
+    admin = serializers.IntegerField()
+
+    class Meta:
+        model = Group
+        fields = ('id', 'name', 'description', 'users', 'admin')

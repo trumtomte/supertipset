@@ -15,6 +15,7 @@ class PointSerializer(serializers.ModelSerializer):
         model = Point
         fields = ('id', 'points', 'result')
 
+
 class SpecialBetSerializer(serializers.ModelSerializer):
     """
     Serializer for special bets
@@ -25,6 +26,7 @@ class SpecialBetSerializer(serializers.ModelSerializer):
     class Meta:
         model = SpecialBet
         fields = ('id', 'player', 'player_goals', 'team', 'tournament')
+
 
 class ShallowUserSerializer(serializers.ModelSerializer):
     """
@@ -38,6 +40,7 @@ class ShallowUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'firstname', 'lastname', 'email',
                   'points', 'special_bets', 'special_bet_results')
+
 
 class DetailGroupSerializer(serializers.ModelSerializer):
     """
