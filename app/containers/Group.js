@@ -19,7 +19,7 @@ class Group extends Component {
         const { params, group, user, dispatch, tournament, tournaments } = this.props
 
         if (group.isFetching || group.data.length === 0) {
-            return <p>Ligan laddas.</p>
+            return <div className='groups'><div className='loading'></div></div>
         }
 
         const isAdmin = user.id === group.data.admin

@@ -1055,6 +1055,10 @@ header nav button:hover {
 
 }
 
+.groups > p {
+    text-align: center;
+}
+
 .group-container {
     margin-bottom: 60px;
     position: relative;
@@ -1434,6 +1438,8 @@ header nav button:hover {
 
 .game-row > span {
     padding: 5px 0;
+    -webkit-align-self: center;
+    align-self: center;
 }
 
 .game-row .deadline,

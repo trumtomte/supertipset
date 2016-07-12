@@ -34,7 +34,8 @@ const Game = ({ game, user }) => {
     }
 
     const started = hasStarted(game.start_date)
-    const matchup = `${game.team_1.name} - ${game.team_2.name} (${game.group_name})`
+    const groupName = game.group_name == "-" ? "" : `(${game.group_name})`
+    const matchup = `${game.team_1.name} - ${game.team_2.name} ${groupName}`
 
     const bet = getBetsForGame(game.id, user)
     const betExists = bet.hasOwnProperty('id')
